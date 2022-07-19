@@ -146,6 +146,8 @@ _pwm_out = [ \
 
 _ext_reset_in = [("ext_reset_in", 0, Pins("j4:6"), IOStandard("LVCMOS33"))]
 
+# Devices configuration end ----------------------------------------------------------------------------------------
+
 #watchdog register setup
 watchdog_size=22
 watchdog_offs=10
@@ -156,9 +158,6 @@ num_outputs=len(_gpios_out)
 num_encoders=len(encoders)
 num_pwm=len(_pwm_out)
 num_stepgens=len(stepgens)
-
-
-# Devices configuration end ----------------------------------------------------------------------------------------
 
 class QuadEnc(Module,AutoCSR):
     def __init__(self, pads):
