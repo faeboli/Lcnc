@@ -558,7 +558,7 @@ def main():
     builder = Builder(soc, **builder_argdict(args))
     
     if args.build:
-        builder.build(**trellis_argdict(args))
+        builder.build(build_name="Lcnc",**trellis_argdict(args))
         
     if args.load:
         prog = soc.platform.create_programmer()
