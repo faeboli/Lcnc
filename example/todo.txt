@@ -1,0 +1,64 @@
+5A75B
+x modificare py per portarlo da 5A75E a 5A75B
+  x pinout
+  x allocare encoder
+  - utilizzare pin D CLK STB OE
+x aggiornare pinout file ODS
+x abilitare encoder nel .c e .h
+  x estendere buffer di lettura con gli encoders
+  x decodificare il valore degli encoders
+x test ping 
+x accesso bridge uart
+x test outputs
+x test stepgens
+x modificare buffers per avere inputs su pins
+x testare inputs
+x sistemare J5 1 2 (corto sulla rete di resistenze) J6 7 (sempre false, controllare fw)
+x testare lettura encoders
+  x non funziona
+  x modificare codice encoders
+  x testare nuovo codice encoders
+  x eliminare riferimenti a Z e riallocare gli ingressi (usare gli inputs normali per veicolare index pulse)
+  x modificare interfaccia encoder da uint32 a int32
+  x aggiungere il fattore di scala per gli encoders come parametro nel driver linuxcnc
+  - capire che succede nelle disconnessioni di rete
+  	- prima di disconnettere emette numeri molto strani sui valori degli encoders, come se venisse corrotto lo spazio di memoria
+  	- durante la disconnessione la scheda restituisce periodicamente dei pacchetti con checksum errato di dimensione molto alta
+  	- dopo la disconnessione, se non si riavvia hal gli stepgen diventano monodirezionali: incrementano e non decrementano
+  x migliorare le stringhe di debug in caso di errore
+? creare fw solo outputs 5A75Bin
+? creare fw solo inputs 5A75Bout (ha senso solo se è possibile concatenare le schede)
+x interfacciare con linuxcnc
+5A75E
+x modificare .c e .h per encoder
+- riscrittura firmware e driver
+    x riscrivere la comunicazione e verificare a connessione base con i componenti
+    x ristrutturare il codice driver
+    x ristrutturare il codice fw
+    x ripianificare le interfacce e i registri necessari per una funzionalità base
+    x riscrivere la nomenclatura dei pin e dei parametri
+    x rendere configurabile il + possibile il driver (tipo di scheda, numero di periferiche ecc)
+    x rendere configurabile il + possibile il firmware (tipo di scheda, numero di periferiche ecc)
+    - validare tutti i componenti hw
+    	x outs
+    	x ins
+    	x pwm valore reset della scala a 100 viene ignorato
+    	x encoders migliorare il calcolo delle basse velocità
+    	x stepgens (calcolare la velocità sulla base della posizione?)
+    x rinominare position in step counter
+    x calcolare il tempo trascorso tra due chiamate per le integrazioni e differenze (es calcolo delle velocità)
+    - implementare limite di accelerazione stepgen
+    x implementare check sui limiti degli input dei parametri e valori
+    x introdurre una logica di reset nel driver se la scheda non risponde
+    x decidere cosa fare nel driver in caso di reset o enabled=0 
+    x introdurre il watchdog 
+    x resettare tutti gli hw quando il watchdog va a zero
+    x aggiungere input hw di fpga che resetti la scheda
+    - aggiungere la ragione dell'ultimo reset nel registro di stato
+    - analizzare e ridurre i tempi di esecuzione (attualmente va da 130 a 250us con picchi di 700us)
+    - introdurre un meccanismo di riconoscimento dell'hw (tipo la scheda comunica quantità e tipo di periferiche programmate)
+    - mandare i parametri solo se sono cambiati
+    - mandare solo i dati cambiati
+    - aggiungere filtro variabile agli encoders
+    - automatizare un minimo la creazione del numero di periferiche nel driver, partendo dal file python del fw
+    - consentire l'esecuzione di + istanze del driver
