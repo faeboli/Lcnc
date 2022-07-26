@@ -33,7 +33,7 @@
 #define TX_POS_PWM2 (TX_POS_PWM1 + 4)
 // end of PWM related regs
 // Encoder control, one register needed, maximum 16 encoders allowed
-#define TX_POS_ENC_RES_EN (TX_POS_PWM_2 + 4)
+#define TX_POS_ENC_RES_EN (TX_POS_PWM2 + 4)
 // Board control and reset register, containing watchdog, only one needed
 #define TX_POS_RES_STAT_REG (TX_POS_ENC_RES_EN + 4)
 // number of regiters to be sent to fpga, sum of all the ones so far

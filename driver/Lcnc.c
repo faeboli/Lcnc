@@ -22,8 +22,8 @@
 #include <netdb.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include "include/Lcnc.h"
 #include "include/configuration_auto.h"
+#include "include/Lcnc.h"
 #include "include/csr.h"
 
 /* module information */

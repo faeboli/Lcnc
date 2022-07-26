@@ -495,9 +495,9 @@ def main():
             f.write("#define TX_POS_VELOCITY"+str(i)+" 0\n")
          else:
             f.write("#define TX_POS_VELOCITY"+str(i)+" (TX_POS_VELOCITY"+str(i-1)+" + 4)\n")
+    f.write("//  - other registers, only one each needed, max 16 STEPGENS allowed\n")
+    f.write("#define TX_POS_STEPSIGN (TX_POS_VELOCITY"+str(num_stepgens-1)+" + 4)\n")
     f.write("\
-//  - other registers, only one each needed, max 16 STEPGENS allowed\n\
-#define TX_POS_STEPSIGN (TX_POS_VELOCITY5 + 4)\n\
 #define TX_POS_STEP_RES_EN (TX_POS_STEPSIGN + 4)\n\
 #define TX_POS_STEPDIRINV (TX_POS_STEP_RES_EN + 4)\n\
 #define TX_POS_STEPTIMES (TX_POS_STEPDIRINV + 4)\n\
@@ -512,8 +512,9 @@ def main():
          else:
             f.write("#define TX_POS_PWM"+str(i)+" (TX_POS_PWM"+str(i-1)+" + 4)\n")
     f.write("// end of PWM related regs\n")
-    f.write("// Encoder control, one register needed, maximum 16 encoders allowed\n\
-#define TX_POS_ENC_RES_EN (TX_POS_PWM_2 + 4)\n\
+    f.write("// Encoder control, one register needed, maximum 16 encoders allowed\n")
+    f.write("#define TX_POS_ENC_RES_EN (TX_POS_PWM"+str(num_pwm-1)+" + 4)\n")
+    f.write("\
 // Board control and reset register, containing watchdog, only one needed\n\
 #define TX_POS_RES_STAT_REG (TX_POS_ENC_RES_EN + 4)\n\
 // number of regiters to be sent to fpga, sum of all the ones so far\n\
@@ -530,8 +531,9 @@ def main():
          else:
             f.write("#define RX_POS_STEPCOUNT"+str(i)+" (RX_POS_STEPCOUNT"+str(i-1)+" + 4)\n")
     f.write("// end of STEPGEN related regs\n\
-// WALLCLOCK feedback register, only one needed\n\
-#define RX_POS_WALLCLOCK (RX_POS_STEPCOUNT5 + 4)\n\
+// WALLCLOCK feedback register, only one needed\n")
+    f.write("#define RX_POS_WALLCLOCK (RX_POS_STEPCOUNT"+str(num_stepgens-1)+" + 4)\n")
+    f.write("\
 // INPUTS register, only one needed, max 32 inputs allowed\n\
 #define RX_POS_GPIOS_IN (RX_POS_WALLCLOCK + 4)\n\
 // ENCODER related:\n")
@@ -542,9 +544,9 @@ def main():
          else:
             f.write("#define RX_POS_ENCCOUNT"+str(i)+" (RX_POS_ENCCOUNT"+str(i-1)+" + 4)\n")
     f.write("// end of ENCODER related regs\n\
-// number of registers to be sent read from fpga, sum of all the ones so far\n\
-#define RX_PAYLOAD_SIZE (RX_POS_ENCCOUNT5 + 4)\n\
-// ---end of configuration\n")
+// number of registers to be sent read from fpga, sum of all the ones so far\n")
+    f.write("#define RX_PAYLOAD_SIZE (RX_POS_ENCCOUNT"+str(num_encoders-1)+" + 4)\n")
+    f.write("// ---end of configuration\n")
 
     f.close()
         
