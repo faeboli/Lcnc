@@ -29,7 +29,7 @@ Getting started:
   the script can be run with default parameters, simply typing "./Lcnc.py --build --doc"
   this will generate a firmware for a colorlight 5A-75E V6.0 with ip=192.168.2.50
 - the target board can be changed adding to the command "board" and "revision" parameters, 
-  for example "--board=5a-75b --version=8.0"
+  for example "--board=5a-75b --revision=8.0"
 - ip address can be configured with "eth-ip" parameter, for example "--eth-ip=192.168.1.100"
 - the script, if succesful, will generate many files, 3 of these are needed:
   - bitfile, you will find it in /build/colorlight_5a_75e/gateware/Lcnc.bit
@@ -50,6 +50,7 @@ Basic functionality check:
   - Lcnc.00.update.time: this will show the update time for the component, in my system is around 200000ns
   - Lcnc.00.watchdog-write: this is the board watchdog time, in seconds, I have it set to 0.01s (10ms) as default
   - Lcnc.00.watchdog-read: this is the watchdog remaining time when petted, in seconds, check the value to be sure that is far from zero, and near to Lcnc.00.watchdog-write: value
+
 The above values should be updated continuosly if the board and driver are working correctly.
 
 Enabling the board:
@@ -57,6 +58,7 @@ Enabling the board:
   - Lcnc.00.enable
   - Lcnc.00.enabled
   - Lcnc.00.enable-request
+
 Set Lcnc.00.enable to True, this is the global enable flag for board, if set to true, the board can become ready to be enabled, the enabling will be requested by Lcnc.00.enable-request, Lcnc.00.enabled is the feedback confirmation that the board enabled, as soon as Lcnc.00.enable will be set to false, the board will be disabled. The board can be disabed also if the onboard watchdog bites (to test this try to set Lcnc.00.watchdog-write to lower values until the board spontaneously disables). The board will disable also if it's reset pin will be set to high (see "_ext_reset_in" in Lcnc.py for it's mapping).
 Set Lcnc.00.enable-request to True, then to False. This interface is checked only on it's rising edge False to True, then it is ignored, if there are no watchdog problems or hw reset request, the board will enable and set back Lcnc.00.enabled to True.
 
