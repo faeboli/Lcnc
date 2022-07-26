@@ -1,0 +1,256 @@
+
+linuxcnc naming: component.nn.functionality.nn.par_or_pin.n es: colorcnc.00.pwm.00.width
+
+- step generator (sg)
+  - linuxcnc -> driver
+    - parameters:
+      - colorcnc.xx.stepgen.yy.step_inv step inversion
+      - colorcnc.xx.stepgen-step_width larghezza minima impulso step in us (unico per tutti gli stepgen)
+      - colorcnc.xx.stepgen-step_space intervallo minimo tra due impulsi step in us (unico per tutti gli stepgen)
+      - colorcnc.xx.stepgen.yy.dir_inv dir inversion
+      - colorcnc.xx.stepgen-dir_width larghezza minima impulso dir in us (unico per tutti gli stepgen)
+      - colorcnc.xx.stepgen-setup_time intervallo minimo tra la variazione di dir e lo step successivo in us (unico per tutti gli stepgen)
+      - colorcnc.xx.stepgen.yy.scale scale in step/mm
+    - inputs:
+      - colorcnc.xx.stepgen.yy.reset azzera lo stato interno
+      - colorcnc.xx.stepgen.yy.enable abilita lo step generator
+      - colorcnc.xx.stepgen.yy.vel-cmd comando di velocità in mm/s
+      - colorcnc.xx.stepgen.yy.acc-lim limite di accelerazione in mm/s^2 (da implementare)
+    - outputs: 
+      - colorcnc.xx.stepgen.yy.vel-fb feedback velocità reale in mm/s
+      - colorcnc.xx.stepgen.yy.pos-fb feedback position reale in mm
+  - driver -> registers:
+    - MMIO_INST_STEP_RES_EN (16 bit enable e 16bit reset)
+    - MMIO_INST_STEPDIRINV (16 bit step inversion e 16bit dir inversion)
+    - MMIO_INST_STEPTIMES (9bits step width 9bits dir width 14bits setup time)
+    - MMIO_INST_STEPSIGN (16bit) segno del comando velocità
+    - MMIO_INST_VELOCITY_n (32bit)
+  - registers -> driver:
+    - MMIO_INST_POSITION_n (32bit)
+
+velocity mode
+	- firmware input frequency, pulse width, dir width and setup time, reset
+	- firmware output pulse dir, position
+	- fw implementation is a phase accumulator, with overlfow as out
+	- driver input acceleration, speed, scale, pulse width time, dir width and setup
+	- driver calculates freq and max freq
+	- driver output position fb, speed fb
+	- HAL pins:
+		- par: scale [mm/step], pulse min width [ns], space min width [ns], dir setup time [ns], dir min width [ns]
+		- in: max accel [mm/s2], max speed [mm/s], speed [mm/s], reset
+		- out: speed [mm/s], position [mm]
+notes: 
+50MHz input ck
+32bit fractional phase accumulator, input speed (steps/s), output position (steps)
+speed: 
+maximum 50MHz
+minimum and resolution 0.01164Hz
+
+freq=[step/s]
+vel=[mm/s]
+scale=[step/mm]
+
+freq=command/2^32 * 50*10^6 [step/s]
+vel=freq/scale [mm/s]
+
+command=freq*2^32/(50*10^6)
+freq=vel*scale
+
+command=vel*scale*2^32/(50*10^6)
+
+example:
+scale 8000 step/rev
+leadscrew 4mm/rev
+0.0005mm/step
+Max speed 25m/s
+
+Acceleration limit:
+32bit fractional phase accumulator, input acceleration (steps/s^2), output speed (steps/s)
+max accel 50MHz
+minimum and resolution 0.01164 steps/s^2
+
+accel_freq=[step/s^2]
+accel=[mm/s^2]
+scale=[step/mm]
+
+accel_freq=accel_command/2^32 * 50*10^6 [step/s^2]
+accel=accel_freq/scale [mm/s^2]
+
+accel_command=accel_freq*2^32/(50*10^6)
+accel_freq=accel*scale
+
+accel_command=accel*scale*2^32/(50*10^6)
+
+width counter setup:
+tempo in ns = numero di conteggi*10^6/frequenza di clock
+numero di conteggi= tempo in ns * frequenza di clock/10^6
+
+step width counter 9bit: max 511 conteggi = 10.22us risoluzione 20ns
+dir width counter 9bit: vedi sopra
+dir setup counter 14bit: max 16383 conteggi = 327.66us risoluzione 20ns
+step space + step width = min period
+1/min period = max frequency
+
+la frequenza massima in step/s è data dall'intervallo minimo tra due step consevutivi:
+min interv = Step width + space width
+max freq = 1/ min interv=1(step width + step space)
+max vel= max freq/scale=1/((step width + step space)*scale)
+
+bit for reset and sign
+32bit unsigned for speed
+32bit signed for position fb
+registers host to fw:
+LIMIT 16 stepgens
+velocity input 32b per stepgen
+velocity sign 1b per stepgen, 1 32bit register
+reset 1b per stepgen, 1/2 32bit register
+enable 1b per stepgen, 1/2 32bit register
+invert step 1b per stepgen, 1/2 32bit register
+invert dir 1b per stepgen, 1/2 32bit register
+dir width 9b, step width 9b, dir setup 14b, 1 32b register
+registers fw to host:
+position fb 32bit per stepgen
+
+- encoder inputs (enc)
+  - linuxcnc -> driver
+    - parameters:
+      - colorcnc.xx.encoder.yy.scale 
+      - colorcnc.xx.encoder.yy.inv
+    - inputs:
+      - colorcnc.xx.encoder.yy.reset
+      - colorcnc.xx.encoder.yy.enable
+    - outputs: 
+      - colorcnc.xx.encoder.yy.pos-fb output is input*scale
+      - colorcnc.xx.encoder.yy.vel-fb output is input velocity*scale
+  - driver -> registers:
+    - en_res_en (16 bit enable e 16bit reset)
+  - registers -> driver:
+    - en_position_fb_n (32bit)
+
+- firmware is a counter free running
+- firmware input is reset, output is counter value
+- driver sends reset, reads back counter
+- driver calculates position based on scale and counter
+- HAL pins:
+	- par: scale [mm/count]
+	- in: reset
+	- out: position [mm]
+registers host to fw:
+LIMIT 16 encoders
+reset 1b per encoder, 1/2 32bit register
+enable 1b per encoder, 1/2 32bit register
+registers fw to host:
+position fb 32bit per encoder
+
+- pwm (pwm)
+  - linuxcnc -> driver
+    - parameters:
+      - colorcnc.xx.pwm.yy.scale 
+      - colorcnc.xx.pwm.yy.offs
+      - colorcnc.xx.pwm.yy.inv
+    - inputs:
+      - colorcnc.xx.pwm.yy.freq
+      - colorcnc.xx.pwm.yy.value
+      - colorcnc.xx.pwm.yy.enable
+    - outputs: none
+  - driver -> registers:
+    - MMIO_INST_PWM_0 (16bit period MSB,16bit width LSB)
+  - registers -> driver: none
+
+	- driver converts percent and frequency in width and period
+	- firmware reads width and period to generate pwm
+	- HAL pins:
+		- in: frequency [Hz], value [%], reset
+32 bit: 16 bit width and 16 bit value.
+spare bits for reset somewhere
+frequency=F_FPGA/period
+period=F_FPGA/frequency
+width=(value+offset)*period/(scale)
+es:
+frequency 10000
+scale 100
+offset 10
+value 50
+period=50000000/10000=5000
+width=(50+10)*5000/(100)=3000=60%
+
+actual limits: f 763Hz to 2.5MHz
+add a prescaler for lowering the frequency
+
+-gpio in (input)
+  - linuxcnc -> driver
+    - parameters: none
+    - inputs: none
+    - outputs:
+      - colorcnc.xx.input.yy.in true if input driven (needed 100ua on fpga pin)
+      - colorcnc.xx.input.yy.in-n false if input driven
+  - driver -> registers: none
+  - registers -> driver:
+    - MMIO_INST_GPIOS_IN 32bit
+
+-gpio out (output)
+  - linuxcnc -> driver
+    - parameters:
+      - colorcnc.xx.output.yy.inv if true output is inverted
+    - inputs:
+      - colorcnc.xx.output.yy.out if true output is driven high or low depending on inversion parameter
+    - outputs: none
+  - driver -> registers:
+    - MMIO_INST_GPIOS_OUT 32bit
+  - registers -> driver: none
+
+wallclock:
+  - linuxcnc -> driver
+    - outputs:
+      - colorcnc.xx.wallclock.yy.value u32 free running counter
+      - colorcnc.xx.wallclock.yy.interval float last interval in seconds
+  - registers -> driver:
+    - wallclock (32bit)
+può essere free run a 32 bit, a 50MHz va in overflow in 85s
+l'itervallo è calcolato facendo la differenza tra due letture successive di wallclock e dividendola per la frequenza.
+
+watchdog:
+  - linuxcnc -> driver
+    - outputs:
+      - colorcnc.00.enabled if true the driver is working and enabled, goes to false in case of watchdog biting
+    - inputs:
+      - colorcnc.00.enable-request when goes from false to true, the driver is started
+      - colorcnc.00.enable if true the enable request will be evaluated, if is false the driver is disabled
+  - registers <-> driver: reset and status
+
+registro reset e status:
+registro generico che contiene il watch dog e eventualmente una serie di flags r/w
+bits 31:9 watchdog counter, 22 bits, counts down every 2^6 clocks, at 50MHz covers 5.36s max with a resolution of 1.28uS
+      
+register containing watchdog counter, read-write by both board and host
+the host can write a value periodically and read back it's contents, 
+board will decrement the value, when zero will go in safe reset mode.
+Failure modes:
+a- board reboots, host keep sending packets
+  - board has to go in safe mode, resetting appropriately the outputs
+  - host need to know if the board has resetted and is not in sync anymore -> watchdog is zero
+b- host reboots or hangs, board keep driving
+  - board need to know if the host stopped sending updates and need to go in safe mode -> on board watchdog  
+c- Missing packets:
+  - host send a write packet, board misses it, watchdog does not update, after a while board goes in watchdog reset
+  - host send a read packet, board misses it, host waits for the packet to be received, after some time stop the wait, restarts from a send write packet, increments an internal error counter, if errors counter increment over a threshold, she system is halted and board resetted writing zero to watchdog.
+  - board sends a write packet (in response to host's read packet), host misses it, same as above.
+
+Appunti driver:
+in futuro il driver dovrebbe prima leggere poi scrivere, per gestire correttamente il tempo e le sequenze di reset
+/build.../generated/csr.h contiene le definizioni degli indirizzi dei registri, utili per compilare i pacchetti
+
+la scrittura prevede la sequenza:
+creare il pacchetto di scrittura vuoto
+aggiungere gli headers
+aggiungere il primo indirizzo da scrivere
+aggiungere la sequenza di valori da scrivere
+mandare il pacchetto
+
+la lettura prevede la sequenza:
+creare il pacchetto di scrittura-lettura vuoto
+aggiungere gli headers
+aggiungere la sequenza di indirizzi da leggere
+mandare il pacchetto
+attendere e leggere il pacchetto ricevuto
+interpretare i valori nel payload alla luce degli indirizzi inviati in precedenza

@@ -1,0 +1,11 @@
+# components
+loadrt threads name1=Thread1 period1=1000000
+#loadrt __Thread2  (not loaded by loadrt, no args saved)
+loadrt Lcnc
+# pin aliases
+# param aliases
+# signals
+# nets
+# realtime thread/function links
+addf Lcnc.00.update Thread1
+start
