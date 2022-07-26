@@ -49,7 +49,7 @@ Basic functionality check:
 - in halshow GUI watch tab choose the following interfaces:
   - Lcnc.00.update.time: this will show the update time for the component, in my system is around 200000ns
   - Lcnc.00.watchdog-write: this is the board watchdog time, in seconds, I have it set to 0.01s (10ms) as default
-  - Lcnc.00.watchdog-read: this is the watchdog remaining time when petted, in seconds, check the value to be sure that is far from zero, and near to Lcnc.00.watchdog-write: value
+  - Lcnc.00.watchdog-read: this is the watchdog remaining time when petted, in seconds, check the value to be sure that is far from zero, and near to Lcnc.00.watchdog-write value
 
 The above values should be updated continuosly if the board and driver are working correctly.
 
@@ -59,11 +59,13 @@ Enabling the board:
   - Lcnc.00.enabled
   - Lcnc.00.enable-request
 
-Set Lcnc.00.enable to True, this is the global enable flag for board, if set to true, the board can become ready to be enabled, the enabling will be requested by Lcnc.00.enable-request, Lcnc.00.enabled is the feedback confirmation that the board enabled, as soon as Lcnc.00.enable will be set to false, the board will be disabled. The board can be disabed also if the onboard watchdog bites (to test this try to set Lcnc.00.watchdog-write to lower values until the board spontaneously disables). The board will disable also if it's reset pin will be set to high (see "_ext_reset_in" in Lcnc.py for it's mapping).
-Set Lcnc.00.enable-request to True, then to False. This interface is checked only on it's rising edge False to True, then it is ignored, if there are no watchdog problems or hw reset request, the board will enable and set back Lcnc.00.enabled to True.
+- Set Lcnc.00.enable to True, this is the global enable flag for board, if set to true, the board can become ready to be enabled. 
+The effective enabling will be requested by Lcnc.00.enable-request.
+- Lcnc.00.enabled is the feedback confirmation that the board is enabled, as soon as Lcnc.00.enable will be set to false, the board will be disabled. The board can be disabed also if the onboard watchdog bites (to test this try to set Lcnc.00.watchdog-write to lower values until the board spontaneously disables). The board will disable also if it's hardware reset pin will be set to high (see "_ext_reset_in" in Lcnc.py for it's mapping).
+- Set Lcnc.00.enable-request to True, then to False. This interface is checked only on it's rising edge from False to True, then it is ignored, if there are no watchdog problems or hw reset request, the board will enable and set back Lcnc.00.enabled to True.
 
 Working with peripherals:
--- doc to be created, the peripherals are what they seem, you can play with them, only to be noted that stepgen is velocity mode only, and for now acceleration limit is not implemented.
+-- doc to be created, the peripherals are what they seem, you can play with them, only to be noted that stepgen is velocity mode only, and acceleration limit is not implemented yet.
 
 Enjoy
 
