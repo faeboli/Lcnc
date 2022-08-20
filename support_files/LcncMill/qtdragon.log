@@ -1,0 +1,29 @@
+2021-08-02 20:43:27,269 - QTvcp - INFO - Logging to "/home/pi/linuxcnc/configs/remoraMill/qtdragon.log"
+2021-08-02 20:43:28,068 - QTvcp.QTVCP.LIB.SYS_NOTIFY - WARNING - Descktop Notify not availale:: org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.Notifications was not provided by any .service files
+2021-08-02 20:43:28,252 - QTvcp - INFO - Base log level set to 20
+2021-08-02 20:43:28,253 - QtDesigner.QTVCP.QT_PSTAT - DEBUG - BASENAME qtdragon
+2021-08-02 20:43:28,254 - QtDesigner.QTVCP.QT_PSTAT - DEBUG - Checking for handler file in: None Found
+2021-08-02 20:43:28,255 - QtDesigner.QTVCP.QT_PSTAT - DEBUG - Checking for default handler file in: /usr/share/qtvcp/screens/qtdragon/qtdragon_handler.py
+2021-08-02 20:43:28,255 - QtDesigner.QTVCP.QT_PSTAT - INFO - Using DEFAULT handler file path: /usr/share/qtvcp/screens/qtdragon/qtdragon_handler.py
+2021-08-02 20:43:28,256 - QtDesigner.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: None Found
+2021-08-02 20:43:28,256 - QtDesigner.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: /usr/share/qtvcp/screens/qtdragon/qtdragon.ui
+2021-08-02 20:43:28,257 - QtDesigner.QTVCP.QT_PSTAT - INFO - Using DEFAULT ui file from /usr/share/qtvcp/screens/qtdragon/qtdragon.ui
+2021-08-02 20:43:28,257 - QtDesigner.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: None Found
+2021-08-02 20:43:28,258 - QtDesigner.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: /usr/share/qtvcp/screens/qtdragon/qtdragon.qss
+2021-08-02 20:43:28,258 - QtDesigner.QTVCP.QT_PSTAT - INFO - Using DEFAULT qss file from /usr/share/qtvcp/screens/qtdragon/qtdragon.qss
+2021-08-02 20:43:28,259 - QtDesigner.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: None Found
+2021-08-02 20:43:28,259 - QtDesigner.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: /usr/share/qtvcp/screens/qtdragon/qtdragon.qrc
+2021-08-02 20:43:28,260 - QtDesigner.QTVCP.QT_PSTAT - INFO - Using DEFAULT qrc file from /usr/share/qtvcp/screens/qtdragon/qtdragon.qrc
+2021-08-02 20:43:28,260 - QtDesigner.QTVCP.QT_PSTAT - DEBUG - Checking for resources.py in: /home/pi/linuxcnc/configs/remoraMill/resources.py
+2021-08-02 20:43:28,260 - QtDesigner.QTVCP.QT_PSTAT - DEBUG - Checking for resources.py in: /usr/share/qtvcp/screens/qtdragon/resources.py
+2021-08-02 20:43:28,261 - QtDesigner.QTVCP.QT_PSTAT - INFO - DEFAULT Resources.py file needs to be compiled at: /usr/share/qtvcp/screens/qtdragon/resources.py
+2021-08-02 20:43:28,261 - QTvcp - INFO - Building A Linuxcnc Main Screen
+2021-08-02 20:43:28,308 - QTvcp - INFO - No handler file specified on command line
+2021-08-02 20:43:28,309 - QTvcp - INFO - No HAL component base name specified on command line using: qtdragon
+2021-08-02 20:43:28,598 - QTvcp.QTVCP.QT_MAKEGUI - INFO - Compiling qrc: /usr/share/qtvcp/screens/qtdragon/qtdragon.qrc to 
+ /usr/share/qtvcp/screens/qtdragon/resources.py
+2021-08-02 20:43:28,758 - QTvcp.QTVCP.QT_MAKEGUI - INFO - No resource file to load: /usr/share/qtvcp/screens/qtdragon/resources.py
+2021-08-02 20:43:32,378 - QTvcp.QTVCP.WIDGETS.DIALOG_WIDGET - WARNING - Detected hal_manualtoolchange component already loaded
+   Qtvcp recommends to allow use of it's own component by not loading the original. 
+   Qtvcp Intergrated toolchange dialog will not show untill then
+2021-08-02 20:43:32,499 - QTvcp.QTVCP.WIDGETS.BASIC_PROBE - ERROR - No path to BasicProbe Macros Found in INI's [RS274] SUBROUTINE_PATH entry
