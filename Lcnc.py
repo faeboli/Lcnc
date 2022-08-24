@@ -37,40 +37,39 @@ from liteeth.core import LiteEthUDPIPCore
 from liteeth.common import *
 
 # Devices configuration start ----------------------------------------------------------------------------------------
-# remove  number from name
 encoders=([
     ("encoder", 0,
-     Subsignal("A", Pins("j7:0")), # J9.1
-     Subsignal("B", Pins("j7:1")), # J9.2
+     Subsignal("A", Pins("j1:0")), # J9.1
+     Subsignal("B", Pins("j1:1")), # J9.2
  #    Subsignal("Z", Pins("j7:2")), # false
      IOStandard("LVCMOS33")),
     ("encoder", 1,
-     Subsignal("A", Pins("j7:2")),  # J9.5
-     Subsignal("B", Pins("j7:4")),  # J9.6
+     Subsignal("A", Pins("j1:2")),  # J9.5
+     Subsignal("B", Pins("j1:4")),  # J9.6
   #   Subsignal("Z", Pins("j7:6")),  # false
      IOStandard("LVCMOS33")
      ),
     ("encoder", 2,
-     Subsignal("A", Pins("j7:5")),  # J10.1
-     Subsignal("B", Pins("j7:6")),  # J10.2
+     Subsignal("A", Pins("j1:5")),  # J10.1
+     Subsignal("B", Pins("j1:6")),  # J10.2
 #     Subsignal("Z", Pins("j8:2")),  # false
      IOStandard("LVCMOS33")
      ),
     ("encoder", 3,
-     Subsignal("A", Pins("j8:0")),  # J10.5
-     Subsignal("B", Pins("j8:1")),  # J10.6
+     Subsignal("A", Pins("j2:0")),  # J10.5
+     Subsignal("B", Pins("j2:1")),  # J10.6
 #     Subsignal("Z", Pins("j8:6")),  # false
      IOStandard("LVCMOS33")
      ),
     ("encoder", 4,
-     Subsignal("A", Pins("j8:2")),  # J11.1
-     Subsignal("B", Pins("j8:4")),  # J11.2
+     Subsignal("A", Pins("j2:2")),  # J11.1
+     Subsignal("B", Pins("j2:4")),  # J11.2
 #     Subsignal("Z", Pins("j1:14")),  # false
      IOStandard("LVCMOS33")
      ),
     ("encoder", 5,
-     Subsignal("A", Pins("j8:5")),  # J11.5
-     Subsignal("B", Pins("j8:6")),  # J11.6
+     Subsignal("A", Pins("j2:5")),  # J11.5
+     Subsignal("B", Pins("j2:6")),  # J11.6
  #    Subsignal("Z", Pins("j1:14")),  # false
      IOStandard("LVCMOS33")
      ),
@@ -78,73 +77,69 @@ encoders=([
 
 stepgens=([
     ("stepgen", 0,
-     Subsignal("step", Pins("j1:0")), # J1.1
-     Subsignal("dir", Pins("j1:1")), # J1.2
+     Subsignal("step", Pins("j9:0")), # J1.1
+     Subsignal("dir", Pins("j9:1")), # J1.2
      IOStandard("LVCMOS33")),
     ("stepgen", 1,
-     Subsignal("step", Pins("j1:2")),  # J1.3
-     Subsignal("dir", Pins("j1:4")),  # J1.5
+     Subsignal("step", Pins("j9:2")),  # J1.3
+     Subsignal("dir", Pins("j9:4")),  # J1.5
      IOStandard("LVCMOS33")
      ),
     ("stepgen", 2,
-     Subsignal("step", Pins("j1:5")),  # J1.6
-     Subsignal("dir", Pins("j1:6")),  # J1.7
+     Subsignal("step", Pins("j9:5")),  # J1.6
+     Subsignal("dir", Pins("j9:6")),  # J1.7
      IOStandard("LVCMOS33")
      ),
     ("stepgen", 3,
-     Subsignal("step", Pins("j2:0")),  # J2.1
-     Subsignal("dir", Pins("j2:1")),  # J2.2
+     Subsignal("step", Pins("j10:0")),  # J2.1
+     Subsignal("dir", Pins("j10:1")),  # J2.2
      IOStandard("LVCMOS33")
      ),
     ("stepgen", 4,
-     Subsignal("step", Pins("j2:2")),  # J2.3
-     Subsignal("dir", Pins("j2:4")),  # J2.5
+     Subsignal("step", Pins("j10:2")),  # J2.3
+     Subsignal("dir", Pins("j10:4")),  # J2.5
      IOStandard("LVCMOS33")
      ),
     ("stepgen", 5,
-     Subsignal("step", Pins("j2:5")),  # J2.6
-     Subsignal("dir", Pins("j2:6")),  # J2.7
+     Subsignal("step", Pins("j10:5")),  # J2.6
+     Subsignal("dir", Pins("j10:6")),  # J2.7
      IOStandard("LVCMOS33")
      ),
 ])
-
+#gpios in
 _gpios_in = [
-    ("gpio_in", 0, Pins("j5:0"), IOStandard("LVCMOS33")),# J5:0
-    ("gpio_in", 1, Pins("j5:1"), IOStandard("LVCMOS33")),# J5:1
-    ("gpio_in", 2, Pins("j5:2"), IOStandard("LVCMOS33")),# J5:2
-    ("gpio_in", 3, Pins("j5:4"), IOStandard("LVCMOS33")),# J5:4
-    ("gpio_in", 4, Pins("j5:5"), IOStandard("LVCMOS33")),# J5:5
-    ("gpio_in", 5, Pins("j5:6"), IOStandard("LVCMOS33")),# J5:6
-    ("gpio_in", 6, Pins("j6:0"), IOStandard("LVCMOS33")),# J6:0
-    ("gpio_in", 7, Pins("j6:1"), IOStandard("LVCMOS33")),# J6:1
-    ("gpio_in", 8, Pins("j6:2"), IOStandard("LVCMOS33")),# J6:2
-    ("gpio_in", 9, Pins("j6:4"), IOStandard("LVCMOS33")),# J6:4
-    ("gpio_in", 10, Pins("j6:5"), IOStandard("LVCMOS33")),# J6:5
-    ("gpio_in", 11, Pins("j6:6"), IOStandard("LVCMOS33")) #,# J6:6
-    ]
+    ("gpio_in", 0, Pins("j3:0"), IOStandard("LVCMOS33")),
+    ("gpio_in", 1, Pins("j3:1"), IOStandard("LVCMOS33")),
+    ("gpio_in", 2, Pins("j3:2"), IOStandard("LVCMOS33")),
+    ("gpio_in", 3, Pins("j3:4"), IOStandard("LVCMOS33")),
+    ("gpio_in", 4, Pins("j3:5"), IOStandard("LVCMOS33")),
+    ("gpio_in", 5, Pins("j3:6"), IOStandard("LVCMOS33")),
+    ("gpio_in", 6, Pins("j4:1"), IOStandard("LVCMOS33")),
+    ("gpio_in", 7, Pins("j4:2"), IOStandard("LVCMOS33")),
+    ("gpio_in", 8, Pins("j4:4"), IOStandard("LVCMOS33")),
+    ("gpio_in", 9, Pins("j4:5"), IOStandard("LVCMOS33")),
+    ("gpio_in", 10, Pins("j4:6"), IOStandard("LVCMOS33")),
+]
 #gpios out
 _gpios_out = [ \
-    ("gpio_out", 0, Pins("j3:0"), IOStandard("LVCMOS33")),
-    ("gpio_out", 1, Pins("j3:1"), IOStandard("LVCMOS33")),
-    ("gpio_out", 2, Pins("j3:2"), IOStandard("LVCMOS33")),
-    ("gpio_out", 3, Pins("j3:4"), IOStandard("LVCMOS33")),
-    ("gpio_out", 4, Pins("j3:5"), IOStandard("LVCMOS33")),
-    ("gpio_out", 5, Pins("j3:6"), IOStandard("LVCMOS33")),
-    ("gpio_out", 6, Pins("j4:0"), IOStandard("LVCMOS33")),
-    ("gpio_out", 7, Pins("j4:1"), IOStandard("LVCMOS33")),
-    ("gpio_out", 8, Pins("j4:2"), IOStandard("LVCMOS33")),
-    ("gpio_out", 9, Pins("j4:4"), IOStandard("LVCMOS33")),
-    ("gpio_out", 10, Pins("j4:5"), IOStandard("LVCMOS33")),
-#    ("gpio_out", 11, Pins("j4:6"), IOStandard("LVCMOS33"))
+    ("gpio_out", 0, Pins("j11:1"), IOStandard("LVCMOS33")),
+    ("gpio_out", 1, Pins("j11:2"), IOStandard("LVCMOS33")),
+    ("gpio_out", 2, Pins("j11:5"), IOStandard("LVCMOS33")),
+    ("gpio_out", 3, Pins("j11:6"), IOStandard("LVCMOS33")),
+    ("gpio_out", 4, Pins("j12:0"), IOStandard("LVCMOS33")),
+    ("gpio_out", 5, Pins("j12:1"), IOStandard("LVCMOS33")),
+    ("gpio_out", 6, Pins("j12:2"), IOStandard("LVCMOS33")),
+    ("gpio_out", 7, Pins("j12:4"), IOStandard("LVCMOS33")),
+    ("gpio_out", 8, Pins("j12:5"), IOStandard("LVCMOS33")),
+    ("gpio_out", 9, Pins("j12:6"), IOStandard("LVCMOS33")),
 ]
 
 _pwm_out = [ \
-    ("pwm_out", 0, Pins("j1:8"), IOStandard("LVCMOS33")), #j1:8 ?
-    ("pwm_out", 1, Pins("j1:9"), IOStandard("LVCMOS33")), #j1:9 ?
-    ("pwm_out", 2, Pins("j1:10"), IOStandard("LVCMOS33"))#, #j1:10 ?
+    ("pwm_out", 0, Pins("j11:0"), IOStandard("LVCMOS33")),
+    ("pwm_out", 1, Pins("j11:4"), IOStandard("LVCMOS33")),
 ]
 
-_ext_reset_in = [("ext_reset_in", 0, Pins("j4:6"), IOStandard("LVCMOS33"))]
+_ext_reset_in = [("ext_reset_in", 0, Pins("j4:0"), IOStandard("LVCMOS33"))]
 
 # Devices configuration end ----------------------------------------------------------------------------------------
 

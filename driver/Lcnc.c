@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <netdb.h>
 #include <sys/socket.h>
+#include <time.h>
 #include <netinet/in.h>
 #include "include/configuration_auto.h"
 #include "include/Lcnc.h"
@@ -45,6 +46,7 @@ MODULE_LICENSE("");
 data_hal* device_data=0;
 static int comp_id;		/* component ID */
 static int num_ports;		/* number of ports configured */
+static struct timespec spec_old;
 
 /***********************************************************************
 *                  LOCAL FUNCTION DECLARATIONS                         *
@@ -155,7 +157,7 @@ struct eb_connection *eb_connect(const char *addr, const char *port, int is_dire
         }
 		struct timeval timeout;
 		timeout.tv_sec = 0;
-		timeout.tv_usec = 10000; //FIRST_PACKETS
+		timeout.tv_usec = RECV_TIMEOUT_US; //FIRST_PACKETS
 		err = setsockopt(rx_socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
 		if (err < 0) {
 			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: could NOT to set setsockopt for tx\n");
@@ -224,6 +226,18 @@ void eb_disconnect(struct eb_connection **conn) {
     return;
 }
 
+double get_timestamp()
+{
+    struct timespec spec;
+
+    if(spec_old.tv_sec==0)
+    {
+	clock_gettime(CLOCK_REALTIME, &spec_old);
+    }
+    clock_gettime(CLOCK_REALTIME, &spec);
+    return ((double)(spec.tv_sec-spec_old.tv_sec)+(double)(spec.tv_nsec-spec_old.tv_nsec)/1000000000.0);
+}
+
 
 /***********************************************************************
 *                       INIT AND EXIT CODE                             *
@@ -243,7 +257,7 @@ int rtapi_app_main(void)
     	rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR: hal_init() failed\n");
     	goto fail0;
     }
-    else rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: hal_init() ok\n");
+    else rtapi_print_msg(RTAPI_MSG_INFO,"Lcnc:%f hal_init() ok\n",get_timestamp());
 
     // STEP 2: allocate shared memory for to_hal data
     device_data = hal_malloc(sizeof(data_hal));
@@ -253,7 +267,7 @@ int rtapi_app_main(void)
 		r = -1;
 		goto fail0;
     }
-    else rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: hal_malloc() ok\n");
+    else rtapi_print_msg(RTAPI_MSG_INFO,"Lcnc:%f hal_malloc() ok\n",get_timestamp());
 
 //###################################################
 ///// INIT ETH BOARD ; OPEN SOCKET
@@ -265,7 +279,7 @@ int rtapi_app_main(void)
         rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR: failed to connect to board\n");
         goto fail1;
     }
-    else rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: connected to board \n");
+    else rtapi_print_msg(RTAPI_MSG_INFO,"Lcnc:%f connected to board \n",get_timestamp());
 
 //######################################################
 //######### EXPORT SIGNALS, PIN, FUNCTION
@@ -275,21 +289,21 @@ int rtapi_app_main(void)
 	r = hal_pin_bit_newf(HAL_IN, &(device_data->enable),comp_id, "Lcnc.%02d.enable", 0);
       	if (r < 0) 
       	{
-			rtapi_print_msg(RTAPI_MSG_ERR, "Lcnc: ERROR: input %d export failed with err=%i\n", i ,r);
+			rtapi_print_msg(RTAPI_MSG_ERR, "Lcnc: ERROR: enable pin export failed with err=%i\n",r);
 			r = -1;
 			goto fail1;
 	}
 	r = hal_pin_bit_newf(HAL_IN, &(device_data->enable_req),comp_id, "Lcnc.%02d.enable-request", 0);
       	if (r < 0) 
       	{
-			rtapi_print_msg(RTAPI_MSG_ERR, "Lcnc: ERROR: input %d export failed with err=%i\n", i ,r);
+			rtapi_print_msg(RTAPI_MSG_ERR, "Lcnc: ERROR: enable request pin export failed with err=%i\n",r);
 			r = -1;
 			goto fail1;
 	}
 	r = hal_pin_bit_newf(HAL_OUT, &(device_data->enabled),comp_id, "Lcnc.%02d.enabled", 0);
       	if (r < 0) 
       	{
-			rtapi_print_msg(RTAPI_MSG_ERR, "Lcnc: ERROR: input %d export failed with err=%i\n", i ,r);
+			rtapi_print_msg(RTAPI_MSG_ERR, "Lcnc: ERROR: enabled pin export failed with err=%i\n",r);
 			r = -1;
 			goto fail1;
 	}
@@ -297,7 +311,7 @@ int rtapi_app_main(void)
 	r = hal_param_u32_newf(HAL_RW, &(device_data->tx_max_retries),comp_id, "Lcnc.%02d.tx-max-retries", 0);
       	if (r < 0) 
       	{
-			rtapi_print_msg(RTAPI_MSG_ERR, "Lcnc: ERROR: input %d export failed with err=%i\n", i ,r);
+			rtapi_print_msg(RTAPI_MSG_ERR, "Lcnc: ERROR: max retries pin export failed with err=%i\n",r);
 			r = -1;
 			goto fail1;
 	}
@@ -306,14 +320,14 @@ int rtapi_app_main(void)
 	r = hal_pin_float_newf(HAL_OUT, &(device_data->watchdog_rd),comp_id, "Lcnc.%02d.watchdog-read", 0);
       	if (r < 0) 
       	{
-			rtapi_print_msg(RTAPI_MSG_ERR, "Lcnc: ERROR: input %d export failed with err=%i\n", i ,r);
+			rtapi_print_msg(RTAPI_MSG_ERR, "Lcnc: ERROR: watchdog read pin export failed with err=%i\n",r);
 			r = -1;
 			goto fail1;
 	}
 	r = hal_param_float_newf(HAL_RW, &(device_data->watchdog_wr),comp_id, "Lcnc.%02d.watchdog-write", 0);
       	if (r < 0) 
       	{
-			rtapi_print_msg(RTAPI_MSG_ERR, "Lcnc: ERROR: input %d export failed with err=%i\n", i ,r);
+			rtapi_print_msg(RTAPI_MSG_ERR, "Lcnc: ERROR: watchdog write pin export failed with err=%i\n",r);
 			r = -1;
 			goto fail1;
 	}
@@ -381,28 +395,28 @@ int rtapi_app_main(void)
 		r = hal_pin_float_newf(HAL_OUT, &(device_data-> enc_pos_fb[i]), comp_id, "Lcnc.%02d.encoder.%02d.pos-fb", 0, i);
 		if (r < 0) 
 		{
-			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err encoder=%i\n", r);
+			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err encoder %i position feedback\n", r);
 			r = -1;
 			goto fail1;
 		}
 		r = hal_pin_bit_newf(HAL_IN, &(device_data-> enc_res[i]), comp_id, "Lcnc.%02d.encoder.%02d.reset", 0, i);
 		if (r < 0) 
 		{
-			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err encoder=%i\n", r);
+			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err encoder %i reset\n", r);
 			r = -1;
 			goto fail1;
 		}
 		r = hal_pin_bit_newf(HAL_IN, &(device_data-> enc_en[i]), comp_id, "Lcnc.%02d.encoder.%02d.enable", 0, i);
 		if (r < 0) 
 		{
-			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err encoder=%i\n", r);
+			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err encoder %i enable\n", r);
 			r = -1;
 			goto fail1;
 		}
 		r = hal_pin_float_newf(HAL_OUT, &(device_data-> enc_vel_fb[i]), comp_id, "Lcnc.%02d.encoder.%02d.vel-fb", 0, i);
 		if (r < 0) 
 		{
-			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err encoder=%i\n", r);
+			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err encoder %i velocity\n", r);
 			r = -1;
 			goto fail1;
 		}
@@ -410,7 +424,7 @@ int rtapi_app_main(void)
 		r = hal_param_float_newf(HAL_RW, &(device_data-> enc_scale[i]), comp_id, "Lcnc.%02d.encoder.%02d.scale", 0, i);
 		if (r < 0) 
 		{
-			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err enc_scale=%i\n", r);
+			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err enc_scale %i scale\n", r);
 			r = -1;
 			goto fail1;
 		}
@@ -419,7 +433,7 @@ int rtapi_app_main(void)
 		r = hal_param_bit_newf(HAL_RW, &(device_data-> enc_inv[i]), comp_id, "Lcnc.%02d.encoder.%02d.inv", 0, i);
 		if (r < 0) 
 		{
-			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err enc_scale=%i\n", r);
+			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err enc %i inversion\n", r);
 			r = -1;
 			goto fail1;
 		}
@@ -479,28 +493,28 @@ int rtapi_app_main(void)
 		r = hal_pin_float_newf(HAL_IN, &(device_data-> pwm_freq[i]), comp_id, "Lcnc.%02d.pwm.%02d.freq", 0, i);
 		if (r < 0) 
 		{
-			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err steptime=%i\n", r);
+			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  PWM %i frequency\n", r);
 			r = -1;
 			goto fail1;
 		}
 			r = hal_pin_float_newf(HAL_IN, &(device_data-> pwm_value[i]), comp_id, "Lcnc.%02d.pwm.%02d.value", 0, i);
 		if (r < 0) 
 		{
-			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err steptime=%i\n", r);
+			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  PWM %i value\n", r);
 			r = -1;
 			goto fail1;
 		}
 			r = hal_pin_bit_newf(HAL_IN, &(device_data->pwm_enable[i]), comp_id, "Lcnc.%02d.pwm.%02d.enable", 0, i);
 		if (r < 0) 
 		{
-			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err steptime=%i\n", r);
+			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  PWM %i enable\n", r);
 			r = -1;
 			goto fail1;
 		}
 	        r = hal_param_float_newf(HAL_RW, &(device_data->pwm_scale[i]), comp_id, "Lcnc.%02d.pwm.%02d.scale", 0, i);
 		if (r < 0) 
 		{
-			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err steptime=%i\n", r);
+			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  PWM %i scale\n", r);
 			r = -1;
 			goto fail1;
 		}
@@ -509,7 +523,7 @@ int rtapi_app_main(void)
 		r = hal_param_float_newf(HAL_RW, &(device_data-> pwm_offs[i]), comp_id, "Lcnc.%02d.pwm.%02d.offs", 0, i);
 		if (r < 0) 
 		{
-			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err steptime=%i\n", r);
+			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  PWM %i offset\n", r);
 			r = -1;
 			goto fail1;
 		}
@@ -517,7 +531,7 @@ int rtapi_app_main(void)
 			r = hal_param_bit_newf(HAL_RW, &(device_data-> pwm_inv[i]), comp_id, "Lcnc.%02d.pwm.%02d.inv", 0, i);
 		if (r < 0) 
 		{
-			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  err steptime=%i\n", r);
+			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR:  PWM %i inversion\n", r);
 			r = -1;
 			goto fail1;
 		}
@@ -533,7 +547,7 @@ int rtapi_app_main(void)
 		goto fail1;
     }
 
-    rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: installed driver for %d card(s)\n", num_ports);
+    rtapi_print_msg(RTAPI_MSG_INFO,"Lcnc: installed driver for %d card(s)\n", num_ports);
     hal_ready(comp_id);
            
     return 0;
@@ -632,7 +646,8 @@ void update_port(void *arg, long period)
         int count = eb_recv(device_data->eb, rx_read_packet_buffer, sizeof(rx_read_packet_buffer));
         if (count <0) {
                 if(((port->num_errors_reported)%100)==0)
-	            fprintf(stderr, "connection error - unexpected read length: %d\n errors %d max %d\n", count,(port->num_errors_reported), (port->tx_max_retries));
+	            //fprintf(stderr, "connection error - unexpected read length: %d\n errors %d max %d\n", count,(port->num_errors_reported), (port->tx_max_retries));
+		    rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f connection error- unexpected read length: %d\n errors %d max %d\n", get_timestamp(), count,(port->num_errors_reported), (port->tx_max_retries));
             (port->num_errors_reported)++;
 //            return;
         }
@@ -641,31 +656,19 @@ void update_port(void *arg, long period)
         else {
                 if((port->num_errors_reported)>0)
 		{
-			fprintf(stderr, "connection restored\n", count);
+			//fprintf(stderr, "connection restored\n", count);
+			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f connection restored, lost %d packets, limit is set to %d\n",get_timestamp(),port->num_errors_reported, (port->tx_max_retries));
 			(port->num_errors_reported)=0;
-			}
 		}
 	
 	// Reset and status reg
 	// read watchdog value
 	memcpy((void*)temp_reg_value.bytes,(void*)(rx_read_packet_buffer+EB_HEADER_SIZE+RX_POS_RES_ST_REG),4);
 	tempvalue=be32toh(temp_reg_value.value);
+	port->watchdog_rd_old=*(port->watchdog_rd);
 	*(port->watchdog_rd)=(hal_float_t)(tempvalue >> CSR_MMIO_INST_RES_ST_REG_WATCHDOG_OFFSET)*WDT_SCALE;
-	
-	// if watchdog bites or not enabled or tx errors
-	if(*(port->watchdog_rd)==0 || *(port->enable)==0 || ((port->num_errors_reported)>(port->tx_max_retries))) 
-	{
-	    *(port->enabled)=0;
-	}
-	else
-	{
-	    if(*(port->enable_req) && !port->enable_req_old && *(port->enable))
-	    {
-		*(port->enabled)=1;
-	    }
-	}
-	port->enable_req_old=*(port->enable_req);
-	
+	if((port->watchdog_rd_old)>0 && *(port->watchdog_rd)==0)
+	    rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f watchdog has bitten, was set to %f\n",get_timestamp(),port->watchdog_wr);
 	// gpio in
 	memcpy((void*)temp_reg_value.bytes,(void*)(rx_read_packet_buffer+EB_HEADER_SIZE+RX_POS_GPIOS_IN),4);
 	tempvalue=be32toh(temp_reg_value.value);
@@ -715,7 +718,22 @@ void update_port(void *arg, long period)
 		if((*(port->wallclock_intvl))>0)
 		    *(port->enc_vel_fb[i])=((*(port->enc_pos_fb[i]))-(port->enc_pos_fb_old[i]))/(*(port->wallclock_intvl));
     }
-    
+    }
+    	// if watchdog bites or not enabled or tx errors
+	if(*(port->watchdog_rd)==0 || *(port->enable)==0 || ((port->num_errors_reported)>(port->tx_max_retries))) 
+	{
+	    *(port->enabled)=0;
+	}
+	else
+	{
+	    if(*(port->enable_req) && !port->enable_req_old && *(port->enable))
+	    {
+		*(port->enabled)=1;
+	    }
+	}
+	port->enable_req_old=*(port->enable_req);
+	
+
 //----------------------------------
 // End of read section
 //----------------------------------

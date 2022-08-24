@@ -3,10 +3,10 @@
 #define UDP_PORT "1234"
 #define F_FPGA (50000000.0)
 //---Devices configuration---
-#define N_INPUTS 12
-#define N_OUTPUTS 11
+#define N_INPUTS 11
+#define N_OUTPUTS 10
 #define N_ENCODERS 6
-#define N_PWM 3
+#define N_PWM 2
 #define N_STEPGENS 6
 //---Registers definition, all are 32bit wide---
 // --transmitted registers: board to fpga
@@ -30,10 +30,9 @@
 //   - pwm control registers, one per PWM
 #define TX_POS_PWM0 (TX_POS_GPIOS_OUT + 4)
 #define TX_POS_PWM1 (TX_POS_PWM0 + 4)
-#define TX_POS_PWM2 (TX_POS_PWM1 + 4)
 // end of PWM related regs
 // Encoder control, one register needed, maximum 16 encoders allowed
-#define TX_POS_ENC_RES_EN (TX_POS_PWM2 + 4)
+#define TX_POS_ENC_RES_EN (TX_POS_PWM1 + 4)
 // Board control and reset register, containing watchdog, only one needed
 #define TX_POS_RES_STAT_REG (TX_POS_ENC_RES_EN + 4)
 // number of regiters to be sent to fpga, sum of all the ones so far

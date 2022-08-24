@@ -1,6 +1,5 @@
 #define SEND_TIMEOUT_US 10
-//#define RECV_TIMEOUT_US 10
-//#define READ_PCK_DELAY_NS 10000
+#define RECV_TIMEOUT_US 5000
 #define DRIVER_NAME "Lcnc"
 
 #ifdef __cplusplus
@@ -86,6 +85,7 @@ typedef struct {
   	hal_bit_t digital_out_inv[N_OUTPUTS]; 
   	hal_u32_t *wallclock;
   	hal_float_t *watchdog_rd;
+  	hal_float_t watchdog_rd_old;
   	hal_float_t watchdog_wr;
 	hal_u32_t wallclock_old;
 	hal_float_t *wallclock_intvl;
