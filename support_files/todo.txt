@@ -59,6 +59,9 @@ x modificare .c e .h per encoder
     - introdurre un meccanismo di riconoscimento dell'hw (tipo la scheda comunica quantità e tipo di periferiche programmate)
     - mandare i parametri solo se sono cambiati
     - mandare solo i dati cambiati
+
+watchdog non si comporta bene, dopo la prima scadenza, in caso di disconnessione non interviene più
+la disconnessione genera problemi ai dati ricevuti
     - aggiungere filtro variabile agli encoders
     - automatizare un minimo la creazione del numero di periferiche nel driver, partendo dal file python del fw
     - consentire l'esecuzione di + istanze del driver

@@ -1,5 +1,5 @@
-#define SEND_TIMEOUT_US 10
-#define RECV_TIMEOUT_US 5000
+#define SEND_TIMEOUT_US 1
+#define RECV_TIMEOUT_US 100
 #define DRIVER_NAME "Lcnc"
 
 #ifdef __cplusplus
@@ -63,11 +63,10 @@ The same type of record is returned, so your data is at offset 16.
 struct eb_connection {
     int fd;
     int read_fd;
-    int is_direct;
     struct addrinfo* addr;
 };
 
-struct eb_connection *eb_connect(const char *addr, const char *port, int is_direct);
+struct eb_connection *eb_connect(const char *addr, const char *port);
 void eb_disconnect(struct eb_connection **conn);
 int eb_fill_header(uint8_t wb_buffer[20],int is_read, uint8_t num, uint8_t base_addr);
 

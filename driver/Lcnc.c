@@ -94,18 +94,16 @@ int eb_fill_header(uint8_t wb_buffer[20],int is_read, uint8_t num, uint8_t base_
 } 
 
 int eb_send(struct eb_connection *conn, const void *bytes, size_t len) {
-    if (conn->is_direct)
-        return sendto(conn->fd, bytes, len, 0, conn->addr->ai_addr, conn->addr->ai_addrlen);
-    return write(conn->fd, bytes, len);
+    return sendto(conn->fd, bytes, len, MSG_DONTWAIT, conn->addr->ai_addr, conn->addr->ai_addrlen);
+    //return send(conn->fd, bytes, len, 0);
 }
 
 int eb_recv(struct eb_connection *conn, void *bytes, size_t max_len) {
-    if (conn->is_direct)
-        return recvfrom(conn->read_fd, bytes, max_len, 0, NULL, NULL);
-    return read(conn->fd, bytes, max_len);
+    //return recvfrom(conn->read_fd, bytes, max_len, 0, NULL, NULL);
+    return recv(conn->read_fd, bytes, max_len, 0);
 }
 
-struct eb_connection *eb_connect(const char *addr, const char *port, int is_direct) {
+struct eb_connection *eb_connect(const char *addr, const char *port) {
 
     struct addrinfo hints;
     struct addrinfo* res = 0;
@@ -120,8 +118,8 @@ struct eb_connection *eb_connect(const char *addr, const char *port, int is_dire
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
-    hints.ai_socktype = is_direct ? SOCK_DGRAM : SOCK_STREAM;
-    hints.ai_protocol = is_direct ? IPPROTO_UDP : IPPROTO_TCP;
+    hints.ai_socktype = SOCK_DGRAM;
+    hints.ai_protocol = IPPROTO_UDP;
     hints.ai_flags = AI_ADDRCONFIG;
     err = getaddrinfo(addr, port, &hints, &res);
     if (err != 0) {
@@ -130,9 +128,6 @@ struct eb_connection *eb_connect(const char *addr, const char *port, int is_dire
         return NULL;
     }
 
-    conn->is_direct = is_direct;
-
-    if (is_direct) {
         // Rx half
         struct sockaddr_in si_me;
 
@@ -157,7 +152,7 @@ struct eb_connection *eb_connect(const char *addr, const char *port, int is_dire
         }
 		struct timeval timeout;
 		timeout.tv_sec = 0;
-		timeout.tv_usec = RECV_TIMEOUT_US; //FIRST_PACKETS
+		timeout.tv_usec = RECV_TIMEOUT_US;
 		err = setsockopt(rx_socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
 		if (err < 0) {
 			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: could NOT to set setsockopt for tx\n");
@@ -187,28 +182,6 @@ struct eb_connection *eb_connect(const char *addr, const char *port, int is_dire
         conn->read_fd = rx_socket;
         conn->fd = tx_socket;
         conn->addr = res;
-    }
-    else {
-        sock = socket(AF_INET, SOCK_STREAM, 0);
-        if (sock == -1) {
-            rtapi_print_msg(RTAPI_MSG_ERR, "Lcnc: failed to create socket: %s\n", strerror(errno));
-            freeaddrinfo(res);
-            free(conn);
-            return NULL;
-        }
-
-        int connection = connect(sock, res->ai_addr, res->ai_addrlen);
-        if (connection == -1) {
-            close(sock);
-            freeaddrinfo(res);
-            rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: unable to create socket: %s\n", strerror(errno));
-            free(conn);
-            return NULL;
-        }
-
-        conn->fd = sock;
-        conn->addr = res;
-    }
 
     return conn;
 }
@@ -267,19 +240,19 @@ int rtapi_app_main(void)
 		r = -1;
 		goto fail0;
     }
-    else rtapi_print_msg(RTAPI_MSG_INFO,"Lcnc:%f hal_malloc() ok\n",get_timestamp());
+    else rtapi_print_msg(RTAPI_MSG_INFO ,"Lcnc:%f hal_malloc() ok\n",get_timestamp());
 
 //###################################################
 ///// INIT ETH BOARD ; OPEN SOCKET
 //###################################################
-    device_data->eb = eb_connect(IP_ADDR, UDP_PORT, 1);
+    device_data->eb = eb_connect(IP_ADDR, UDP_PORT);
 
 	if (!device_data->eb)
     {
         rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR: failed to connect to board\n");
         goto fail1;
     }
-    else rtapi_print_msg(RTAPI_MSG_INFO,"Lcnc:%f connected to board \n",get_timestamp());
+    else rtapi_print_msg(RTAPI_MSG_INFO ,"Lcnc:%f connected to board \n",get_timestamp());
 
 //######################################################
 //######### EXPORT SIGNALS, PIN, FUNCTION
@@ -591,6 +564,8 @@ void update_port(void *arg, long period)
     static int_fast64_t internal_enc_count[N_ENCODERS];
     static uint_fast32_t enc_count[N_ENCODERS];
     static uint_fast32_t enc_count_old[N_ENCODERS];
+    static uint8_t conn_err_notified=0;
+    static uint8_t enable_err_notified=0;
     port = arg;
     uint_fast32_t tempvalue;
     union EbData 
@@ -644,20 +619,24 @@ void update_port(void *arg, long period)
 
 	uint8_t rx_read_packet_buffer[EB_HEADER_SIZE+RX_PAYLOAD_SIZE];
         int count = eb_recv(device_data->eb, rx_read_packet_buffer, sizeof(rx_read_packet_buffer));
-        if (count <0) {
-                if(((port->num_errors_reported)%100)==0)
-	            //fprintf(stderr, "connection error - unexpected read length: %d\n errors %d max %d\n", count,(port->num_errors_reported), (port->tx_max_retries));
-		    rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f connection error- unexpected read length: %d\n errors %d max %d\n", get_timestamp(), count,(port->num_errors_reported), (port->tx_max_retries));
-            (port->num_errors_reported)++;
-//            return;
+        if (count != EB_HEADER_SIZE+RX_PAYLOAD_SIZE) 
+	{
+	    (port->num_errors_reported)++;
+                if(conn_err_notified==0)
+		{
+		    conn_err_notified=1;
+	            fprintf(stderr, "Lcnc:%f connection error- unexpected read length: %d\n errors %d max %d\n", get_timestamp(), count,(port->num_errors_reported), (port->tx_max_retries));
+		    //rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f connection error- unexpected read length: %d\n errors %d max %d\n", get_timestamp(), count,(port->num_errors_reported), (port->tx_max_retries));
+		}
         }
 
         //end receive process
         else {
                 if((port->num_errors_reported)>0)
 		{
-			//fprintf(stderr, "connection restored\n", count);
-			rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f connection restored, lost %d packets, limit is set to %d\n",get_timestamp(),port->num_errors_reported, (port->tx_max_retries));
+			conn_err_notified=0;
+			fprintf(stderr, "Lcnc:%f connection restored, lost %d packets, limit is set to %d\n",get_timestamp(), port->num_errors_reported, (port->tx_max_retries));
+			//rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f connection restored, lost %d packets, limit is set to %d\n",get_timestamp(),port->num_errors_reported, (port->tx_max_retries));
 			(port->num_errors_reported)=0;
 		}
 	
@@ -667,8 +646,6 @@ void update_port(void *arg, long period)
 	tempvalue=be32toh(temp_reg_value.value);
 	port->watchdog_rd_old=*(port->watchdog_rd);
 	*(port->watchdog_rd)=(hal_float_t)(tempvalue >> CSR_MMIO_INST_RES_ST_REG_WATCHDOG_OFFSET)*WDT_SCALE;
-	if((port->watchdog_rd_old)>0 && *(port->watchdog_rd)==0)
-	    rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f watchdog has bitten, was set to %f\n",get_timestamp(),port->watchdog_wr);
 	// gpio in
 	memcpy((void*)temp_reg_value.bytes,(void*)(rx_read_packet_buffer+EB_HEADER_SIZE+RX_POS_GPIOS_IN),4);
 	tempvalue=be32toh(temp_reg_value.value);
@@ -723,11 +700,20 @@ void update_port(void *arg, long period)
 	if(*(port->watchdog_rd)==0 || *(port->enable)==0 || ((port->num_errors_reported)>(port->tx_max_retries))) 
 	{
 	    *(port->enabled)=0;
+	    if(*(port->enable)!=0 && enable_err_notified==0)
+	    {
+		enable_err_notified=1;
+		if(*(port->watchdog_rd)==0) 
+		 rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f driver disabled due to watchdog timer expiring, limit is set to %d\n",get_timestamp(),(port->watchdog_wr));
+		else
+		 rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f driver disabled due transmission maximum retries reached, limit is set to %d\n",get_timestamp(),(port->tx_max_retries));
+	    }
 	}
 	else
 	{
 	    if(*(port->enable_req) && !port->enable_req_old && *(port->enable))
-	    {
+	    { 	
+		enable_err_notified=0;
 		*(port->enabled)=1;
 	    }
 	}
