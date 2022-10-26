@@ -745,7 +745,7 @@ void update_port(void *arg, long period)
 	    freq_req=(*(port->stepgen_velocity_cmd[i]))*(port->stepgen_scale[i]);
 	    // limit frequency requested to the maximum available
 	    if(freq_req>max_freq) freq_req=max_freq;
-	    else if((freq_req<-max_freq) freq_req=-max_freq;
+	    else if(freq_req<-max_freq) freq_req=-max_freq;
 	    // recalculate actual velocity for feedback
 	    if(*(device_data->stepgen_enable[i]) && !(*(device_data->stepgen_reset[i]))) 
 		*(device_data->stepgen_velocity_fb[i])=(double)freq_req/(port->stepgen_scale[i]);

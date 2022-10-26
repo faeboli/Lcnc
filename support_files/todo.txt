@@ -21,10 +21,10 @@ x testare lettura encoders
   x eliminare riferimenti a Z e riallocare gli ingressi (usare gli inputs normali per veicolare index pulse)
   x modificare interfaccia encoder da uint32 a int32
   x aggiungere il fattore di scala per gli encoders come parametro nel driver linuxcnc
-  - capire che succede nelle disconnessioni di rete
-  	- prima di disconnettere emette numeri molto strani sui valori degli encoders, come se venisse corrotto lo spazio di memoria
-  	- durante la disconnessione la scheda restituisce periodicamente dei pacchetti con checksum errato di dimensione molto alta
-  	- dopo la disconnessione, se non si riavvia hal gli stepgen diventano monodirezionali: incrementano e non decrementano
+  x capire che succede nelle disconnessioni di rete
+  	x prima di disconnettere emette numeri molto strani sui valori degli encoders, come se venisse corrotto lo spazio di memoria
+  	x durante la disconnessione la scheda restituisce periodicamente dei pacchetti con checksum errato di dimensione molto alta
+  	x dopo la disconnessione, se non si riavvia hal gli stepgen diventano monodirezionali: incrementano e non decrementano
   x migliorare le stringhe di debug in caso di errore
 ? creare fw solo outputs 5A75Bin
 ? creare fw solo inputs 5A75Bout (ha senso solo se è possibile concatenare le schede)
@@ -39,7 +39,7 @@ x modificare .c e .h per encoder
     x riscrivere la nomenclatura dei pin e dei parametri
     x rendere configurabile il + possibile il driver (tipo di scheda, numero di periferiche ecc)
     x rendere configurabile il + possibile il firmware (tipo di scheda, numero di periferiche ecc)
-    - validare tutti i componenti hw
+    x validare tutti i componenti hw
     	x outs
     	x ins
     	x pwm valore reset della scala a 100 viene ignorato
@@ -54,14 +54,20 @@ x modificare .c e .h per encoder
     x introdurre il watchdog 
     x resettare tutti gli hw quando il watchdog va a zero
     x aggiungere input hw di fpga che resetti la scheda
+    x velocità come int32
     - aggiungere la ragione dell'ultimo reset nel registro di stato
     - analizzare e ridurre i tempi di esecuzione (attualmente va da 130 a 250us con picchi di 700us)
     - introdurre un meccanismo di riconoscimento dell'hw (tipo la scheda comunica quantità e tipo di periferiche programmate)
     - mandare i parametri solo se sono cambiati
     - mandare solo i dati cambiati
 
-watchdog non si comporta bene, dopo la prima scadenza, in caso di disconnessione non interviene più
-la disconnessione genera problemi ai dati ricevuti
     - aggiungere filtro variabile agli encoders
     - automatizare un minimo la creazione del numero di periferiche nel driver, partendo dal file python del fw
+    - configuratore visuale delle periferiche
+      - dearpygui
+      - nel py chiedere se avviare il configuratore
+      - il configuratore consente di definire periferiche e pins
+      - verifica la coerenza dei valori
+      - all'uscita fa partire la generazione del firmware con le definizioni create nella gui
+      - salva la configurazione in un file di testo
     - consentire l'esecuzione di + istanze del driver

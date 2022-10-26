@@ -212,7 +212,7 @@ class StepGen(Module,AutoCSR):
         self.comb+=If(self.inv_dir==1,		#Evaluate dir inversion
         pads.dir.eq(~sdir)).Else(pads.dir.eq(sdir))
         
-        self.comb+=If(self.velocity[31]==1,     # calculate internal velocity, always positive
+        self.sync+=If(self.velocity[31]==1,     # calculate internal velocity, always positive
         int_vel.eq(~self.velocity+1)
         ).Else(int_vel.eq(self.velocity))
 
@@ -482,7 +482,7 @@ def main():
             f.write("#define TX_POS_VELOCITY"+str(i)+" (TX_POS_VELOCITY"+str(i-1)+" + 4)\n")
     f.write("//  - other registers, only one each needed, max 16 STEPGENS allowed\n")
     f.write("\
-#define TX_POS_STEP_RES_EN (TX_POS_VELOCITY + 4)\n\
+#define TX_POS_STEP_RES_EN (TX_POS_VELOCITY"+str(num_stepgens-1)+" + 4)\n\
 #define TX_POS_STEPDIRINV (TX_POS_STEP_RES_EN + 4)\n\
 #define TX_POS_STEPTIMES (TX_POS_STEPDIRINV + 4)\n\
 // - end of STEPGEN related regs\n\

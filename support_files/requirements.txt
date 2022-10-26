@@ -23,8 +23,7 @@ linuxcnc naming: component.nn.functionality.nn.par_or_pin.n es: colorcnc.00.pwm.
     - MMIO_INST_STEP_RES_EN (16 bit enable e 16bit reset)
     - MMIO_INST_STEPDIRINV (16 bit step inversion e 16bit dir inversion)
     - MMIO_INST_STEPTIMES (9bits step width 9bits dir width 14bits setup time)
-    - MMIO_INST_STEPSIGN (16bit) segno del comando velocità
-    - MMIO_INST_VELOCITY_n (32bit)
+    - MMIO_INST_VELOCITY_n (int32)
   - registers -> driver:
     - MMIO_INST_POSITION_n (32bit)
 
@@ -96,13 +95,12 @@ min interv = Step width + space width
 max freq = 1/ min interv=1(step width + step space)
 max vel= max freq/scale=1/((step width + step space)*scale)
 
-bit for reset and sign
-32bit unsigned for speed
+bit for reset
+32bit signed for speed
 32bit signed for position fb
 registers host to fw:
 LIMIT 16 stepgens
 velocity input 32b per stepgen
-velocity sign 1b per stepgen, 1 32bit register
 reset 1b per stepgen, 1/2 32bit register
 enable 1b per stepgen, 1/2 32bit register
 invert step 1b per stepgen, 1/2 32bit register

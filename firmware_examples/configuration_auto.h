@@ -16,7 +16,7 @@
 #define TX_POS_VELOCITY1 (TX_POS_VELOCITY0 + 4)
 #define TX_POS_VELOCITY2 (TX_POS_VELOCITY1 + 4)
 //  - other registers, only one each needed, max 16 STEPGENS allowed
-#define TX_POS_STEP_RES_EN (TX_POS_VELOCITY + 4)
+#define TX_POS_STEP_RES_EN (TX_POS_VELOCITY2 + 4)
 #define TX_POS_STEPDIRINV (TX_POS_STEP_RES_EN + 4)
 #define TX_POS_STEPTIMES (TX_POS_STEPDIRINV + 4)
 // - end of STEPGEN related regs
