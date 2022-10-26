@@ -39,70 +39,65 @@ from liteeth.common import *
 # Devices configuration start ----------------------------------------------------------------------------------------
 encoders=([
     ("encoder", 0,
-     Subsignal("A", Pins("j1:0")), # J9.1
-     Subsignal("B", Pins("j1:1")), # J9.2
- #    Subsignal("Z", Pins("j7:2")), # false
-     IOStandard("LVCMOS33")),
+     Subsignal("A", Pins("j1:0")),
+     Subsignal("B", Pins("j1:1")),
+     IOStandard("LVCMOS33")
+     ),
     ("encoder", 1,
-     Subsignal("A", Pins("j1:2")),  # J9.5
-     Subsignal("B", Pins("j1:4")),  # J9.6
-  #   Subsignal("Z", Pins("j7:6")),  # false
+     Subsignal("A", Pins("j1:2")),
+     Subsignal("B", Pins("j1:4")),
      IOStandard("LVCMOS33")
      ),
     ("encoder", 2,
-     Subsignal("A", Pins("j1:5")),  # J10.1
-     Subsignal("B", Pins("j1:6")),  # J10.2
-#     Subsignal("Z", Pins("j8:2")),  # false
+     Subsignal("A", Pins("j1:5")),
+     Subsignal("B", Pins("j1:6")),
      IOStandard("LVCMOS33")
      ),
     ("encoder", 3,
-     Subsignal("A", Pins("j2:0")),  # J10.5
-     Subsignal("B", Pins("j2:1")),  # J10.6
-#     Subsignal("Z", Pins("j8:6")),  # false
+     Subsignal("A", Pins("j2:0")),
+     Subsignal("B", Pins("j2:1")),
      IOStandard("LVCMOS33")
      ),
     ("encoder", 4,
-     Subsignal("A", Pins("j2:2")),  # J11.1
-     Subsignal("B", Pins("j2:4")),  # J11.2
-#     Subsignal("Z", Pins("j1:14")),  # false
+     Subsignal("A", Pins("j2:2")), 
+     Subsignal("B", Pins("j2:4")),
      IOStandard("LVCMOS33")
      ),
     ("encoder", 5,
-     Subsignal("A", Pins("j2:5")),  # J11.5
-     Subsignal("B", Pins("j2:6")),  # J11.6
- #    Subsignal("Z", Pins("j1:14")),  # false
+     Subsignal("A", Pins("j2:5")),
+     Subsignal("B", Pins("j2:6")),
      IOStandard("LVCMOS33")
      ),
 ])
 
 stepgens=([
     ("stepgen", 0,
-     Subsignal("step", Pins("j9:0")), # J1.1
-     Subsignal("dir", Pins("j9:1")), # J1.2
+     Subsignal("step", Pins("j9:0")),
+     Subsignal("dir", Pins("j9:1")),
      IOStandard("LVCMOS33")),
     ("stepgen", 1,
-     Subsignal("step", Pins("j9:2")),  # J1.3
-     Subsignal("dir", Pins("j9:4")),  # J1.5
+     Subsignal("step", Pins("j9:2")),
+     Subsignal("dir", Pins("j9:4")),
      IOStandard("LVCMOS33")
      ),
     ("stepgen", 2,
-     Subsignal("step", Pins("j9:5")),  # J1.6
-     Subsignal("dir", Pins("j9:6")),  # J1.7
+     Subsignal("step", Pins("j9:5")),
+     Subsignal("dir", Pins("j9:6")),
      IOStandard("LVCMOS33")
      ),
     ("stepgen", 3,
-     Subsignal("step", Pins("j10:0")),  # J2.1
-     Subsignal("dir", Pins("j10:1")),  # J2.2
+     Subsignal("step", Pins("j10:0")),
+     Subsignal("dir", Pins("j10:1")),
      IOStandard("LVCMOS33")
      ),
     ("stepgen", 4,
-     Subsignal("step", Pins("j10:2")),  # J2.3
-     Subsignal("dir", Pins("j10:4")),  # J2.5
+     Subsignal("step", Pins("j10:2")),
+     Subsignal("dir", Pins("j10:4")),
      IOStandard("LVCMOS33")
      ),
     ("stepgen", 5,
-     Subsignal("step", Pins("j10:5")),  # J2.6
-     Subsignal("dir", Pins("j10:6")),  # J2.7
+     Subsignal("step", Pins("j10:5")),
+     Subsignal("dir", Pins("j10:6")),
      IOStandard("LVCMOS33")
      ),
 ])
@@ -193,7 +188,6 @@ class StepGen(Module,AutoCSR):
 
         #register inputs
         self.velocity=Signal(32) #frequency input
-        self.sign=Signal(1) #frequency sign
         self.reset=Signal(1) #reset 
         self.enable=Signal(1) #enable
         self.inv_step=Signal(1) #invert step pin
@@ -206,25 +200,24 @@ class StepGen(Module,AutoCSR):
         self.position_fb=Signal(32) #position output
         
         #internal signals
-#        int_step=Signal(1)
-#        int_dir=Signal(1)
         counter=Signal(33)#internal counter
+        int_vel=Signal(32)#internal velocity
         step_tmr=Signal(9)# step width timer
         dir_tmr=Signal(9)# dir min width timer
         dir_setuptimer=Signal(14)#dir setup timer
         dir_old=Signal(1)# dir out
-        
-        #pads
-#        self.comb+=pads.step.eq(step)
-#        self.comb+=pads.dir.eq(sdir)
-
+                
         self.comb+=If(self.inv_step==1,		#Evaluate step inversion
         pads.step.eq(~step)).Else(pads.step.eq(step))
         self.comb+=If(self.inv_dir==1,		#Evaluate dir inversion
         pads.dir.eq(~sdir)).Else(pads.dir.eq(sdir))
         
+        self.comb+=If(self.velocity[31]==1,     # calculate internal velocity, always positive
+        int_vel.eq(~self.velocity+1)
+        ).Else(int_vel.eq(self.velocity))
+
         self.sync+=If(self.enable==1,               # increment counter with frequency term
-        counter.eq(counter+self.velocity))
+        counter.eq(counter+int_vel))
         
         self.sync+=If(counter[32]==1,       # use carry for output
         counter[32].eq(0),                           # reset carry
@@ -248,7 +241,7 @@ class StepGen(Module,AutoCSR):
         self.sync+=If(dir_setuptimer==0, # update dir only after setup time from last step end
         If( dir_tmr==0,                                 # and if minimum dir time is passed
         dir_old.eq(sdir),
-        sdir.eq(self.sign)))
+        sdir.eq(self.velocity[31])))
         
         self.sync+=If(dir_old!=sdir,    # initialize timer for minimum dir duration
         dir_tmr.eq(self.dir_width))
@@ -258,6 +251,7 @@ class StepGen(Module,AutoCSR):
         
         self.sync+=If(self.reset==1,
         counter.eq(0),
+        int_vel.eq(0),
         step_tmr.eq(0),
         dir_tmr.eq(0),
         dir_setuptimer.eq(0),
@@ -271,9 +265,6 @@ class MMIO(Module,AutoCSR):
         for i in range(num_stepgens):
            setattr(self,f'velocity{i}', CSRStorage(size=32, description="Stepgen velocity", write_from_dev=False, name='velocity_'+str(i)))
 
-        self.step_sign = CSRStorage(fields=[
-        CSRField("sign", size=16, offset=0,description="Velocity sign")],
-        description="Stepgen velocity sign", write_from_dev=False, name='stepsign')
         self.step_res_en = CSRStorage(fields=[
         CSRField("sgreset", size=16, offset=0,description="Reset"),
         CSRField("sgenable", size=16, offset=16,description="Enable")],
@@ -391,7 +382,6 @@ class BaseSoC(SoCMini):
             getattr(self.MMIO_inst,f'sg_count{i}').we.eq(True),
             getattr(self,f'stepgen{i}').enable.eq(self.MMIO_inst.step_res_en.fields.sgenable[i]),
             getattr(self,f'stepgen{i}').reset.eq(self.MMIO_inst.step_res_en.fields.sgreset[i] | global_reset),
-            getattr(self,f'stepgen{i}').sign.eq(self.MMIO_inst.step_sign.fields.sign[i]),
             getattr(self,f'stepgen{i}').inv_step.eq(self.MMIO_inst.step_dir_inv.fields.step_inv[i]),
             getattr(self,f'stepgen{i}').inv_dir.eq(self.MMIO_inst.step_dir_inv.fields.dir_inv[i]),
             getattr(self,f'stepgen{i}').step_width.eq(self.MMIO_inst.steptimes.fields.step_width),
@@ -491,9 +481,8 @@ def main():
          else:
             f.write("#define TX_POS_VELOCITY"+str(i)+" (TX_POS_VELOCITY"+str(i-1)+" + 4)\n")
     f.write("//  - other registers, only one each needed, max 16 STEPGENS allowed\n")
-    f.write("#define TX_POS_STEPSIGN (TX_POS_VELOCITY"+str(num_stepgens-1)+" + 4)\n")
     f.write("\
-#define TX_POS_STEP_RES_EN (TX_POS_STEPSIGN + 4)\n\
+#define TX_POS_STEP_RES_EN (TX_POS_VELOCITY + 4)\n\
 #define TX_POS_STEPDIRINV (TX_POS_STEP_RES_EN + 4)\n\
 #define TX_POS_STEPTIMES (TX_POS_STEPDIRINV + 4)\n\
 // - end of STEPGEN related regs\n\

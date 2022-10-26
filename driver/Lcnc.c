@@ -737,35 +737,24 @@ void update_port(void *arg, long period)
     // Payload setup
 	const float velfact=pow(2,VEL_SIZE_BITS)/F_FPGA; // velocity factor that is 2^32/F_FPGA
 	float max_freq,freq_req,cmdtmp;
-	int sign=1;
-	uint32_t temp_sign=0;
 	for (i=0;i<N_STEPGENS;i++)
 	{
-	    // maximum frequency: given by mximum step period, that is the iverse of the sum of pulse width and space
+	    // maximum frequency: limited by minimum step period, that is the sum of pulse width and space width
 	    max_freq=1.0E6/(port->stepgen_step_width + port->stepgen_step_space); //[Hz]
-	    // requested freqeuency of step generator
+	    // requested frequency of step generator
 	    freq_req=(*(port->stepgen_velocity_cmd[i]))*(port->stepgen_scale[i]);
-	    if(freq_req<0)
-	    {
-	        sign=-1;
-	        freq_req=-freq_req;
-	        temp_sign|=(1<<i);
-	    }
-	    else sign=1;
-	    // limit frequency reuested to the maximum available
+	    // limit frequency requested to the maximum available
 	    if(freq_req>max_freq) freq_req=max_freq;
+	    else if((freq_req<-max_freq) freq_req=-max_freq;
 	    // recalculate actual velocity for feedback
 	    if(*(device_data->stepgen_enable[i]) && !(*(device_data->stepgen_reset[i]))) 
-		*(device_data->stepgen_velocity_fb[i])=(double)sign*freq_req/(port->stepgen_scale[i]);
+		*(device_data->stepgen_velocity_fb[i])=(double)freq_req/(port->stepgen_scale[i]);
 	    else *(device_data->stepgen_velocity_fb[i])=0;
 	    // convert frequency request to step generator internal command word
 	    cmdtmp=freq_req*velfact;
-	    temp_reg_value.value=htobe32((uint32_t)cmdtmp); // VELOCITY1
+	    temp_reg_value.value=htobe32((int32_t)cmdtmp); // VELOCITY
         memcpy((void*)(tx_write_packet_buffer+EB_HEADER_SIZE+TX_POS_VELOCITY0+4*i),(void*)temp_reg_value.bytes,4);
-    }
-    temp_reg_value.value=htobe32(temp_sign); // STEPSIGN
-    memcpy((void*)(tx_write_packet_buffer+EB_HEADER_SIZE+TX_POS_STEPSIGN),(void*)temp_reg_value.bytes,4);
-    
+    }    
 
     tempvalue=0;
     for (i=0;i<N_STEPGENS;i++)
