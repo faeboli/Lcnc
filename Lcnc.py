@@ -188,6 +188,7 @@ class StepGen(Module,AutoCSR):
 
         #register inputs
         self.velocity=Signal((32,True)) #frequency input
+        self.max_acc=Signal((32,False)) #maximum acceleration input unsigned
         self.reset=Signal(1) #reset 
         self.enable=Signal(1) #enable
         self.inv_step=Signal(1) #invert step pin
