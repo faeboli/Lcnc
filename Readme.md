@@ -65,7 +65,7 @@ The effective enabling will be requested by Lcnc.00.enable-request.
 - Set Lcnc.00.enable-request to True, then to False. This interface is checked only on it's rising edge from False to True, then it is ignored, if there are no watchdog problems or hw reset request, the board will enable and set back Lcnc.00.enabled to True.
 
 Working with peripherals:
--- doc in construction, the peripherals are what they seem, you can play with them, only to be noted that stepgen is velocity mode only, and acceleration limit is not implemented yet.
+-- doc in construction, the peripherals are what they seem, you can play with them, only to be noted that stepgen is velocity mode only.
 
 Digital inputs to the board, the pins are defined in "_gpios_in" list un Lcnc.py script, maximum number of 32 inputs can be defined:
 - gpio in
@@ -139,7 +139,7 @@ Step generator, the pins are defined in "stepgens" list un Lcnc.py script, maxim
       - Lcnc.xx.stepgen.yy.reset reset internal state to default
       - Lcnc.xx.stepgen.yy.enable enables step generator
       - Lcnc.xx.stepgen.yy.vel-cmd velocity command in mm/s
-      - Lcnc.xx.stepgen.yy.acc-lim acceleration limit in mm/s^2 (to be implemented)
+      - Lcnc.xx.stepgen.yy.acc-lim acceleration limit in mm/s^2
     - outputs:
       - Lcnc.xx.stepgen.yy.vel-fb feedback velocity in mm/s
       - Lcnc.xx.stepgen.yy.pos-fb feedback position in mm
