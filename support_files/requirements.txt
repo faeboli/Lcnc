@@ -64,7 +64,9 @@ leadscrew 4mm/rev
 Max speed 25m/s
 
 Acceleration limit:
-32bit fractional phase accumulator, input acceleration (steps/s^2), output speed (steps/s)
+32bit fractional phase accumulator, every overflow increments velocity command
+input acceleration (steps/s^2), output speed (steps/s)
+
 max accel 50MHz
 minimum and resolution 0.01164 steps/s^2
 

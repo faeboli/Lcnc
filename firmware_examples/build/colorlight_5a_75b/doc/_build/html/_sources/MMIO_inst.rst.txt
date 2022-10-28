@@ -13,39 +13,51 @@ Register Listing for MMIO_INST
 +------------------------------------------------------+-------------------------------------------+
 | :ref:`MMIO_INST_VELOCITY_2 <MMIO_INST_VELOCITY_2>`   | :ref:`0x00000008 <MMIO_INST_VELOCITY_2>`  |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_STEP_RES_EN <MMIO_INST_STEP_RES_EN>` | :ref:`0x0000000c <MMIO_INST_STEP_RES_EN>` |
+| :ref:`MMIO_INST_MAX_ACC_0 <MMIO_INST_MAX_ACC_0>`     | :ref:`0x0000000c <MMIO_INST_MAX_ACC_0>`   |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_STEPDIRINV <MMIO_INST_STEPDIRINV>`   | :ref:`0x00000010 <MMIO_INST_STEPDIRINV>`  |
+| :ref:`MMIO_INST_MAX_ACC_1 <MMIO_INST_MAX_ACC_1>`     | :ref:`0x00000010 <MMIO_INST_MAX_ACC_1>`   |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_STEPTIMES <MMIO_INST_STEPTIMES>`     | :ref:`0x00000014 <MMIO_INST_STEPTIMES>`   |
+| :ref:`MMIO_INST_MAX_ACC_2 <MMIO_INST_MAX_ACC_2>`     | :ref:`0x00000014 <MMIO_INST_MAX_ACC_2>`   |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_GPIOS_OUT <MMIO_INST_GPIOS_OUT>`     | :ref:`0x00000018 <MMIO_INST_GPIOS_OUT>`   |
+| :ref:`MMIO_INST_STEP_RES_EN <MMIO_INST_STEP_RES_EN>` | :ref:`0x00000018 <MMIO_INST_STEP_RES_EN>` |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_PWM_0 <MMIO_INST_PWM_0>`             | :ref:`0x0000001c <MMIO_INST_PWM_0>`       |
+| :ref:`MMIO_INST_STEPDIRINV <MMIO_INST_STEPDIRINV>`   | :ref:`0x0000001c <MMIO_INST_STEPDIRINV>`  |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_PWM_1 <MMIO_INST_PWM_1>`             | :ref:`0x00000020 <MMIO_INST_PWM_1>`       |
+| :ref:`MMIO_INST_STEPTIMES <MMIO_INST_STEPTIMES>`     | :ref:`0x00000020 <MMIO_INST_STEPTIMES>`   |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_PWM_2 <MMIO_INST_PWM_2>`             | :ref:`0x00000024 <MMIO_INST_PWM_2>`       |
+| :ref:`MMIO_INST_GPIOS_OUT <MMIO_INST_GPIOS_OUT>`     | :ref:`0x00000024 <MMIO_INST_GPIOS_OUT>`   |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_ENC_RES_EN <MMIO_INST_ENC_RES_EN>`   | :ref:`0x00000028 <MMIO_INST_ENC_RES_EN>`  |
+| :ref:`MMIO_INST_PWM_0 <MMIO_INST_PWM_0>`             | :ref:`0x00000028 <MMIO_INST_PWM_0>`       |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_RES_ST_REG <MMIO_INST_RES_ST_REG>`   | :ref:`0x0000002c <MMIO_INST_RES_ST_REG>`  |
+| :ref:`MMIO_INST_PWM_1 <MMIO_INST_PWM_1>`             | :ref:`0x0000002c <MMIO_INST_PWM_1>`       |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_SG_COUNT_0 <MMIO_INST_SG_COUNT_0>`   | :ref:`0x00000030 <MMIO_INST_SG_COUNT_0>`  |
+| :ref:`MMIO_INST_PWM_2 <MMIO_INST_PWM_2>`             | :ref:`0x00000030 <MMIO_INST_PWM_2>`       |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_SG_COUNT_1 <MMIO_INST_SG_COUNT_1>`   | :ref:`0x00000034 <MMIO_INST_SG_COUNT_1>`  |
+| :ref:`MMIO_INST_ENC_RES_EN <MMIO_INST_ENC_RES_EN>`   | :ref:`0x00000034 <MMIO_INST_ENC_RES_EN>`  |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_SG_COUNT_2 <MMIO_INST_SG_COUNT_2>`   | :ref:`0x00000038 <MMIO_INST_SG_COUNT_2>`  |
+| :ref:`MMIO_INST_RES_ST_REG <MMIO_INST_RES_ST_REG>`   | :ref:`0x00000038 <MMIO_INST_RES_ST_REG>`  |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_WALLCLOCK <MMIO_INST_WALLCLOCK>`     | :ref:`0x0000003c <MMIO_INST_WALLCLOCK>`   |
+| :ref:`MMIO_INST_SG_COUNT_0 <MMIO_INST_SG_COUNT_0>`   | :ref:`0x0000003c <MMIO_INST_SG_COUNT_0>`  |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_GPIOS_IN <MMIO_INST_GPIOS_IN>`       | :ref:`0x00000040 <MMIO_INST_GPIOS_IN>`    |
+| :ref:`MMIO_INST_SG_COUNT_1 <MMIO_INST_SG_COUNT_1>`   | :ref:`0x00000040 <MMIO_INST_SG_COUNT_1>`  |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_ENC_COUNT_0 <MMIO_INST_ENC_COUNT_0>` | :ref:`0x00000044 <MMIO_INST_ENC_COUNT_0>` |
+| :ref:`MMIO_INST_SG_COUNT_2 <MMIO_INST_SG_COUNT_2>`   | :ref:`0x00000044 <MMIO_INST_SG_COUNT_2>`  |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_ENC_COUNT_1 <MMIO_INST_ENC_COUNT_1>` | :ref:`0x00000048 <MMIO_INST_ENC_COUNT_1>` |
+| :ref:`MMIO_INST_SG_VEL_0 <MMIO_INST_SG_VEL_0>`       | :ref:`0x00000048 <MMIO_INST_SG_VEL_0>`    |
 +------------------------------------------------------+-------------------------------------------+
-| :ref:`MMIO_INST_ENC_COUNT_2 <MMIO_INST_ENC_COUNT_2>` | :ref:`0x0000004c <MMIO_INST_ENC_COUNT_2>` |
+| :ref:`MMIO_INST_SG_VEL_1 <MMIO_INST_SG_VEL_1>`       | :ref:`0x0000004c <MMIO_INST_SG_VEL_1>`    |
++------------------------------------------------------+-------------------------------------------+
+| :ref:`MMIO_INST_SG_VEL_2 <MMIO_INST_SG_VEL_2>`       | :ref:`0x00000050 <MMIO_INST_SG_VEL_2>`    |
++------------------------------------------------------+-------------------------------------------+
+| :ref:`MMIO_INST_WALLCLOCK <MMIO_INST_WALLCLOCK>`     | :ref:`0x00000054 <MMIO_INST_WALLCLOCK>`   |
++------------------------------------------------------+-------------------------------------------+
+| :ref:`MMIO_INST_GPIOS_IN <MMIO_INST_GPIOS_IN>`       | :ref:`0x00000058 <MMIO_INST_GPIOS_IN>`    |
++------------------------------------------------------+-------------------------------------------+
+| :ref:`MMIO_INST_ENC_COUNT_0 <MMIO_INST_ENC_COUNT_0>` | :ref:`0x0000005c <MMIO_INST_ENC_COUNT_0>` |
++------------------------------------------------------+-------------------------------------------+
+| :ref:`MMIO_INST_ENC_COUNT_1 <MMIO_INST_ENC_COUNT_1>` | :ref:`0x00000060 <MMIO_INST_ENC_COUNT_1>` |
++------------------------------------------------------+-------------------------------------------+
+| :ref:`MMIO_INST_ENC_COUNT_2 <MMIO_INST_ENC_COUNT_2>` | :ref:`0x00000064 <MMIO_INST_ENC_COUNT_2>` |
 +------------------------------------------------------+-------------------------------------------+
 
 MMIO_INST_VELOCITY_0
@@ -99,10 +111,61 @@ MMIO_INST_VELOCITY_2
         }
 
 
+MMIO_INST_MAX_ACC_0
+^^^^^^^^^^^^^^^^^^^
+
+`Address: 0x00000000 + 0xc = 0x0000000c`
+
+    Stepgen max acceleration
+
+    .. wavedrom::
+        :caption: MMIO_INST_MAX_ACC_0
+
+        {
+            "reg": [
+                {"name": "max_acc_0[31:0]", "bits": 32}
+            ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+        }
+
+
+MMIO_INST_MAX_ACC_1
+^^^^^^^^^^^^^^^^^^^
+
+`Address: 0x00000000 + 0x10 = 0x00000010`
+
+    Stepgen max acceleration
+
+    .. wavedrom::
+        :caption: MMIO_INST_MAX_ACC_1
+
+        {
+            "reg": [
+                {"name": "max_acc_1[31:0]", "bits": 32}
+            ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+        }
+
+
+MMIO_INST_MAX_ACC_2
+^^^^^^^^^^^^^^^^^^^
+
+`Address: 0x00000000 + 0x14 = 0x00000014`
+
+    Stepgen max acceleration
+
+    .. wavedrom::
+        :caption: MMIO_INST_MAX_ACC_2
+
+        {
+            "reg": [
+                {"name": "max_acc_2[31:0]", "bits": 32}
+            ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+        }
+
+
 MMIO_INST_STEP_RES_EN
 ^^^^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0xc = 0x0000000c`
+`Address: 0x00000000 + 0x18 = 0x00000018`
 
     Stepgen Enable and Reset flags
 
@@ -128,7 +191,7 @@ MMIO_INST_STEP_RES_EN
 MMIO_INST_STEPDIRINV
 ^^^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x10 = 0x00000010`
+`Address: 0x00000000 + 0x1c = 0x0000001c`
 
     Stepgen Dir and Step inversion
 
@@ -154,7 +217,7 @@ MMIO_INST_STEPDIRINV
 MMIO_INST_STEPTIMES
 ^^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x14 = 0x00000014`
+`Address: 0x00000000 + 0x20 = 0x00000020`
 
     Stepgen steptime
 
@@ -183,7 +246,7 @@ MMIO_INST_STEPTIMES
 MMIO_INST_GPIOS_OUT
 ^^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x18 = 0x00000018`
+`Address: 0x00000000 + 0x24 = 0x00000024`
 
     gpios out
 
@@ -200,7 +263,7 @@ MMIO_INST_GPIOS_OUT
 MMIO_INST_PWM_0
 ^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x1c = 0x0000001c`
+`Address: 0x00000000 + 0x28 = 0x00000028`
 
     PWM width and period
 
@@ -226,7 +289,7 @@ MMIO_INST_PWM_0
 MMIO_INST_PWM_1
 ^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x20 = 0x00000020`
+`Address: 0x00000000 + 0x2c = 0x0000002c`
 
     PWM width and period
 
@@ -252,7 +315,7 @@ MMIO_INST_PWM_1
 MMIO_INST_PWM_2
 ^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x24 = 0x00000024`
+`Address: 0x00000000 + 0x30 = 0x00000030`
 
     PWM width and period
 
@@ -278,7 +341,7 @@ MMIO_INST_PWM_2
 MMIO_INST_ENC_RES_EN
 ^^^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x28 = 0x00000028`
+`Address: 0x00000000 + 0x34 = 0x00000034`
 
     Encoder enable and reset flags
 
@@ -304,7 +367,7 @@ MMIO_INST_ENC_RES_EN
 MMIO_INST_RES_ST_REG
 ^^^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x2c = 0x0000002c`
+`Address: 0x00000000 + 0x38 = 0x00000038`
 
     Reset and status register
 
@@ -328,7 +391,7 @@ MMIO_INST_RES_ST_REG
 MMIO_INST_SG_COUNT_0
 ^^^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x30 = 0x00000030`
+`Address: 0x00000000 + 0x3c = 0x0000003c`
 
     Stepgen 0 count
 
@@ -345,7 +408,7 @@ MMIO_INST_SG_COUNT_0
 MMIO_INST_SG_COUNT_1
 ^^^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x34 = 0x00000034`
+`Address: 0x00000000 + 0x40 = 0x00000040`
 
     Stepgen 1 count
 
@@ -362,7 +425,7 @@ MMIO_INST_SG_COUNT_1
 MMIO_INST_SG_COUNT_2
 ^^^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x38 = 0x00000038`
+`Address: 0x00000000 + 0x44 = 0x00000044`
 
     Stepgen 2 count
 
@@ -376,10 +439,61 @@ MMIO_INST_SG_COUNT_2
         }
 
 
+MMIO_INST_SG_VEL_0
+^^^^^^^^^^^^^^^^^^
+
+`Address: 0x00000000 + 0x48 = 0x00000048`
+
+    Stepgen 0 vel
+
+    .. wavedrom::
+        :caption: MMIO_INST_SG_VEL_0
+
+        {
+            "reg": [
+                {"name": "sg_vel_0[31:0]", "bits": 32}
+            ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+        }
+
+
+MMIO_INST_SG_VEL_1
+^^^^^^^^^^^^^^^^^^
+
+`Address: 0x00000000 + 0x4c = 0x0000004c`
+
+    Stepgen 1 vel
+
+    .. wavedrom::
+        :caption: MMIO_INST_SG_VEL_1
+
+        {
+            "reg": [
+                {"name": "sg_vel_1[31:0]", "bits": 32}
+            ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+        }
+
+
+MMIO_INST_SG_VEL_2
+^^^^^^^^^^^^^^^^^^
+
+`Address: 0x00000000 + 0x50 = 0x00000050`
+
+    Stepgen 2 vel
+
+    .. wavedrom::
+        :caption: MMIO_INST_SG_VEL_2
+
+        {
+            "reg": [
+                {"name": "sg_vel_2[31:0]", "bits": 32}
+            ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+        }
+
+
 MMIO_INST_WALLCLOCK
 ^^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x3c = 0x0000003c`
+`Address: 0x00000000 + 0x54 = 0x00000054`
 
     wallclock time
 
@@ -396,7 +510,7 @@ MMIO_INST_WALLCLOCK
 MMIO_INST_GPIOS_IN
 ^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x40 = 0x00000040`
+`Address: 0x00000000 + 0x58 = 0x00000058`
 
     gpios in
 
@@ -413,7 +527,7 @@ MMIO_INST_GPIOS_IN
 MMIO_INST_ENC_COUNT_0
 ^^^^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x44 = 0x00000044`
+`Address: 0x00000000 + 0x5c = 0x0000005c`
 
     Encoder 0 count
 
@@ -430,7 +544,7 @@ MMIO_INST_ENC_COUNT_0
 MMIO_INST_ENC_COUNT_1
 ^^^^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x48 = 0x00000048`
+`Address: 0x00000000 + 0x60 = 0x00000060`
 
     Encoder 1 count
 
@@ -447,7 +561,7 @@ MMIO_INST_ENC_COUNT_1
 MMIO_INST_ENC_COUNT_2
 ^^^^^^^^^^^^^^^^^^^^^
 
-`Address: 0x00000000 + 0x4c = 0x0000004c`
+`Address: 0x00000000 + 0x64 = 0x00000064`
 
     Encoder 2 count
 

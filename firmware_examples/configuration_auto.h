@@ -15,8 +15,11 @@
 #define TX_POS_VELOCITY0 0
 #define TX_POS_VELOCITY1 (TX_POS_VELOCITY0 + 4)
 #define TX_POS_VELOCITY2 (TX_POS_VELOCITY1 + 4)
+#define TX_POS_MAX_ACC0 (TX_POS_VELOCITY2 + 4)
+#define TX_POS_MAX_ACC1 (TX_POS_MAX_ACC0 + 4)
+#define TX_POS_MAX_ACC2 (TX_POS_MAX_ACC1 + 4)
 //  - other registers, only one each needed, max 16 STEPGENS allowed
-#define TX_POS_STEP_RES_EN (TX_POS_VELOCITY2 + 4)
+#define TX_POS_STEP_RES_EN (TX_POS_MAX_ACC2 + 4)
 #define TX_POS_STEPDIRINV (TX_POS_STEP_RES_EN + 4)
 #define TX_POS_STEPTIMES (TX_POS_STEPDIRINV + 4)
 // - end of STEPGEN related regs
@@ -42,9 +45,12 @@
 #define RX_POS_STEPCOUNT0 (RX_POS_RES_ST_REG + 4)
 #define RX_POS_STEPCOUNT1 (RX_POS_STEPCOUNT0 + 4)
 #define RX_POS_STEPCOUNT2 (RX_POS_STEPCOUNT1 + 4)
+#define RX_POS_STEPVEL0 (RX_POS_STEPCOUNT2 + 4)
+#define RX_POS_STEPVEL1 (RX_POS_STEPVEL0 + 4)
+#define RX_POS_STEPVEL2 (RX_POS_STEPVEL1 + 4)
 // end of STEPGEN related regs
 // WALLCLOCK feedback register, only one needed
-#define RX_POS_WALLCLOCK (RX_POS_STEPCOUNT2 + 4)
+#define RX_POS_WALLCLOCK (RX_POS_STEPVEL2 + 4)
 // INPUTS register, only one needed, max 32 inputs allowed
 #define RX_POS_GPIOS_IN (RX_POS_WALLCLOCK + 4)
 // ENCODER related:

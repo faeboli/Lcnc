@@ -576,6 +576,7 @@ void update_port(void *arg, long period)
     float time_temp;
     uint32_t time_temp_u;
     uint_fast8_t read_header_ready=0,write_header_ready=0;
+    const float velfact=pow(2,VEL_SIZE_BITS)/F_FPGA; // velocity factor that is 2^32/F_FPGA
 
 //----------------------------------
 // Start of read section
@@ -598,6 +599,12 @@ void update_port(void *arg, long period)
         {
 			temp_reg_value.value=htobe32(CSR_MMIO_INST_SG_COUNT_0_ADDR+4*i);
 			memcpy((void*)(tx_read_packet_buffer+EB_HEADER_SIZE+RX_POS_STEPCOUNT0+4*i),(void*)temp_reg_value.bytes,4);
+		}
+        // read stepgen velocity
+        for(i=0;i<N_STEPGENS;i++)
+        {
+			temp_reg_value.value=htobe32(CSR_MMIO_INST_SG_VEL_0_ADDR+4*i);
+			memcpy((void*)(tx_read_packet_buffer+EB_HEADER_SIZE+RX_POS_STEPVEL0+4*i),(void*)temp_reg_value.bytes,4);
 		}
 		// read wall clock
         temp_reg_value.value=htobe32(CSR_MMIO_INST_WALLCLOCK_ADDR); 
@@ -674,6 +681,9 @@ void update_port(void *arg, long period)
 		if(*(device_data->stepgen_reset[i])) internal_step_count[i]=0;
 		internal_step_count[i]+=((int32_t)(step_count[i])-(int32_t)step_count_old[i]);
 		*(port->stepgen_position_fb[i])=((hal_float_t)(internal_step_count[i]))/(port->stepgen_scale[i]);
+		memcpy((void*)temp_reg_value.bytes,(void*)(rx_read_packet_buffer+EB_HEADER_SIZE+RX_POS_STEPVEL0+4*i),4);
+		tempvalue=be32toh(temp_reg_value.value);
+		*(port->stepgen_velocity_fb[i])=((hal_float_t)((int32_t)tempvalue))/((port->stepgen_scale[i])*velfact);
 	}
 
      ///////////// read encoders /////////////////////////////////////////////
@@ -735,7 +745,6 @@ void update_port(void *arg, long period)
 	write_header_ready=1;
     }
     // Payload setup
-	const float velfact=pow(2,VEL_SIZE_BITS)/F_FPGA; // velocity factor that is 2^32/F_FPGA
 	float max_freq,freq_req,cmdtmp;
 	for (i=0;i<N_STEPGENS;i++)
 	{
@@ -747,13 +756,18 @@ void update_port(void *arg, long period)
 	    if(freq_req>max_freq) freq_req=max_freq;
 	    else if(freq_req<-max_freq) freq_req=-max_freq;
 	    // recalculate actual velocity for feedback
-	    if(*(device_data->stepgen_enable[i]) && !(*(device_data->stepgen_reset[i]))) 
-		*(device_data->stepgen_velocity_fb[i])=(double)freq_req/(port->stepgen_scale[i]);
-	    else *(device_data->stepgen_velocity_fb[i])=0;
-	    // convert frequency request to step generator internal command word
+//	    if(*(device_data->stepgen_enable[i]) && !(*(device_data->stepgen_reset[i]))) 
+//		*(device_data->stepgen_velocity_fb[i])=(double)freq_req/(port->stepgen_scale[i]);
+//	    else *(device_data->stepgen_velocity_fb[i])=0;
+	    // convert velocity request to step generator internal command word
 	    cmdtmp=freq_req*velfact;
 	    temp_reg_value.value=htobe32((int32_t)cmdtmp); // VELOCITY
         memcpy((void*)(tx_write_packet_buffer+EB_HEADER_SIZE+TX_POS_VELOCITY0+4*i),(void*)temp_reg_value.bytes,4);
+	    // convert maximum acceleration to step generator internal command word
+	    cmdtmp=(*(port->stepgen_acc_lim[i]))*velfact*velfact*(port->stepgen_scale[i]); // the factor is the same of velocity but squared
+	    if(cmdtmp<0) cmdtmp=-cmdtmp; // only positive acceleration
+	    temp_reg_value.value=htobe32((uint32_t)(cmdtmp)); // Maximum Acceleration
+        memcpy((void*)(tx_write_packet_buffer+EB_HEADER_SIZE+TX_POS_MAX_ACC0+4*i),(void*)temp_reg_value.bytes,4);
     }    
 
     tempvalue=0;

@@ -187,7 +187,7 @@ class StepGen(Module,AutoCSR):
         sdir=Signal()# dir out
 
         #register inputs
-        self.velocity=Signal(32) #frequency input
+        self.velocity=Signal((32,True)) #frequency input
         self.reset=Signal(1) #reset 
         self.enable=Signal(1) #enable
         self.inv_step=Signal(1) #invert step pin
@@ -197,11 +197,13 @@ class StepGen(Module,AutoCSR):
         self.dir_setuptime=Signal(14)#dir minimum distance dir-step and step-dir
         
         #register outputs
-        self.position_fb=Signal(32) #position output
+        self.position_fb=Signal((32,True)) #position output
+        self.velocity_fb=Signal((32,True)) #velocity output
         
         #internal signals
-        counter=Signal(33)#internal counter
-        int_vel=Signal(32)#internal velocity
+        counter_vel=Signal(33)#internal counter for velocity update
+        counter_acc=Signal(33)#internal counter for acceleration update
+        acc_count=Signal()
         step_tmr=Signal(9)# step width timer
         dir_tmr=Signal(9)# dir min width timer
         dir_setuptimer=Signal(14)#dir setup timer
@@ -211,16 +213,24 @@ class StepGen(Module,AutoCSR):
         pads.step.eq(~step)).Else(pads.step.eq(step))
         self.comb+=If(self.inv_dir==1,		#Evaluate dir inversion
         pads.dir.eq(~sdir)).Else(pads.dir.eq(sdir))
-        
-        self.sync+=If(self.velocity[31]==1,     # calculate internal velocity, always positive
-        int_vel.eq(~self.velocity+1)
-        ).Else(int_vel.eq(self.velocity))
 
-        self.sync+=If(self.enable==1,               # increment counter with frequency term
-        counter.eq(counter+int_vel))
+        self.sync+=If(self.velocity_fb!=self.velocity,acc_count.eq(1)).Else(acc_count.eq(0)) # if target velocity is different than actual velocity, acceleration counter is enabled
+
+                
+        self.sync+=If(acc_count==1,               # if there is acceleration, acceleration counter is started
+        counter_acc.eq(counter_acc+self.max_acc))
+
+        self.sync+=If(counter_acc[-1]==1,       # overflow of acceleration counter, update velocity
+        counter_acc[-1].eq(0),                           # reset overflow bit
+        If(self.velocity_fb<self.velocity,self.velocity_fb.eq(self.velocity_fb+1)), # if velocity is less than requested, increment
+        If(self.velocity_fb>self.velocity,self.velocity_fb.eq(self.velocity_fb-1))) # if velocity is more than requested, decrement
+
+        self.sync+=If(self.enable==1,               # increment counter with velocity, consider sign
+        If(self.velocity_fb[-1]==0,counter_vel.eq(counter_vel+self.velocity_fb))
+        .Else(counter_vel.eq(counter_vel-(~self.velocity_fb+1))))
         
-        self.sync+=If(counter[32]==1,       # use carry for output
-        counter[32].eq(0),                           # reset carry
+        self.sync+=If(counter_vel[-1]==1,       # use carry for output
+        counter_vel[-1].eq(0),                           # reset carry
         step_tmr.eq(self.step_width), #,    # initialize timer for minimum step duration
         If(sdir==0,                                        # update the position counter
         self.position_fb.eq(self.position_fb+1)
@@ -241,7 +251,7 @@ class StepGen(Module,AutoCSR):
         self.sync+=If(dir_setuptimer==0, # update dir only after setup time from last step end
         If( dir_tmr==0,                                 # and if minimum dir time is passed
         dir_old.eq(sdir),
-        sdir.eq(self.velocity[31])))
+        sdir.eq(self.velocity_fb[-1])))
         
         self.sync+=If(dir_old!=sdir,    # initialize timer for minimum dir duration
         dir_tmr.eq(self.dir_width))
@@ -250,12 +260,13 @@ class StepGen(Module,AutoCSR):
         dir_tmr.eq(dir_tmr-1))
         
         self.sync+=If(self.reset==1,
-        counter.eq(0),
-        int_vel.eq(0),
+        counter_vel.eq(0),
+        counter_acc.eq(0),
         step_tmr.eq(0),
         dir_tmr.eq(0),
         dir_setuptimer.eq(0),
         self.position_fb.eq(0),
+        self.velocity_fb.eq(0),
         dir_old.eq(0))
 
 class MMIO(Module,AutoCSR):
@@ -264,6 +275,8 @@ class MMIO(Module,AutoCSR):
 
         for i in range(num_stepgens):
            setattr(self,f'velocity{i}', CSRStorage(size=32, description="Stepgen velocity", write_from_dev=False, name='velocity_'+str(i)))
+        for i in range(num_stepgens):
+           setattr(self,f'max_acc{i}', CSRStorage(size=32, description="Stepgen max acceleration", write_from_dev=False, name='max_acc_'+str(i)))
 
         self.step_res_en = CSRStorage(fields=[
         CSRField("sgreset", size=16, offset=0,description="Reset"),
@@ -298,6 +311,8 @@ class MMIO(Module,AutoCSR):
 
         for i in range(num_stepgens):        
             setattr(self,f'sg_count{i}', CSRStatus(size=32, description="Stepgen "+str(i)+" count", name="sg_count_"+str(i)))
+        for i in range(num_stepgens):        
+            setattr(self,f'sg_vel{i}', CSRStatus(size=32, description="Stepgen "+str(i)+" vel", name="sg_vel_"+str(i)))
                     
         self.wallclock = CSRStatus(size=32, description="wallclock time", name='wallclock')
         self.gpios_in = CSRStatus(size=32, description="gpios in", name='gpios_in')
@@ -380,6 +395,8 @@ class BaseSoC(SoCMini):
             self.sync+=[
             getattr(self.MMIO_inst,f'sg_count{i}').status.eq(getattr(self,f'stepgen{i}').position_fb),
             getattr(self.MMIO_inst,f'sg_count{i}').we.eq(True),
+            getattr(self.MMIO_inst,f'sg_vel{i}').status.eq(getattr(self,f'stepgen{i}').velocity_fb),
+            getattr(self.MMIO_inst,f'sg_vel{i}').we.eq(True),
             getattr(self,f'stepgen{i}').enable.eq(self.MMIO_inst.step_res_en.fields.sgenable[i]),
             getattr(self,f'stepgen{i}').reset.eq(self.MMIO_inst.step_res_en.fields.sgreset[i] | global_reset),
             getattr(self,f'stepgen{i}').inv_step.eq(self.MMIO_inst.step_dir_inv.fields.step_inv[i]),
@@ -387,7 +404,8 @@ class BaseSoC(SoCMini):
             getattr(self,f'stepgen{i}').step_width.eq(self.MMIO_inst.steptimes.fields.step_width),
             getattr(self,f'stepgen{i}').dir_width.eq(self.MMIO_inst.steptimes.fields.dir_width),
             getattr(self,f'stepgen{i}').dir_setuptime.eq(self.MMIO_inst.steptimes.fields.dir_setup),
-            getattr(self,f'stepgen{i}').velocity.eq(getattr(self.MMIO_inst,f'velocity{i}').storage)]
+            getattr(self,f'stepgen{i}').velocity.eq(getattr(self.MMIO_inst,f'velocity{i}').storage),
+            getattr(self,f'stepgen{i}').max_acc.eq(getattr(self.MMIO_inst,f'max_acc{i}').storage)]
 
         for i in range(num_encoders):
             self.sync+=[
@@ -480,9 +498,14 @@ def main():
             f.write("#define TX_POS_VELOCITY"+str(i)+" 0\n")
          else:
             f.write("#define TX_POS_VELOCITY"+str(i)+" (TX_POS_VELOCITY"+str(i-1)+" + 4)\n")
+    for i in range(num_stepgens):
+         if i==0:
+            f.write("#define TX_POS_MAX_ACC"+str(i)+" (TX_POS_VELOCITY"+str(num_stepgens-1)+" + 4)\n")
+         else:
+            f.write("#define TX_POS_MAX_ACC"+str(i)+" (TX_POS_MAX_ACC"+str(i-1)+" + 4)\n")
     f.write("//  - other registers, only one each needed, max 16 STEPGENS allowed\n")
     f.write("\
-#define TX_POS_STEP_RES_EN (TX_POS_VELOCITY"+str(num_stepgens-1)+" + 4)\n\
+#define TX_POS_STEP_RES_EN (TX_POS_MAX_ACC"+str(num_stepgens-1)+" + 4)\n\
 #define TX_POS_STEPDIRINV (TX_POS_STEP_RES_EN + 4)\n\
 #define TX_POS_STEPTIMES (TX_POS_STEPDIRINV + 4)\n\
 // - end of STEPGEN related regs\n\
@@ -514,9 +537,14 @@ def main():
             f.write("#define RX_POS_STEPCOUNT"+str(i)+" (RX_POS_RES_ST_REG + 4)\n")
          else:
             f.write("#define RX_POS_STEPCOUNT"+str(i)+" (RX_POS_STEPCOUNT"+str(i-1)+" + 4)\n")
+    for i in range(num_stepgens):
+         if i==0:
+            f.write("#define RX_POS_STEPVEL"+str(i)+" (RX_POS_STEPCOUNT"+str(num_stepgens-1)+" + 4)\n")
+         else:
+            f.write("#define RX_POS_STEPVEL"+str(i)+" (RX_POS_STEPVEL"+str(i-1)+" + 4)\n")
     f.write("// end of STEPGEN related regs\n\
 // WALLCLOCK feedback register, only one needed\n")
-    f.write("#define RX_POS_WALLCLOCK (RX_POS_STEPCOUNT"+str(num_stepgens-1)+" + 4)\n")
+    f.write("#define RX_POS_WALLCLOCK (RX_POS_STEPVEL"+str(num_stepgens-1)+" + 4)\n")
     f.write("\
 // INPUTS register, only one needed, max 32 inputs allowed\n\
 #define RX_POS_GPIOS_IN (RX_POS_WALLCLOCK + 4)\n\
