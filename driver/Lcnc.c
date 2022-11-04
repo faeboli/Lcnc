@@ -442,6 +442,7 @@ int rtapi_app_main(void)
 
         r = hal_param_bit_newf(HAL_RW, &(device_data->stepgen_dir_inv[i]), comp_id, "Lcnc.%02d.stepgen.%02d.dir_inv", 0, i);
         if(r != 0) return r;
+
     }
 
     r = hal_param_float_newf(HAL_RW, &(device_data->stepgen_step_width), comp_id, "Lcnc.%02d.stepgen-step_width", 0);
@@ -745,7 +746,9 @@ void update_port(void *arg, long period)
 	write_header_ready=1;
     }
     // Payload setup
-	float max_freq,freq_req,cmdtmp;
+	float max_freq,freq_req;
+	uint8_t accel_mult;
+	double cmdtmp;
 	for (i=0;i<N_STEPGENS;i++)
 	{
 	    // maximum frequency: limited by minimum step period, that is the sum of pulse width and space width
@@ -764,10 +767,23 @@ void update_port(void *arg, long period)
 	    temp_reg_value.value=htobe32((int32_t)cmdtmp); // VELOCITY
         memcpy((void*)(tx_write_packet_buffer+EB_HEADER_SIZE+TX_POS_VELOCITY0+4*i),(void*)temp_reg_value.bytes,4);
 	    // convert maximum acceleration to step generator internal command word
-	    cmdtmp=(*(port->stepgen_acc_lim[i]))*velfact*velfact*(port->stepgen_scale[i]); // the factor is the same of velocity but squared
+	    cmdtmp=(double)(*(port->stepgen_acc_lim[i]))*(double)velfact*(double)velfact/(double)4*(double)(port->stepgen_scale[i]);// the factor is the same of velocity but squared
+                                                                                            // the "/4" is due to the fact that acceleration 
+                                                                                            // command is 30bits instead of 32
 	    if(cmdtmp<0) cmdtmp=-cmdtmp; // only positive acceleration
-	    temp_reg_value.value=htobe32((uint32_t)(cmdtmp)); // Maximum Acceleration
-        memcpy((void*)(tx_write_packet_buffer+EB_HEADER_SIZE+TX_POS_MAX_ACC0+4*i),(void*)temp_reg_value.bytes,4);
+	    // if command overflows number of bits allocated, is reduced 8-fold and acc_mult incremented by one until command does not overflows or acc_mult reaches the maximum allowed value 
+	    for(
+	    accel_mult=0;
+	    cmdtmp>((1<<(CSR_MMIO_INST_MAX_ACC_0_ACC_SIZE))-1) && accel_mult<((1<<(CSR_MMIO_INST_MAX_ACC_0_ACC_MULT_SIZE))-1);
+	    accel_mult++
+	    ) 
+	    cmdtmp=cmdtmp/(1<<(ACC_MULT_EXP));
+            // if command still overflows, is saturated
+	    if(cmdtmp>((1<<(CSR_MMIO_INST_MAX_ACC_0_ACC_SIZE))-1)) cmdtmp=((1<<(CSR_MMIO_INST_MAX_ACC_0_ACC_SIZE))-1);
+	    tempvalue=(uint32_t)(cmdtmp);
+	    tempvalue|=((uint32_t)accel_mult)<<(CSR_MMIO_INST_MAX_ACC_0_ACC_MULT_OFFSET);
+	    temp_reg_value.value=htobe32(tempvalue); // Maximum Acceleration
+            memcpy((void*)(tx_write_packet_buffer+EB_HEADER_SIZE+TX_POS_MAX_ACC0+4*i),(void*)temp_reg_value.bytes,4);
     }    
 
     tempvalue=0;

@@ -118,6 +118,9 @@ _ext_reset_in = [("ext_reset_in", 0, Pins("j6:0"), IOStandard("LVCMOS33"))]
 watchdog_size=22
 watchdog_offs=10
 
+#acceleration limit multiplier setup
+acc_mult_exp=3
+
 # global for number of each device
 num_inputs=len(_gpios_in)
 num_outputs=len(_gpios_out)
@@ -164,7 +167,8 @@ class StepGen(Module,AutoCSR):
 
         #register inputs
         self.velocity=Signal((32,True)) #frequency input
-        self.max_acc=Signal((32,False)) #maximum acceleration input unsigned
+        self.max_acc=Signal((30,False)) #maximum acceleration input unsigned
+        self.acc_mult=Signal(2) #maximum acceleration multiplier
         self.reset=Signal(1) #reset 
         self.enable=Signal(1) #enable
         self.inv_step=Signal(1) #invert step pin
@@ -179,8 +183,10 @@ class StepGen(Module,AutoCSR):
         
         #internal signals
         counter_vel=Signal(33)#internal counter for velocity update
-        counter_acc=Signal(33)#internal counter for acceleration update
-        acc_count=Signal()
+        counter_acc=Signal(31)#internal counter for acceleration update
+        acc_count=Signal(1)
+        acc_multiplier=Signal(30)
+        acc_multiplier_1=Signal(30)
         step_tmr=Signal(9)# step width timer
         dir_tmr=Signal(9)# dir min width timer
         dir_setuptimer=Signal(14)#dir setup timer
@@ -196,11 +202,16 @@ class StepGen(Module,AutoCSR):
                 
         self.sync+=If(acc_count==1,               # if there is acceleration, acceleration counter is started
         counter_acc.eq(counter_acc+self.max_acc))
-        
+
+        self.comb+=[
+        acc_multiplier_1.eq(self.acc_mult), #multiplier width extension
+        acc_multiplier.eq(1<<(acc_mult_exp*acc_multiplier_1))] #multiplier rescaling
+
         self.sync+=If(counter_acc[-1]==1,       # overflow of acceleration counter, update velocity
         counter_acc[-1].eq(0),                           # reset overflow bit
-        If(self.velocity_fb<self.velocity,self.velocity_fb.eq(self.velocity_fb+1)), # if velocity is less than requested, increment
-        If(self.velocity_fb>self.velocity,self.velocity_fb.eq(self.velocity_fb-1))) # if velocity is more than requested, decrement
+        If(self.velocity_fb<(self.velocity-(acc_multiplier)),self.velocity_fb.eq(self.velocity_fb+(acc_multiplier))). # if velocity is less than requested, increment with a step of 2^acc_mult
+        Else(If(self.velocity_fb>(self.velocity+(acc_multiplier)),self.velocity_fb.eq(self.velocity_fb-(acc_multiplier))). # if velocity is more than requested, decrement with a step of 2^acc_mult
+        Else(self.velocity_fb.eq(self.velocity))))
 
         self.sync+=If(self.enable==1,               # increment counter with velocity, consider sign
         If(self.velocity_fb[-1]==0,counter_vel.eq(counter_vel+self.velocity_fb))
@@ -253,7 +264,10 @@ class MMIO(Module,AutoCSR):
         for i in range(num_stepgens):
            setattr(self,f'velocity{i}', CSRStorage(size=32, description="Stepgen velocity", write_from_dev=False, name='velocity_'+str(i)))
         for i in range(num_stepgens):
-           setattr(self,f'max_acc{i}', CSRStorage(size=32, description="Stepgen max acceleration", write_from_dev=False, name='max_acc_'+str(i)))
+          setattr(self,f'max_acc{i}', CSRStorage(fields=[
+        CSRField("acc",size=30,offset=0,description="Stepgen max acceleration"),
+        CSRField("acc_mult",size=2,offset=30,description="Acceleration Multiplier")],
+        description="Stepgen acceleration", write_from_dev=False, name='max_acc_'+str(i)))
 
         self.step_res_en = CSRStorage(fields=[
         CSRField("sgreset", size=16, offset=0,description="Reset"),
@@ -382,7 +396,8 @@ class BaseSoC(SoCMini):
             getattr(self,f'stepgen{i}').dir_width.eq(self.MMIO_inst.steptimes.fields.dir_width),
             getattr(self,f'stepgen{i}').dir_setuptime.eq(self.MMIO_inst.steptimes.fields.dir_setup),
             getattr(self,f'stepgen{i}').velocity.eq(getattr(self.MMIO_inst,f'velocity{i}').storage),
-            getattr(self,f'stepgen{i}').max_acc.eq(getattr(self.MMIO_inst,f'max_acc{i}').storage)]
+            getattr(self,f'stepgen{i}').max_acc.eq(getattr(self.MMIO_inst,f'max_acc{i}').fields.acc),
+            getattr(self,f'stepgen{i}').acc_mult.eq(getattr(self.MMIO_inst,f'max_acc{i}').fields.acc_mult)]
 
         for i in range(num_encoders):
             self.sync+=[
@@ -466,6 +481,7 @@ def main():
     f.write("#define N_ENCODERS "+str(num_encoders)+"\n")
     f.write("#define N_PWM "+str(num_pwm)+"\n")
     f.write("#define N_STEPGENS "+str(num_stepgens)+"\n")
+    f.write("#define ACC_MULT_EXP "+str(acc_mult_exp)+"\n")
     f.write("//---Registers definition, all are 32bit wide---\n")
     f.write("// --transmitted registers: board to fpga\n")
     f.write("// - start of STEPGEN related regs\n")

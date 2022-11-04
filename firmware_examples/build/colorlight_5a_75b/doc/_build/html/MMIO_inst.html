@@ -183,52 +183,124 @@
 <h3>MMIO_INST_MAX_ACC_0<a class="headerlink" href="#mmio-inst-max-acc-0" title="Permalink to this headline">¶</a></h3>
 <p><cite>Address: 0x00000000 + 0xc = 0x0000000c</cite></p>
 <blockquote>
-<div><p>Stepgen max acceleration</p>
+<div><p>Stepgen acceleration</p>
 
 <div style="overflow-x:auto">
 <script type="WaveDrom">
 {
     "reg": [
-        {"name": "max_acc_0[31:0]", "bits": 32}
-    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+        {"name": "acc",  "bits": 30},
+        {"name": "acc_mult",  "bits": 2}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
 }
 </script>
 </div>
 </div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[29:0]</td>
+<td>ACC</td>
+<td>Stepgen max acceleration</td>
+</tr>
+<tr class="row-odd"><td>[31:30]</td>
+<td>ACC_MULT</td>
+<td>Acceleration Multiplier</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="mmio-inst-max-acc-1">
 <h3>MMIO_INST_MAX_ACC_1<a class="headerlink" href="#mmio-inst-max-acc-1" title="Permalink to this headline">¶</a></h3>
 <p><cite>Address: 0x00000000 + 0x10 = 0x00000010</cite></p>
 <blockquote>
-<div><p>Stepgen max acceleration</p>
+<div><p>Stepgen acceleration</p>
 
 <div style="overflow-x:auto">
 <script type="WaveDrom">
 {
     "reg": [
-        {"name": "max_acc_1[31:0]", "bits": 32}
-    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+        {"name": "acc",  "bits": 30},
+        {"name": "acc_mult",  "bits": 2}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
 }
 </script>
 </div>
 </div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[29:0]</td>
+<td>ACC</td>
+<td>Stepgen max acceleration</td>
+</tr>
+<tr class="row-odd"><td>[31:30]</td>
+<td>ACC_MULT</td>
+<td>Acceleration Multiplier</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="mmio-inst-max-acc-2">
 <h3>MMIO_INST_MAX_ACC_2<a class="headerlink" href="#mmio-inst-max-acc-2" title="Permalink to this headline">¶</a></h3>
 <p><cite>Address: 0x00000000 + 0x14 = 0x00000014</cite></p>
 <blockquote>
-<div><p>Stepgen max acceleration</p>
+<div><p>Stepgen acceleration</p>
 
 <div style="overflow-x:auto">
 <script type="WaveDrom">
 {
     "reg": [
-        {"name": "max_acc_2[31:0]", "bits": 32}
-    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+        {"name": "acc",  "bits": 30},
+        {"name": "acc_mult",  "bits": 2}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
 }
 </script>
 </div>
 </div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[29:0]</td>
+<td>ACC</td>
+<td>Stepgen max acceleration</td>
+</tr>
+<tr class="row-odd"><td>[31:30]</td>
+<td>ACC_MULT</td>
+<td>Acceleration Multiplier</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="mmio-inst-step-res-en">
 <h3>MMIO_INST_STEP_RES_EN<a class="headerlink" href="#mmio-inst-step-res-en" title="Permalink to this headline">¶</a></h3>

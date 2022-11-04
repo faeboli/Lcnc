@@ -47,7 +47,11 @@ x modificare .c e .h per encoder
     	x stepgens (calcolare la velocità sulla base della posizione?)
     x rinominare position in step counter
     x calcolare il tempo trascorso tra due chiamate per le integrazioni e differenze (es calcolo delle velocità)
-    - implementare limite di accelerazione stepgen
+    x implementare limite di accelerazione stepgen
+    - avere un moltiplicatore della accelerazione per ogni stepgen invece di un singolo moltiplicatore per tutti
+      - con 2 bit ciascuno e base 8 si spazia da 8^0=1 a 8^3=512
+    - configurare automaticamente il moltiplicatore in funzione del valore di accelerazione richiesto
+    - valutare di annegare il moltiplicatore nel valore di accelerazione massima per ridurre il numero di registri
     x implementare check sui limiti degli input dei parametri e valori
     x introdurre una logica di reset nel driver se la scheda non risponde
     x decidere cosa fare nel driver in caso di reset o enabled=0 
@@ -57,7 +61,6 @@ x modificare .c e .h per encoder
     x velocità come int32
     - aggiungere la ragione dell'ultimo reset nel registro di stato
     - analizzare e ridurre i tempi di esecuzione (attualmente va da 130 a 250us con picchi di 700us)
-    - introdurre un meccanismo di riconoscimento dell'hw (tipo la scheda comunica quantità e tipo di periferiche programmate)
     - mandare i parametri solo se sono cambiati
     - mandare solo i dati cambiati
 

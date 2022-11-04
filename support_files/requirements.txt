@@ -52,35 +52,44 @@ scale=[step/mm]
 freq=command/2^32 * 50*10^6 [step/s]
 vel=freq/scale [mm/s]
 
-command=freq*2^32/(50*10^6)
+command=freq*2^32/(50*10^6)  [step/s]
 freq=vel*scale
 
-command=vel*scale*2^32/(50*10^6)
-
-example:
-scale 8000 step/rev
-leadscrew 4mm/rev
-0.0005mm/step
-Max speed 25m/s
+command=vel*scale*2^32/(50*10^6) [step/s]
 
 Acceleration limit:
-32bit fractional phase accumulator, every overflow increments velocity command
-input acceleration (steps/s^2), output speed (steps/s)
+30bit fractional phase accumulator, every overflow increments velocity command of 1
+input acceleration (steps/s^2), output vel command that is freq*2^32/(50*10^6)
 
-max accel 50MHz
-minimum and resolution 0.01164 steps/s^2
+output is velocity command variation
 
 accel_freq=[step/s^2]
 accel=[mm/s^2]
 scale=[step/mm]
 
-accel_freq=accel_command/2^32 * 50*10^6 [step/s^2]
-accel=accel_freq/scale [mm/s^2]
+(30 bits)
+accel_freq=accel_command/2^30 * 50*10^6 [commands/s]
+vel=command/scale*(50*10^6)/2^32 [mm/s]
+accel=d vel/dt=d command/dt /scale*(50*10^6)/2^32=accel_freq/scale*(50*10^6)/2^32 [mm/s^2]
+accel_freq=accel*scale*2^32/(50*10^6) [mm/s^2]*[step/mm]=[step/s^2]
+accel_command=accel_freq*2^30/(50*10^6)=accel*scale*2^32/(50*10^6)*2^30/(50*10^6)
+accel_command=accel*scale*(2^32/(50*10^6))^2/4 [mm/s^2]*[step/mm]=[step/s^2]
+accel=accel_command/scale*((50*10^6)/2^32)^2*4 [mm/s^2]
 
-accel_command=accel_freq*2^32/(50*10^6)
-accel_freq=accel*scale
-
-accel_command=accel*scale*2^32/(50*10^6)
+example:
+scale 8000 step/rev
+leadscrew 4mm/rev
+0.0005mm/step
+Max speed : command= 2^32, vel=2^32/2^32/8000*4*(50*10^6)=12500mm/s
+Resolution : 5.821*10^-6 mm/s
+accelerazione con contatore e comando di 30 bits + 2 bits moltiplicatore
+Max accel : accel_command=2^30, accel=2^30/8000*4*(50*10^6)*(50*10^6)/2^32/2^32=291mm/s^2
+Resolution : 2.71*10^-7 mm/s^2
+moltiplicatore M che genera un fattore di 8^M
+M=0 8^0=1 max=291mm/s^2 Ris=2.71*10^-7 mm/s^2
+M=1 8^1=8 max=2328mm/s^2 Ris=2.17*10^-6 mm/s^2
+M=2 8^2=64 max=18624mm/s^2 Ris=1.73*10^-5 mm/s^2
+M=3 8^3=512 max=148992mm/s^2 Ris=1.39*10^-4 mm/s^2
 
 width counter setup:
 tempo in ns = numero di conteggi*10^6/frequenza di clock

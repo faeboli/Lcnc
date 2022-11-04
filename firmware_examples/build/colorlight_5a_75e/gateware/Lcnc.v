@@ -9,7 +9,7 @@
 // Filename   : Lcnc.v
 // Device     : LFE5U-25F-6BG256C
 // LiteX sha1 : a426ec9e
-// Date       : 2022-10-28 15:04:53
+// Date       : 2022-11-04 16:02:34
 //------------------------------------------------------------------------------
 
 
@@ -2631,7 +2631,8 @@ wire [1:0] quadenc5_tmp;
 reg  stepgen0_step1 = 1'd0;
 reg  stepgen0_sdir = 1'd0;
 reg  signed [31:0] stepgen0_velocity = 32'd0;
-reg  [31:0] stepgen0_max_acc = 32'd0;
+reg  [29:0] stepgen0_max_acc = 30'd0;
+reg  [1:0] stepgen0_acc_mult = 2'd0;
 reg  stepgen0_reset = 1'd0;
 reg  stepgen0_enable = 1'd0;
 reg  stepgen0_inv_step = 1'd0;
@@ -2642,8 +2643,10 @@ reg  [13:0] stepgen0_dir_setuptime = 14'd0;
 reg  signed [31:0] stepgen0_position_fb = 32'd0;
 reg  signed [31:0] stepgen0_velocity_fb = 32'd0;
 reg  [32:0] stepgen0_counter_vel = 33'd0;
-reg  [32:0] stepgen0_counter_acc = 33'd0;
+reg  [30:0] stepgen0_counter_acc = 31'd0;
 reg  stepgen0_acc_count = 1'd0;
+wire [29:0] stepgen0_acc_multiplier;
+wire [29:0] stepgen0_acc_multiplier_1;
 reg  [8:0] stepgen0_step_tmr = 9'd0;
 reg  [8:0] stepgen0_dir_tmr = 9'd0;
 reg  [13:0] stepgen0_dir_setuptimer = 14'd0;
@@ -2651,7 +2654,8 @@ reg  stepgen0_dir_old = 1'd0;
 reg  stepgen1_step1 = 1'd0;
 reg  stepgen1_sdir = 1'd0;
 reg  signed [31:0] stepgen1_velocity = 32'd0;
-reg  [31:0] stepgen1_max_acc = 32'd0;
+reg  [29:0] stepgen1_max_acc = 30'd0;
+reg  [1:0] stepgen1_acc_mult = 2'd0;
 reg  stepgen1_reset = 1'd0;
 reg  stepgen1_enable = 1'd0;
 reg  stepgen1_inv_step = 1'd0;
@@ -2662,8 +2666,10 @@ reg  [13:0] stepgen1_dir_setuptime = 14'd0;
 reg  signed [31:0] stepgen1_position_fb = 32'd0;
 reg  signed [31:0] stepgen1_velocity_fb = 32'd0;
 reg  [32:0] stepgen1_counter_vel = 33'd0;
-reg  [32:0] stepgen1_counter_acc = 33'd0;
+reg  [30:0] stepgen1_counter_acc = 31'd0;
 reg  stepgen1_acc_count = 1'd0;
+wire [29:0] stepgen1_acc_multiplier;
+wire [29:0] stepgen1_acc_multiplier_1;
 reg  [8:0] stepgen1_step_tmr = 9'd0;
 reg  [8:0] stepgen1_dir_tmr = 9'd0;
 reg  [13:0] stepgen1_dir_setuptimer = 14'd0;
@@ -2671,7 +2677,8 @@ reg  stepgen1_dir_old = 1'd0;
 reg  stepgen2_step1 = 1'd0;
 reg  stepgen2_sdir = 1'd0;
 reg  signed [31:0] stepgen2_velocity = 32'd0;
-reg  [31:0] stepgen2_max_acc = 32'd0;
+reg  [29:0] stepgen2_max_acc = 30'd0;
+reg  [1:0] stepgen2_acc_mult = 2'd0;
 reg  stepgen2_reset = 1'd0;
 reg  stepgen2_enable = 1'd0;
 reg  stepgen2_inv_step = 1'd0;
@@ -2682,8 +2689,10 @@ reg  [13:0] stepgen2_dir_setuptime = 14'd0;
 reg  signed [31:0] stepgen2_position_fb = 32'd0;
 reg  signed [31:0] stepgen2_velocity_fb = 32'd0;
 reg  [32:0] stepgen2_counter_vel = 33'd0;
-reg  [32:0] stepgen2_counter_acc = 33'd0;
+reg  [30:0] stepgen2_counter_acc = 31'd0;
 reg  stepgen2_acc_count = 1'd0;
+wire [29:0] stepgen2_acc_multiplier;
+wire [29:0] stepgen2_acc_multiplier_1;
 reg  [8:0] stepgen2_step_tmr = 9'd0;
 reg  [8:0] stepgen2_dir_tmr = 9'd0;
 reg  [13:0] stepgen2_dir_setuptimer = 14'd0;
@@ -2691,7 +2700,8 @@ reg  stepgen2_dir_old = 1'd0;
 reg  stepgen3_step1 = 1'd0;
 reg  stepgen3_sdir = 1'd0;
 reg  signed [31:0] stepgen3_velocity = 32'd0;
-reg  [31:0] stepgen3_max_acc = 32'd0;
+reg  [29:0] stepgen3_max_acc = 30'd0;
+reg  [1:0] stepgen3_acc_mult = 2'd0;
 reg  stepgen3_reset = 1'd0;
 reg  stepgen3_enable = 1'd0;
 reg  stepgen3_inv_step = 1'd0;
@@ -2702,8 +2712,10 @@ reg  [13:0] stepgen3_dir_setuptime = 14'd0;
 reg  signed [31:0] stepgen3_position_fb = 32'd0;
 reg  signed [31:0] stepgen3_velocity_fb = 32'd0;
 reg  [32:0] stepgen3_counter_vel = 33'd0;
-reg  [32:0] stepgen3_counter_acc = 33'd0;
+reg  [30:0] stepgen3_counter_acc = 31'd0;
 reg  stepgen3_acc_count = 1'd0;
+wire [29:0] stepgen3_acc_multiplier;
+wire [29:0] stepgen3_acc_multiplier_1;
 reg  [8:0] stepgen3_step_tmr = 9'd0;
 reg  [8:0] stepgen3_dir_tmr = 9'd0;
 reg  [13:0] stepgen3_dir_setuptimer = 14'd0;
@@ -2711,7 +2723,8 @@ reg  stepgen3_dir_old = 1'd0;
 reg  stepgen4_step1 = 1'd0;
 reg  stepgen4_sdir = 1'd0;
 reg  signed [31:0] stepgen4_velocity = 32'd0;
-reg  [31:0] stepgen4_max_acc = 32'd0;
+reg  [29:0] stepgen4_max_acc = 30'd0;
+reg  [1:0] stepgen4_acc_mult = 2'd0;
 reg  stepgen4_reset = 1'd0;
 reg  stepgen4_enable = 1'd0;
 reg  stepgen4_inv_step = 1'd0;
@@ -2722,8 +2735,10 @@ reg  [13:0] stepgen4_dir_setuptime = 14'd0;
 reg  signed [31:0] stepgen4_position_fb = 32'd0;
 reg  signed [31:0] stepgen4_velocity_fb = 32'd0;
 reg  [32:0] stepgen4_counter_vel = 33'd0;
-reg  [32:0] stepgen4_counter_acc = 33'd0;
+reg  [30:0] stepgen4_counter_acc = 31'd0;
 reg  stepgen4_acc_count = 1'd0;
+wire [29:0] stepgen4_acc_multiplier;
+wire [29:0] stepgen4_acc_multiplier_1;
 reg  [8:0] stepgen4_step_tmr = 9'd0;
 reg  [8:0] stepgen4_dir_tmr = 9'd0;
 reg  [13:0] stepgen4_dir_setuptimer = 14'd0;
@@ -2731,7 +2746,8 @@ reg  stepgen4_dir_old = 1'd0;
 reg  stepgen5_step1 = 1'd0;
 reg  stepgen5_sdir = 1'd0;
 reg  signed [31:0] stepgen5_velocity = 32'd0;
-reg  [31:0] stepgen5_max_acc = 32'd0;
+reg  [29:0] stepgen5_max_acc = 30'd0;
+reg  [1:0] stepgen5_acc_mult = 2'd0;
 reg  stepgen5_reset = 1'd0;
 reg  stepgen5_enable = 1'd0;
 reg  stepgen5_inv_step = 1'd0;
@@ -2742,8 +2758,10 @@ reg  [13:0] stepgen5_dir_setuptime = 14'd0;
 reg  signed [31:0] stepgen5_position_fb = 32'd0;
 reg  signed [31:0] stepgen5_velocity_fb = 32'd0;
 reg  [32:0] stepgen5_counter_vel = 33'd0;
-reg  [32:0] stepgen5_counter_acc = 33'd0;
+reg  [30:0] stepgen5_counter_acc = 31'd0;
 reg  stepgen5_acc_count = 1'd0;
+wire [29:0] stepgen5_acc_multiplier;
+wire [29:0] stepgen5_acc_multiplier_1;
 reg  [8:0] stepgen5_step_tmr = 9'd0;
 reg  [8:0] stepgen5_dir_tmr = 9'd0;
 reg  [13:0] stepgen5_dir_setuptimer = 14'd0;
@@ -2768,16 +2786,28 @@ reg  [31:0] MMIO_inst_csrstorage4_storage = 32'd0;
 reg  MMIO_inst_csrstorage4_re = 1'd0;
 reg  [31:0] MMIO_inst_csrstorage5_storage = 32'd0;
 reg  MMIO_inst_csrstorage5_re = 1'd0;
+wire [29:0] MMIO_inst_acc0;
+wire [1:0] MMIO_inst_acc_mult0;
 reg  [31:0] MMIO_inst_csrstorage6_storage = 32'd0;
 reg  MMIO_inst_csrstorage6_re = 1'd0;
+wire [29:0] MMIO_inst_acc1;
+wire [1:0] MMIO_inst_acc_mult1;
 reg  [31:0] MMIO_inst_csrstorage7_storage = 32'd0;
 reg  MMIO_inst_csrstorage7_re = 1'd0;
+wire [29:0] MMIO_inst_acc2;
+wire [1:0] MMIO_inst_acc_mult2;
 reg  [31:0] MMIO_inst_csrstorage8_storage = 32'd0;
 reg  MMIO_inst_csrstorage8_re = 1'd0;
+wire [29:0] MMIO_inst_acc3;
+wire [1:0] MMIO_inst_acc_mult3;
 reg  [31:0] MMIO_inst_csrstorage9_storage = 32'd0;
 reg  MMIO_inst_csrstorage9_re = 1'd0;
+wire [29:0] MMIO_inst_acc4;
+wire [1:0] MMIO_inst_acc_mult4;
 reg  [31:0] MMIO_inst_csrstorage10_storage = 32'd0;
 reg  MMIO_inst_csrstorage10_re = 1'd0;
+wire [29:0] MMIO_inst_acc5;
+wire [1:0] MMIO_inst_acc_mult5;
 reg  [31:0] MMIO_inst_csrstorage11_storage = 32'd0;
 reg  MMIO_inst_csrstorage11_re = 1'd0;
 wire [15:0] MMIO_inst_sgreset;
@@ -3774,7 +3804,6 @@ end
 always @(*) begin
 	basesoc_ethcore_mac_core_liteethmaccrc32inserter_source_valid <= 1'd0;
 	basesoc_ethcore_mac_core_liteethmaccrc32inserter_ce <= 1'd0;
-	liteethmac_txdatapath_bufferizeendpoints_next_state <= 2'd0;
 	basesoc_ethcore_mac_core_liteethmaccrc32inserter_reset <= 1'd0;
 	basesoc_ethcore_mac_core_liteethmaccrc32inserter_source_first <= 1'd0;
 	basesoc_ethcore_mac_core_liteethmaccrc32inserter_source_last <= 1'd0;
@@ -3783,13 +3812,14 @@ always @(*) begin
 	basesoc_ethcore_mac_core_liteethmaccrc32inserter_source_payload_error <= 1'd0;
 	basesoc_ethcore_mac_core_liteethmaccrc32inserter_data0 <= 8'd0;
 	basesoc_ethcore_mac_core_liteethmaccrc32inserter_last_be0 <= 1'd0;
+	liteethmac_txdatapath_bufferizeendpoints_next_state <= 2'd0;
 	basesoc_ethcore_mac_core_liteethmaccrc32inserter_crc_packet_liteethmac_clockdomainsrenamer1_next_value0 <= 32'd0;
-	basesoc_ethcore_mac_core_liteethmaccrc32inserter_crc_packet_liteethmac_clockdomainsrenamer1_next_value_ce0 <= 1'd0;
-	basesoc_ethcore_mac_core_liteethmaccrc32inserter_last_be2_liteethmac_clockdomainsrenamer1_next_value1 <= 1'd0;
-	basesoc_ethcore_mac_core_liteethmaccrc32inserter_last_be2_liteethmac_clockdomainsrenamer1_next_value_ce1 <= 1'd0;
 	basesoc_ethcore_mac_core_liteethmaccrc32inserter_sink_ready <= 1'd0;
+	basesoc_ethcore_mac_core_liteethmaccrc32inserter_crc_packet_liteethmac_clockdomainsrenamer1_next_value_ce0 <= 1'd0;
 	basesoc_ethcore_mac_core_liteethmaccrc32inserter_is_ongoing0 <= 1'd0;
+	basesoc_ethcore_mac_core_liteethmaccrc32inserter_last_be2_liteethmac_clockdomainsrenamer1_next_value1 <= 1'd0;
 	basesoc_ethcore_mac_core_liteethmaccrc32inserter_is_ongoing1 <= 1'd0;
+	basesoc_ethcore_mac_core_liteethmaccrc32inserter_last_be2_liteethmac_clockdomainsrenamer1_next_value_ce1 <= 1'd0;
 	liteethmac_txdatapath_bufferizeendpoints_next_state <= liteethmac_txdatapath_bufferizeendpoints_state;
 	case (liteethmac_txdatapath_bufferizeendpoints_state)
 		1'd1: begin
@@ -4167,22 +4197,22 @@ assign basesoc_ethcore_mac_core_rx_crc_syncfifo_syncfifo_dout = basesoc_ethcore_
 assign basesoc_ethcore_mac_core_rx_crc_syncfifo_syncfifo_writable = (basesoc_ethcore_mac_core_rx_crc_syncfifo_level != 3'd5);
 assign basesoc_ethcore_mac_core_rx_crc_syncfifo_syncfifo_readable = (basesoc_ethcore_mac_core_rx_crc_syncfifo_level != 1'd0);
 always @(*) begin
-	basesoc_ethcore_mac_core_rx_crc_last_be_liteethmac_next_value0 <= 1'd0;
-	basesoc_ethcore_mac_core_rx_crc_last_be_liteethmac_next_value_ce0 <= 1'd0;
-	basesoc_ethcore_mac_core_rx_crc_crc_error1_liteethmac_next_value1 <= 1'd0;
-	basesoc_ethcore_mac_core_rx_crc_crc_error1_liteethmac_next_value_ce1 <= 1'd0;
 	basesoc_ethcore_mac_core_rx_crc_fifo_reset <= 1'd0;
 	basesoc_ethcore_mac_core_rx_crc_source_source_valid <= 1'd0;
+	liteethmac_rxdatapath_bufferizeendpoints_next_state <= 2'd0;
 	basesoc_ethcore_mac_core_rx_crc_crc_ce <= 1'd0;
 	basesoc_ethcore_mac_core_rx_crc_source_source_first <= 1'd0;
 	basesoc_ethcore_mac_core_rx_crc_crc_reset <= 1'd0;
 	basesoc_ethcore_mac_core_rx_crc_source_source_last <= 1'd0;
 	basesoc_ethcore_mac_core_rx_crc_source_source_payload_data <= 8'd0;
 	basesoc_ethcore_mac_core_rx_crc_source_source_payload_last_be <= 1'd0;
+	basesoc_ethcore_mac_core_rx_crc_last_be_liteethmac_next_value0 <= 1'd0;
 	basesoc_ethcore_mac_core_rx_crc_source_source_payload_error <= 1'd0;
+	basesoc_ethcore_mac_core_rx_crc_last_be_liteethmac_next_value_ce0 <= 1'd0;
 	basesoc_ethcore_mac_core_rx_crc_error <= 1'd0;
+	basesoc_ethcore_mac_core_rx_crc_crc_error1_liteethmac_next_value1 <= 1'd0;
+	basesoc_ethcore_mac_core_rx_crc_crc_error1_liteethmac_next_value_ce1 <= 1'd0;
 	basesoc_ethcore_mac_core_rx_crc_syncfifo_source_ready <= 1'd0;
-	liteethmac_rxdatapath_bufferizeendpoints_next_state <= 2'd0;
 	liteethmac_rxdatapath_bufferizeendpoints_next_state <= liteethmac_rxdatapath_bufferizeendpoints_state;
 	case (liteethmac_rxdatapath_bufferizeendpoints_state)
 		1'd1: begin
@@ -4497,15 +4527,17 @@ always @(*) begin
 end
 assign basesoc_ethcore_mac_packetizer_source_payload_error = basesoc_ethcore_mac_packetizer_sink_payload_error;
 always @(*) begin
-	basesoc_ethcore_mac_packetizer_fsm_from_idle_liteethmac_fsm0_next_value1 <= 1'd0;
-	basesoc_ethcore_mac_packetizer_fsm_from_idle_liteethmac_fsm0_next_value_ce1 <= 1'd0;
+	basesoc_ethcore_mac_packetizer_delayed_last_be_liteethmac_fsm1_next_value0 <= 1'd0;
+	basesoc_ethcore_mac_packetizer_delayed_last_be_liteethmac_fsm1_next_value_ce0 <= 1'd0;
 	basesoc_ethcore_mac_packetizer_is_ongoing0 <= 1'd0;
 	basesoc_ethcore_mac_packetizer_is_ongoing1 <= 1'd0;
 	basesoc_ethcore_mac_packetizer_sink_ready <= 1'd0;
-	liteethmac_fsm1_next_state0 <= 1'd0;
+	liteethmac_fsm0_next_state0 <= 2'd0;
+	basesoc_ethcore_mac_packetizer_count_liteethmac_fsm0_next_value0 <= 4'd0;
+	basesoc_ethcore_mac_packetizer_count_liteethmac_fsm0_next_value_ce0 <= 1'd0;
 	basesoc_ethcore_mac_packetizer_is_ongoing2 <= 1'd0;
-	basesoc_ethcore_mac_packetizer_delayed_last_be_liteethmac_fsm1_next_value0 <= 1'd0;
-	basesoc_ethcore_mac_packetizer_delayed_last_be_liteethmac_fsm1_next_value_ce0 <= 1'd0;
+	basesoc_ethcore_mac_packetizer_fsm_from_idle_liteethmac_fsm0_next_value1 <= 1'd0;
+	basesoc_ethcore_mac_packetizer_fsm_from_idle_liteethmac_fsm0_next_value_ce1 <= 1'd0;
 	basesoc_ethcore_mac_packetizer_source_valid <= 1'd0;
 	basesoc_ethcore_mac_packetizer_source_last_a <= 1'd0;
 	basesoc_ethcore_mac_packetizer_source_last_b <= 1'd0;
@@ -4513,10 +4545,8 @@ always @(*) begin
 	basesoc_ethcore_mac_packetizer_source_payload_data <= 8'd0;
 	basesoc_ethcore_mac_packetizer_source_payload_last_be <= 1'd0;
 	basesoc_ethcore_mac_packetizer_sr_load <= 1'd0;
-	liteethmac_fsm0_next_state0 <= 2'd0;
 	basesoc_ethcore_mac_packetizer_sr_shift <= 1'd0;
-	basesoc_ethcore_mac_packetizer_count_liteethmac_fsm0_next_value0 <= 4'd0;
-	basesoc_ethcore_mac_packetizer_count_liteethmac_fsm0_next_value_ce0 <= 1'd0;
+	liteethmac_fsm1_next_state0 <= 1'd0;
 	liteethmac_fsm0_next_state0 <= liteethmac_fsm0_state0;
 	case (liteethmac_fsm0_state0)
 		1'd1: begin
@@ -4632,23 +4662,23 @@ always @(*) begin
 	basesoc_ethcore_mac_depacketizer_source_payload_data <= 8'd0;
 	basesoc_ethcore_mac_depacketizer_source_payload_last_be <= 1'd0;
 	basesoc_ethcore_mac_depacketizer_sr_shift <= 1'd0;
-	liteethmac_fsm1_next_state1 <= 1'd0;
-	basesoc_ethcore_mac_depacketizer_is_ongoing0 <= 1'd0;
-	basesoc_ethcore_mac_depacketizer_delayed_last_be_liteethmac_fsm1_next_value1 <= 1'd0;
-	basesoc_ethcore_mac_depacketizer_is_ongoing1 <= 1'd0;
-	basesoc_ethcore_mac_depacketizer_delayed_last_be_liteethmac_fsm1_next_value_ce1 <= 1'd0;
-	basesoc_ethcore_mac_depacketizer_sink_ready <= 1'd0;
-	basesoc_ethcore_mac_depacketizer_fsm_from_idle_liteethmac_fsm0_next_value3 <= 1'd0;
-	basesoc_ethcore_mac_depacketizer_is_ongoing2 <= 1'd0;
-	basesoc_ethcore_mac_depacketizer_is_ongoing3 <= 1'd0;
 	liteethmac_fsm0_next_state1 <= 2'd0;
 	basesoc_ethcore_mac_depacketizer_count_liteethmac_fsm0_next_value2 <= 4'd0;
-	basesoc_ethcore_mac_depacketizer_source_valid <= 1'd0;
 	basesoc_ethcore_mac_depacketizer_count_liteethmac_fsm0_next_value_ce2 <= 1'd0;
+	basesoc_ethcore_mac_depacketizer_is_ongoing0 <= 1'd0;
+	basesoc_ethcore_mac_depacketizer_fsm_from_idle_liteethmac_fsm0_next_value3 <= 1'd0;
 	basesoc_ethcore_mac_depacketizer_fsm_from_idle_liteethmac_fsm0_next_value_ce3 <= 1'd0;
+	basesoc_ethcore_mac_depacketizer_is_ongoing1 <= 1'd0;
+	basesoc_ethcore_mac_depacketizer_delayed_last_be_liteethmac_fsm1_next_value1 <= 1'd0;
+	basesoc_ethcore_mac_depacketizer_sink_ready <= 1'd0;
+	basesoc_ethcore_mac_depacketizer_is_ongoing2 <= 1'd0;
+	basesoc_ethcore_mac_depacketizer_is_ongoing3 <= 1'd0;
+	liteethmac_fsm1_next_state1 <= 1'd0;
+	basesoc_ethcore_mac_depacketizer_source_valid <= 1'd0;
 	basesoc_ethcore_mac_depacketizer_source_last_a <= 1'd0;
 	basesoc_ethcore_mac_depacketizer_source_last_b <= 1'd0;
 	basesoc_ethcore_mac_depacketizer_source_last_s <= 1'd0;
+	basesoc_ethcore_mac_depacketizer_delayed_last_be_liteethmac_fsm1_next_value_ce1 <= 1'd0;
 	liteethmac_fsm0_next_state1 <= liteethmac_fsm0_state1;
 	case (liteethmac_fsm0_state1)
 		1'd1: begin
@@ -4841,25 +4871,25 @@ always @(*) begin
 end
 assign basesoc_ethcore_arp_tx_packetizer_source_payload_error = basesoc_ethcore_arp_tx_packetizer_sink_payload_error;
 always @(*) begin
+	liteetharptx_fsm0_next_state <= 2'd0;
 	basesoc_ethcore_arp_tx_packetizer_source_payload_data <= 8'd0;
-	liteetharptx_fsm1_next_state <= 1'd0;
+	basesoc_ethcore_arp_tx_packetizer_count_liteetharp_fsm0_next_value0 <= 5'd0;
 	basesoc_ethcore_arp_tx_packetizer_source_payload_last_be <= 1'd0;
+	basesoc_ethcore_arp_tx_packetizer_count_liteetharp_fsm0_next_value_ce0 <= 1'd0;
 	basesoc_ethcore_arp_tx_packetizer_is_ongoing0 <= 1'd0;
-	basesoc_ethcore_arp_tx_packetizer_delayed_last_be_liteetharp_fsm1_next_value0 <= 1'd0;
-	basesoc_ethcore_arp_tx_packetizer_delayed_last_be_liteetharp_fsm1_next_value_ce0 <= 1'd0;
+	basesoc_ethcore_arp_tx_packetizer_fsm_from_idle_liteetharp_fsm0_next_value1 <= 1'd0;
 	basesoc_ethcore_arp_tx_packetizer_is_ongoing1 <= 1'd0;
 	basesoc_ethcore_arp_tx_packetizer_sr_load <= 1'd0;
+	basesoc_ethcore_arp_tx_packetizer_fsm_from_idle_liteetharp_fsm0_next_value_ce1 <= 1'd0;
 	basesoc_ethcore_arp_tx_packetizer_sr_shift <= 1'd0;
 	basesoc_ethcore_arp_tx_packetizer_sink_ready <= 1'd0;
 	basesoc_ethcore_arp_tx_packetizer_is_ongoing2 <= 1'd0;
 	basesoc_ethcore_arp_tx_packetizer_source_last_a <= 1'd0;
-	liteetharptx_fsm0_next_state <= 2'd0;
 	basesoc_ethcore_arp_tx_packetizer_source_last_b <= 1'd0;
-	basesoc_ethcore_arp_tx_packetizer_count_liteetharp_fsm0_next_value0 <= 5'd0;
+	liteetharptx_fsm1_next_state <= 1'd0;
 	basesoc_ethcore_arp_tx_packetizer_source_last_s <= 1'd0;
-	basesoc_ethcore_arp_tx_packetizer_count_liteetharp_fsm0_next_value_ce0 <= 1'd0;
-	basesoc_ethcore_arp_tx_packetizer_fsm_from_idle_liteetharp_fsm0_next_value1 <= 1'd0;
-	basesoc_ethcore_arp_tx_packetizer_fsm_from_idle_liteetharp_fsm0_next_value_ce1 <= 1'd0;
+	basesoc_ethcore_arp_tx_packetizer_delayed_last_be_liteetharp_fsm1_next_value0 <= 1'd0;
+	basesoc_ethcore_arp_tx_packetizer_delayed_last_be_liteetharp_fsm1_next_value_ce0 <= 1'd0;
 	basesoc_ethcore_arp_tx_packetizer_source_valid <= 1'd0;
 	liteetharptx_fsm0_next_state <= liteetharptx_fsm0_state;
 	case (liteetharptx_fsm0_state)
@@ -5037,24 +5067,24 @@ always @(*) begin
 	end
 end
 always @(*) begin
-	basesoc_ethcore_arp_rx_depacketizer_fsm_from_idle_liteetharp_fsm0_next_value_ce3 <= 1'd0;
-	basesoc_ethcore_arp_rx_depacketizer_is_ongoing0 <= 1'd0;
-	basesoc_ethcore_arp_rx_depacketizer_is_ongoing1 <= 1'd0;
-	basesoc_ethcore_arp_rx_depacketizer_fsm_from_idle_liteetharp_fsm0_next_value3 <= 1'd0;
-	liteetharprx_fsm1_next_state <= 1'd0;
-	basesoc_ethcore_arp_rx_depacketizer_sr_shift <= 1'd0;
-	basesoc_ethcore_arp_rx_depacketizer_is_ongoing2 <= 1'd0;
-	basesoc_ethcore_arp_rx_depacketizer_is_ongoing3 <= 1'd0;
 	basesoc_ethcore_arp_rx_depacketizer_delayed_last_be_liteetharp_fsm1_next_value1 <= 1'd0;
 	basesoc_ethcore_arp_rx_depacketizer_delayed_last_be_liteetharp_fsm1_next_value_ce1 <= 1'd0;
+	basesoc_ethcore_arp_rx_depacketizer_is_ongoing0 <= 1'd0;
+	basesoc_ethcore_arp_rx_depacketizer_is_ongoing1 <= 1'd0;
+	liteetharprx_fsm0_next_state <= 2'd0;
+	basesoc_ethcore_arp_rx_depacketizer_count_liteetharp_fsm0_next_value2 <= 5'd0;
+	basesoc_ethcore_arp_rx_depacketizer_is_ongoing2 <= 1'd0;
+	basesoc_ethcore_arp_rx_depacketizer_count_liteetharp_fsm0_next_value_ce2 <= 1'd0;
+	basesoc_ethcore_arp_rx_depacketizer_sr_shift <= 1'd0;
+	basesoc_ethcore_arp_rx_depacketizer_is_ongoing3 <= 1'd0;
+	basesoc_ethcore_arp_rx_depacketizer_fsm_from_idle_liteetharp_fsm0_next_value3 <= 1'd0;
+	basesoc_ethcore_arp_rx_depacketizer_fsm_from_idle_liteetharp_fsm0_next_value_ce3 <= 1'd0;
 	basesoc_ethcore_arp_rx_depacketizer_sink_ready <= 1'd0;
 	basesoc_ethcore_arp_rx_depacketizer_source_last_a <= 1'd0;
 	basesoc_ethcore_arp_rx_depacketizer_source_last_b <= 1'd0;
 	basesoc_ethcore_arp_rx_depacketizer_source_last_s <= 1'd0;
 	basesoc_ethcore_arp_rx_depacketizer_source_valid <= 1'd0;
-	liteetharprx_fsm0_next_state <= 2'd0;
-	basesoc_ethcore_arp_rx_depacketizer_count_liteetharp_fsm0_next_value2 <= 5'd0;
-	basesoc_ethcore_arp_rx_depacketizer_count_liteetharp_fsm0_next_value_ce2 <= 1'd0;
+	liteetharprx_fsm1_next_state <= 1'd0;
 	basesoc_ethcore_arp_rx_depacketizer_source_payload_data <= 8'd0;
 	basesoc_ethcore_arp_rx_depacketizer_source_payload_last_be <= 1'd0;
 	liteetharprx_fsm0_next_state <= liteetharprx_fsm0_state;
@@ -5366,20 +5396,20 @@ always @(*) begin
 end
 assign basesoc_ethcore_ip_tx_packetizer_source_payload_error = basesoc_ethcore_ip_tx_packetizer_sink_payload_error;
 always @(*) begin
-	liteethip_liteethiptx_fsm1_next_state <= 1'd0;
-	basesoc_ethcore_ip_tx_packetizer_delayed_last_be_liteethip_fsm1_next_value0 <= 1'd0;
-	basesoc_ethcore_ip_tx_packetizer_delayed_last_be_liteethip_fsm1_next_value_ce0 <= 1'd0;
+	liteethip_liteethiptx_fsm0_next_state <= 2'd0;
+	basesoc_ethcore_ip_tx_packetizer_count_liteethip_fsm0_next_value0 <= 5'd0;
+	basesoc_ethcore_ip_tx_packetizer_count_liteethip_fsm0_next_value_ce0 <= 1'd0;
+	basesoc_ethcore_ip_tx_packetizer_fsm_from_idle_liteethip_fsm0_next_value1 <= 1'd0;
+	basesoc_ethcore_ip_tx_packetizer_fsm_from_idle_liteethip_fsm0_next_value_ce1 <= 1'd0;
 	basesoc_ethcore_ip_tx_packetizer_source_valid <= 1'd0;
 	basesoc_ethcore_ip_tx_packetizer_is_ongoing0 <= 1'd0;
 	basesoc_ethcore_ip_tx_packetizer_source_payload_data <= 8'd0;
-	liteethip_liteethiptx_fsm0_next_state <= 2'd0;
-	basesoc_ethcore_ip_tx_packetizer_source_payload_last_be <= 1'd0;
-	basesoc_ethcore_ip_tx_packetizer_count_liteethip_fsm0_next_value0 <= 5'd0;
 	basesoc_ethcore_ip_tx_packetizer_is_ongoing1 <= 1'd0;
-	basesoc_ethcore_ip_tx_packetizer_count_liteethip_fsm0_next_value_ce0 <= 1'd0;
+	basesoc_ethcore_ip_tx_packetizer_source_payload_last_be <= 1'd0;
+	liteethip_liteethiptx_fsm1_next_state <= 1'd0;
+	basesoc_ethcore_ip_tx_packetizer_delayed_last_be_liteethip_fsm1_next_value0 <= 1'd0;
 	basesoc_ethcore_ip_tx_packetizer_sr_load <= 1'd0;
-	basesoc_ethcore_ip_tx_packetizer_fsm_from_idle_liteethip_fsm0_next_value1 <= 1'd0;
-	basesoc_ethcore_ip_tx_packetizer_fsm_from_idle_liteethip_fsm0_next_value_ce1 <= 1'd0;
+	basesoc_ethcore_ip_tx_packetizer_delayed_last_be_liteethip_fsm1_next_value_ce0 <= 1'd0;
 	basesoc_ethcore_ip_tx_packetizer_is_ongoing2 <= 1'd0;
 	basesoc_ethcore_ip_tx_packetizer_sr_shift <= 1'd0;
 	basesoc_ethcore_ip_tx_packetizer_sink_ready <= 1'd0;
@@ -5482,6 +5512,7 @@ always @(*) begin
 	endcase
 end
 always @(*) begin
+	basesoc_ethcore_ip_tx_target_mac_liteethip_next_value_ce <= 1'd0;
 	basesoc_ethcore_ip_tx_source_source_valid <= 1'd0;
 	basesoc_ethcore_ip_tx_source_source_first <= 1'd0;
 	basesoc_ethcore_ip_tx_source_source_last <= 1'd0;
@@ -5490,14 +5521,13 @@ always @(*) begin
 	basesoc_ethcore_ip_tx_source_source_payload_sender_mac <= 48'd0;
 	basesoc_ethcore_ip_tx_source_source_payload_target_mac <= 48'd0;
 	basesoc_ethcore_ip_tx_source_source_payload_data <= 8'd0;
-	liteethip_liteethiptx_next_state <= 3'd0;
 	basesoc_ethcore_ip_tx_source_source_payload_last_be <= 1'd0;
 	basesoc_ethcore_ip_tx_source_source_payload_error <= 1'd0;
-	basesoc_ethcore_ip_tx_target_mac_liteethip_next_value <= 48'd0;
-	basesoc_ethcore_ip_tx_target_mac_liteethip_next_value_ce <= 1'd0;
 	basesoc_ethcore_ip_tx_target_unreachable <= 1'd0;
 	basesoc_ethcore_arp_table_request_valid <= 1'd0;
 	basesoc_ethcore_arp_table_response_ready <= 1'd0;
+	liteethip_liteethiptx_next_state <= 3'd0;
+	basesoc_ethcore_ip_tx_target_mac_liteethip_next_value <= 48'd0;
 	liteethip_liteethiptx_next_state <= liteethip_liteethiptx_state;
 	case (liteethip_liteethiptx_state)
 		1'd1: begin
@@ -5605,18 +5635,19 @@ always @(*) begin
 	end
 end
 always @(*) begin
-	basesoc_ethcore_ip_rx_depacketizer_count_liteethip_fsm0_next_value2 <= 5'd0;
-	basesoc_ethcore_ip_rx_depacketizer_count_liteethip_fsm0_next_value_ce2 <= 1'd0;
-	basesoc_ethcore_ip_rx_depacketizer_fsm_from_idle_liteethip_fsm0_next_value3 <= 1'd0;
-	basesoc_ethcore_ip_rx_depacketizer_fsm_from_idle_liteethip_fsm0_next_value_ce3 <= 1'd0;
+	liteethip_liteethiprx_fsm1_next_state <= 1'd0;
+	basesoc_ethcore_ip_rx_depacketizer_delayed_last_be_liteethip_fsm1_next_value1 <= 1'd0;
+	basesoc_ethcore_ip_rx_depacketizer_delayed_last_be_liteethip_fsm1_next_value_ce1 <= 1'd0;
 	basesoc_ethcore_ip_rx_depacketizer_source_valid <= 1'd0;
 	basesoc_ethcore_ip_rx_depacketizer_is_ongoing0 <= 1'd0;
 	basesoc_ethcore_ip_rx_depacketizer_source_payload_data <= 8'd0;
 	basesoc_ethcore_ip_rx_depacketizer_source_payload_last_be <= 1'd0;
 	basesoc_ethcore_ip_rx_depacketizer_is_ongoing1 <= 1'd0;
-	liteethip_liteethiprx_fsm1_next_state <= 1'd0;
-	basesoc_ethcore_ip_rx_depacketizer_delayed_last_be_liteethip_fsm1_next_value1 <= 1'd0;
-	basesoc_ethcore_ip_rx_depacketizer_delayed_last_be_liteethip_fsm1_next_value_ce1 <= 1'd0;
+	liteethip_liteethiprx_fsm0_next_state <= 2'd0;
+	basesoc_ethcore_ip_rx_depacketizer_count_liteethip_fsm0_next_value2 <= 5'd0;
+	basesoc_ethcore_ip_rx_depacketizer_count_liteethip_fsm0_next_value_ce2 <= 1'd0;
+	basesoc_ethcore_ip_rx_depacketizer_fsm_from_idle_liteethip_fsm0_next_value3 <= 1'd0;
+	basesoc_ethcore_ip_rx_depacketizer_fsm_from_idle_liteethip_fsm0_next_value_ce3 <= 1'd0;
 	basesoc_ethcore_ip_rx_depacketizer_is_ongoing2 <= 1'd0;
 	basesoc_ethcore_ip_rx_depacketizer_is_ongoing3 <= 1'd0;
 	basesoc_ethcore_ip_rx_depacketizer_sr_shift <= 1'd0;
@@ -5624,7 +5655,6 @@ always @(*) begin
 	basesoc_ethcore_ip_rx_depacketizer_source_last_b <= 1'd0;
 	basesoc_ethcore_ip_rx_depacketizer_source_last_s <= 1'd0;
 	basesoc_ethcore_ip_rx_depacketizer_sink_ready <= 1'd0;
-	liteethip_liteethiprx_fsm0_next_state <= 2'd0;
 	liteethip_liteethiprx_fsm0_next_state <= liteethip_liteethiprx_fsm0_state;
 	case (liteethip_liteethiprx_fsm0_state)
 		1'd1: begin
@@ -5986,19 +6016,19 @@ always @(*) begin
 	basesoc_ethcore_icmp_tx_packetizer_source_payload_data <= 8'd0;
 	basesoc_ethcore_icmp_tx_packetizer_source_last_s <= 1'd0;
 	basesoc_ethcore_icmp_tx_packetizer_source_payload_last_be <= 1'd0;
-	liteethicmptx_fsm1_next_state <= 1'd0;
-	basesoc_ethcore_icmp_tx_packetizer_delayed_last_be_fsm1_next_value0 <= 1'd0;
-	basesoc_ethcore_icmp_tx_packetizer_delayed_last_be_fsm1_next_value_ce0 <= 1'd0;
-	basesoc_ethcore_icmp_tx_packetizer_sr_load <= 1'd0;
-	basesoc_ethcore_icmp_tx_packetizer_sr_shift <= 1'd0;
-	basesoc_ethcore_icmp_tx_packetizer_sink_ready <= 1'd0;
 	liteethicmptx_fsm0_next_state <= 2'd0;
 	basesoc_ethcore_icmp_tx_packetizer_count_fsm0_next_value0 <= 3'd0;
-	basesoc_ethcore_icmp_tx_packetizer_is_ongoing0 <= 1'd0;
 	basesoc_ethcore_icmp_tx_packetizer_count_fsm0_next_value_ce0 <= 1'd0;
-	basesoc_ethcore_icmp_tx_packetizer_is_ongoing1 <= 1'd0;
 	basesoc_ethcore_icmp_tx_packetizer_fsm_from_idle_fsm0_next_value1 <= 1'd0;
+	basesoc_ethcore_icmp_tx_packetizer_sr_load <= 1'd0;
 	basesoc_ethcore_icmp_tx_packetizer_fsm_from_idle_fsm0_next_value_ce1 <= 1'd0;
+	basesoc_ethcore_icmp_tx_packetizer_sr_shift <= 1'd0;
+	basesoc_ethcore_icmp_tx_packetizer_sink_ready <= 1'd0;
+	basesoc_ethcore_icmp_tx_packetizer_is_ongoing0 <= 1'd0;
+	liteethicmptx_fsm1_next_state <= 1'd0;
+	basesoc_ethcore_icmp_tx_packetizer_is_ongoing1 <= 1'd0;
+	basesoc_ethcore_icmp_tx_packetizer_delayed_last_be_fsm1_next_value0 <= 1'd0;
+	basesoc_ethcore_icmp_tx_packetizer_delayed_last_be_fsm1_next_value_ce0 <= 1'd0;
 	basesoc_ethcore_icmp_tx_packetizer_is_ongoing2 <= 1'd0;
 	liteethicmptx_fsm0_next_state <= liteethicmptx_fsm0_state;
 	case (liteethicmptx_fsm0_state)
@@ -6156,23 +6186,23 @@ always @(*) begin
 	basesoc_ethcore_icmp_rx_depacketizer_is_ongoing2 <= 1'd0;
 	basesoc_ethcore_icmp_rx_depacketizer_source_valid <= 1'd0;
 	basesoc_ethcore_icmp_rx_depacketizer_is_ongoing3 <= 1'd0;
-	liteethicmprx_fsm1_next_state <= 1'd0;
+	liteethicmprx_fsm0_next_state <= 2'd0;
 	basesoc_ethcore_icmp_rx_depacketizer_source_last_a <= 1'd0;
+	basesoc_ethcore_icmp_rx_depacketizer_count_fsm0_next_value2 <= 3'd0;
 	basesoc_ethcore_icmp_rx_depacketizer_source_last_b <= 1'd0;
 	basesoc_ethcore_icmp_rx_depacketizer_source_payload_last_be <= 1'd0;
 	basesoc_ethcore_icmp_rx_depacketizer_source_last_s <= 1'd0;
 	basesoc_ethcore_icmp_rx_depacketizer_source_payload_data <= 8'd0;
-	basesoc_ethcore_icmp_rx_depacketizer_delayed_last_be_fsm1_next_value1 <= 1'd0;
-	basesoc_ethcore_icmp_rx_depacketizer_delayed_last_be_fsm1_next_value_ce1 <= 1'd0;
-	basesoc_ethcore_icmp_rx_depacketizer_sr_shift <= 1'd0;
-	liteethicmprx_fsm0_next_state <= 2'd0;
-	basesoc_ethcore_icmp_rx_depacketizer_count_fsm0_next_value2 <= 3'd0;
-	basesoc_ethcore_icmp_rx_depacketizer_is_ongoing0 <= 1'd0;
 	basesoc_ethcore_icmp_rx_depacketizer_count_fsm0_next_value_ce2 <= 1'd0;
-	basesoc_ethcore_icmp_rx_depacketizer_is_ongoing1 <= 1'd0;
-	basesoc_ethcore_icmp_rx_depacketizer_sink_ready <= 1'd0;
 	basesoc_ethcore_icmp_rx_depacketizer_fsm_from_idle_fsm0_next_value3 <= 1'd0;
 	basesoc_ethcore_icmp_rx_depacketizer_fsm_from_idle_fsm0_next_value_ce3 <= 1'd0;
+	basesoc_ethcore_icmp_rx_depacketizer_sr_shift <= 1'd0;
+	liteethicmprx_fsm1_next_state <= 1'd0;
+	basesoc_ethcore_icmp_rx_depacketizer_is_ongoing0 <= 1'd0;
+	basesoc_ethcore_icmp_rx_depacketizer_is_ongoing1 <= 1'd0;
+	basesoc_ethcore_icmp_rx_depacketizer_sink_ready <= 1'd0;
+	basesoc_ethcore_icmp_rx_depacketizer_delayed_last_be_fsm1_next_value1 <= 1'd0;
+	basesoc_ethcore_icmp_rx_depacketizer_delayed_last_be_fsm1_next_value_ce1 <= 1'd0;
 	liteethicmprx_fsm0_next_state <= liteethicmprx_fsm0_state;
 	case (liteethicmprx_fsm0_state)
 		1'd1: begin
@@ -6496,24 +6526,24 @@ always @(*) begin
 end
 assign basesoc_ethcore_tx_packetizer_source_payload_error = basesoc_ethcore_tx_packetizer_sink_payload_error;
 always @(*) begin
-	liteethudp_liteethudptx_fsm0_next_state <= 2'd0;
-	basesoc_ethcore_tx_packetizer_count_liteethudp_fsm0_next_value0 <= 3'd0;
-	basesoc_ethcore_tx_packetizer_count_liteethudp_fsm0_next_value_ce0 <= 1'd0;
-	basesoc_ethcore_tx_packetizer_fsm_from_idle_liteethudp_fsm0_next_value1 <= 1'd0;
-	basesoc_ethcore_tx_packetizer_fsm_from_idle_liteethudp_fsm0_next_value_ce1 <= 1'd0;
+	liteethudp_liteethudptx_fsm1_next_state <= 1'd0;
+	basesoc_ethcore_tx_packetizer_delayed_last_be_liteethudp_fsm1_next_value0 <= 1'd0;
+	basesoc_ethcore_tx_packetizer_delayed_last_be_liteethudp_fsm1_next_value_ce0 <= 1'd0;
 	basesoc_ethcore_tx_packetizer_sink_ready <= 1'd0;
 	basesoc_ethcore_tx_packetizer_is_ongoing0 <= 1'd0;
 	basesoc_ethcore_tx_packetizer_is_ongoing1 <= 1'd0;
 	basesoc_ethcore_tx_packetizer_is_ongoing2 <= 1'd0;
+	liteethudp_liteethudptx_fsm0_next_state <= 2'd0;
 	basesoc_ethcore_tx_packetizer_source_valid <= 1'd0;
-	liteethudp_liteethudptx_fsm1_next_state <= 1'd0;
+	basesoc_ethcore_tx_packetizer_count_liteethudp_fsm0_next_value0 <= 3'd0;
+	basesoc_ethcore_tx_packetizer_count_liteethudp_fsm0_next_value_ce0 <= 1'd0;
 	basesoc_ethcore_tx_packetizer_source_last_a <= 1'd0;
 	basesoc_ethcore_tx_packetizer_source_last_b <= 1'd0;
-	basesoc_ethcore_tx_packetizer_delayed_last_be_liteethudp_fsm1_next_value0 <= 1'd0;
+	basesoc_ethcore_tx_packetizer_source_payload_data <= 8'd0;
 	basesoc_ethcore_tx_packetizer_source_last_s <= 1'd0;
 	basesoc_ethcore_tx_packetizer_source_payload_last_be <= 1'd0;
-	basesoc_ethcore_tx_packetizer_delayed_last_be_liteethudp_fsm1_next_value_ce0 <= 1'd0;
-	basesoc_ethcore_tx_packetizer_source_payload_data <= 8'd0;
+	basesoc_ethcore_tx_packetizer_fsm_from_idle_liteethudp_fsm0_next_value1 <= 1'd0;
+	basesoc_ethcore_tx_packetizer_fsm_from_idle_liteethudp_fsm0_next_value_ce1 <= 1'd0;
 	basesoc_ethcore_tx_packetizer_sr_load <= 1'd0;
 	basesoc_ethcore_tx_packetizer_sr_shift <= 1'd0;
 	liteethudp_liteethudptx_fsm0_next_state <= liteethudp_liteethudptx_fsm0_state;
@@ -6687,25 +6717,25 @@ always @(*) begin
 end
 always @(*) begin
 	basesoc_ethcore_rx_depacketizer_sr_shift <= 1'd0;
-	liteethudp_liteethudprx_fsm0_next_state <= 2'd0;
-	basesoc_ethcore_rx_depacketizer_count_liteethudp_fsm0_next_value2 <= 3'd0;
-	basesoc_ethcore_rx_depacketizer_count_liteethudp_fsm0_next_value_ce2 <= 1'd0;
-	basesoc_ethcore_rx_depacketizer_fsm_from_idle_liteethudp_fsm0_next_value3 <= 1'd0;
-	basesoc_ethcore_rx_depacketizer_fsm_from_idle_liteethudp_fsm0_next_value_ce3 <= 1'd0;
+	liteethudp_liteethudprx_fsm1_next_state <= 1'd0;
+	basesoc_ethcore_rx_depacketizer_delayed_last_be_liteethudp_fsm1_next_value1 <= 1'd0;
+	basesoc_ethcore_rx_depacketizer_delayed_last_be_liteethudp_fsm1_next_value_ce1 <= 1'd0;
 	basesoc_ethcore_rx_depacketizer_is_ongoing0 <= 1'd0;
 	basesoc_ethcore_rx_depacketizer_is_ongoing1 <= 1'd0;
 	basesoc_ethcore_rx_depacketizer_sink_ready <= 1'd0;
+	liteethudp_liteethudprx_fsm0_next_state <= 2'd0;
 	basesoc_ethcore_rx_depacketizer_is_ongoing2 <= 1'd0;
-	liteethudp_liteethudprx_fsm1_next_state <= 1'd0;
+	basesoc_ethcore_rx_depacketizer_count_liteethudp_fsm0_next_value2 <= 3'd0;
 	basesoc_ethcore_rx_depacketizer_source_valid <= 1'd0;
+	basesoc_ethcore_rx_depacketizer_count_liteethudp_fsm0_next_value_ce2 <= 1'd0;
 	basesoc_ethcore_rx_depacketizer_is_ongoing3 <= 1'd0;
-	basesoc_ethcore_rx_depacketizer_delayed_last_be_liteethudp_fsm1_next_value1 <= 1'd0;
+	basesoc_ethcore_rx_depacketizer_fsm_from_idle_liteethudp_fsm0_next_value3 <= 1'd0;
+	basesoc_ethcore_rx_depacketizer_fsm_from_idle_liteethudp_fsm0_next_value_ce3 <= 1'd0;
 	basesoc_ethcore_rx_depacketizer_source_last_a <= 1'd0;
-	basesoc_ethcore_rx_depacketizer_delayed_last_be_liteethudp_fsm1_next_value_ce1 <= 1'd0;
+	basesoc_ethcore_rx_depacketizer_source_payload_data <= 8'd0;
 	basesoc_ethcore_rx_depacketizer_source_payload_last_be <= 1'd0;
 	basesoc_ethcore_rx_depacketizer_source_last_b <= 1'd0;
 	basesoc_ethcore_rx_depacketizer_source_last_s <= 1'd0;
-	basesoc_ethcore_rx_depacketizer_source_payload_data <= 8'd0;
 	liteethudp_liteethudprx_fsm0_next_state <= liteethudp_liteethudprx_fsm0_state;
 	case (liteethudp_liteethudprx_fsm0_state)
 		1'd1: begin
@@ -7280,23 +7310,23 @@ always @(*) begin
 end
 assign basesoc_etherbone_tx_packetizer_source_payload_error = basesoc_etherbone_tx_packetizer_sink_payload_error;
 always @(*) begin
+	liteethetherbonepackettx_fsm0_next_state <= 2'd0;
 	basesoc_etherbone_tx_packetizer_source_payload_data <= 32'd0;
-	liteethetherbonepackettx_fsm1_next_state <= 1'd0;
+	basesoc_etherbone_tx_packetizer_count_fsm0_next_value4 <= 1'd0;
 	basesoc_etherbone_tx_packetizer_source_payload_last_be <= 4'd0;
+	basesoc_etherbone_tx_packetizer_count_fsm0_next_value_ce4 <= 1'd0;
 	basesoc_etherbone_tx_packetizer_is_ongoing2 <= 1'd0;
-	basesoc_etherbone_tx_packetizer_delayed_last_be_fsm1_next_value2 <= 4'd0;
-	basesoc_etherbone_tx_packetizer_delayed_last_be_fsm1_next_value_ce2 <= 1'd0;
+	basesoc_etherbone_tx_packetizer_fsm_from_idle_fsm0_next_value5 <= 1'd0;
 	basesoc_etherbone_tx_packetizer_source_last_a <= 1'd0;
+	basesoc_etherbone_tx_packetizer_fsm_from_idle_fsm0_next_value_ce5 <= 1'd0;
 	basesoc_etherbone_tx_packetizer_source_last_b <= 1'd0;
 	basesoc_etherbone_tx_packetizer_source_last_s <= 1'd0;
 	basesoc_etherbone_tx_packetizer_sr_load <= 1'd0;
 	basesoc_etherbone_tx_packetizer_sr_shift <= 1'd0;
 	basesoc_etherbone_tx_packetizer_sink_ready <= 1'd0;
-	liteethetherbonepackettx_fsm0_next_state <= 2'd0;
-	basesoc_etherbone_tx_packetizer_count_fsm0_next_value4 <= 1'd0;
-	basesoc_etherbone_tx_packetizer_count_fsm0_next_value_ce4 <= 1'd0;
-	basesoc_etherbone_tx_packetizer_fsm_from_idle_fsm0_next_value5 <= 1'd0;
-	basesoc_etherbone_tx_packetizer_fsm_from_idle_fsm0_next_value_ce5 <= 1'd0;
+	liteethetherbonepackettx_fsm1_next_state <= 1'd0;
+	basesoc_etherbone_tx_packetizer_delayed_last_be_fsm1_next_value2 <= 4'd0;
+	basesoc_etherbone_tx_packetizer_delayed_last_be_fsm1_next_value_ce2 <= 1'd0;
 	basesoc_etherbone_tx_packetizer_is_ongoing0 <= 1'd0;
 	basesoc_etherbone_tx_packetizer_is_ongoing1 <= 1'd0;
 	basesoc_etherbone_tx_packetizer_source_valid <= 1'd0;
@@ -7479,22 +7509,22 @@ always @(*) begin
 end
 always @(*) begin
 	basesoc_etherbone_rx_depacketizer_sr_shift <= 1'd0;
-	liteethetherbonepacketrx_fsm1_next_state <= 1'd0;
+	liteethetherbonepacketrx_fsm0_next_state <= 2'd0;
+	basesoc_etherbone_rx_depacketizer_count_fsm0_next_value6 <= 1'd0;
+	basesoc_etherbone_rx_depacketizer_count_fsm0_next_value_ce6 <= 1'd0;
 	basesoc_etherbone_rx_depacketizer_sink_ready <= 1'd0;
-	basesoc_etherbone_rx_depacketizer_delayed_last_be_fsm1_next_value3 <= 4'd0;
-	basesoc_etherbone_rx_depacketizer_delayed_last_be_fsm1_next_value_ce3 <= 1'd0;
+	basesoc_etherbone_rx_depacketizer_fsm_from_idle_fsm0_next_value7 <= 1'd0;
+	basesoc_etherbone_rx_depacketizer_fsm_from_idle_fsm0_next_value_ce7 <= 1'd0;
 	basesoc_etherbone_rx_depacketizer_is_ongoing0 <= 1'd0;
 	basesoc_etherbone_rx_depacketizer_is_ongoing1 <= 1'd0;
 	basesoc_etherbone_rx_depacketizer_source_valid <= 1'd0;
-	liteethetherbonepacketrx_fsm0_next_state <= 2'd0;
-	basesoc_etherbone_rx_depacketizer_count_fsm0_next_value6 <= 1'd0;
+	liteethetherbonepacketrx_fsm1_next_state <= 1'd0;
 	basesoc_etherbone_rx_depacketizer_source_payload_data <= 32'd0;
-	basesoc_etherbone_rx_depacketizer_count_fsm0_next_value_ce6 <= 1'd0;
 	basesoc_etherbone_rx_depacketizer_source_payload_last_be <= 4'd0;
 	basesoc_etherbone_rx_depacketizer_is_ongoing2 <= 1'd0;
-	basesoc_etherbone_rx_depacketizer_fsm_from_idle_fsm0_next_value7 <= 1'd0;
-	basesoc_etherbone_rx_depacketizer_fsm_from_idle_fsm0_next_value_ce7 <= 1'd0;
+	basesoc_etherbone_rx_depacketizer_delayed_last_be_fsm1_next_value3 <= 4'd0;
 	basesoc_etherbone_rx_depacketizer_is_ongoing3 <= 1'd0;
+	basesoc_etherbone_rx_depacketizer_delayed_last_be_fsm1_next_value_ce3 <= 1'd0;
 	basesoc_etherbone_rx_depacketizer_source_last_a <= 1'd0;
 	basesoc_etherbone_rx_depacketizer_source_last_b <= 1'd0;
 	basesoc_etherbone_rx_depacketizer_source_last_s <= 1'd0;
@@ -7864,22 +7894,22 @@ always @(*) begin
 	end
 end
 always @(*) begin
-	fsm0_next_state0 <= 2'd0;
-	basesoc_etherbone_record_depacketizer_count_fsm0_next_value8 <= 1'd0;
-	basesoc_etherbone_record_depacketizer_count_fsm0_next_value_ce8 <= 1'd0;
+	fsm1_next_state0 <= 1'd0;
 	basesoc_etherbone_record_depacketizer_is_ongoing2 <= 1'd0;
-	basesoc_etherbone_record_depacketizer_fsm_from_idle_fsm0_next_value9 <= 1'd0;
 	basesoc_etherbone_record_depacketizer_is_ongoing3 <= 1'd0;
-	basesoc_etherbone_record_depacketizer_fsm_from_idle_fsm0_next_value_ce9 <= 1'd0;
+	basesoc_etherbone_record_depacketizer_delayed_last_be_fsm1_next_value4 <= 4'd0;
+	basesoc_etherbone_record_depacketizer_delayed_last_be_fsm1_next_value_ce4 <= 1'd0;
 	basesoc_etherbone_record_depacketizer_sink_ready <= 1'd0;
 	basesoc_etherbone_record_depacketizer_sr_shift <= 1'd0;
 	basesoc_etherbone_record_depacketizer_source_last_a <= 1'd0;
 	basesoc_etherbone_record_depacketizer_source_last_b <= 1'd0;
 	basesoc_etherbone_record_depacketizer_source_last_s <= 1'd0;
-	fsm1_next_state0 <= 1'd0;
-	basesoc_etherbone_record_depacketizer_delayed_last_be_fsm1_next_value4 <= 4'd0;
+	fsm0_next_state0 <= 2'd0;
+	basesoc_etherbone_record_depacketizer_count_fsm0_next_value8 <= 1'd0;
+	basesoc_etherbone_record_depacketizer_count_fsm0_next_value_ce8 <= 1'd0;
+	basesoc_etherbone_record_depacketizer_fsm_from_idle_fsm0_next_value9 <= 1'd0;
+	basesoc_etherbone_record_depacketizer_fsm_from_idle_fsm0_next_value_ce9 <= 1'd0;
 	basesoc_etherbone_record_depacketizer_source_valid <= 1'd0;
-	basesoc_etherbone_record_depacketizer_delayed_last_be_fsm1_next_value_ce4 <= 1'd0;
 	basesoc_etherbone_record_depacketizer_source_payload_data <= 32'd0;
 	basesoc_etherbone_record_depacketizer_is_ongoing0 <= 1'd0;
 	basesoc_etherbone_record_depacketizer_source_payload_last_be <= 4'd0;
@@ -8359,26 +8389,26 @@ always @(*) begin
 end
 assign basesoc_etherbone_record_packetizer_source_payload_error = basesoc_etherbone_record_packetizer_sink_payload_error;
 always @(*) begin
-	basesoc_etherbone_record_packetizer_fsm_from_idle_fsm0_next_value_ce11 <= 1'd0;
 	basesoc_etherbone_record_packetizer_is_ongoing2 <= 1'd0;
 	basesoc_etherbone_record_packetizer_sink_ready <= 1'd0;
 	basesoc_etherbone_record_packetizer_sr_load <= 1'd0;
 	basesoc_etherbone_record_packetizer_source_last_a <= 1'd0;
 	basesoc_etherbone_record_packetizer_sr_shift <= 1'd0;
 	basesoc_etherbone_record_packetizer_source_last_b <= 1'd0;
-	basesoc_etherbone_record_packetizer_count_fsm0_next_value_ce10 <= 1'd0;
 	basesoc_etherbone_record_packetizer_source_last_s <= 1'd0;
-	fsm1_next_state1 <= 1'd0;
-	basesoc_etherbone_record_packetizer_delayed_last_be_fsm1_next_value5 <= 4'd0;
-	basesoc_etherbone_record_packetizer_delayed_last_be_fsm1_next_value_ce5 <= 1'd0;
+	fsm0_next_state1 <= 2'd0;
+	basesoc_etherbone_record_packetizer_count_fsm0_next_value10 <= 1'd0;
+	basesoc_etherbone_record_packetizer_count_fsm0_next_value_ce10 <= 1'd0;
+	basesoc_etherbone_record_packetizer_fsm_from_idle_fsm0_next_value11 <= 1'd0;
+	basesoc_etherbone_record_packetizer_fsm_from_idle_fsm0_next_value_ce11 <= 1'd0;
 	basesoc_etherbone_record_packetizer_source_valid <= 1'd0;
 	basesoc_etherbone_record_packetizer_source_payload_data <= 32'd0;
 	basesoc_etherbone_record_packetizer_source_payload_last_be <= 4'd0;
-	fsm0_next_state1 <= 2'd0;
 	basesoc_etherbone_record_packetizer_is_ongoing0 <= 1'd0;
-	basesoc_etherbone_record_packetizer_count_fsm0_next_value10 <= 1'd0;
+	fsm1_next_state1 <= 1'd0;
 	basesoc_etherbone_record_packetizer_is_ongoing1 <= 1'd0;
-	basesoc_etherbone_record_packetizer_fsm_from_idle_fsm0_next_value11 <= 1'd0;
+	basesoc_etherbone_record_packetizer_delayed_last_be_fsm1_next_value5 <= 4'd0;
+	basesoc_etherbone_record_packetizer_delayed_last_be_fsm1_next_value_ce5 <= 1'd0;
 	fsm0_next_state1 <= fsm0_state1;
 	case (fsm0_state1)
 		1'd1: begin
@@ -8744,6 +8774,8 @@ always @(*) begin
 		stepgen0_dir <= stepgen0_sdir;
 	end
 end
+assign stepgen0_acc_multiplier_1 = stepgen0_acc_mult;
+assign stepgen0_acc_multiplier = (1'd1 <<< (2'd3 * stepgen0_acc_multiplier_1));
 always @(*) begin
 	stepgen1_step <= 1'd0;
 	if ((stepgen1_inv_step == 1'd1)) begin
@@ -8760,6 +8792,8 @@ always @(*) begin
 		stepgen1_dir <= stepgen1_sdir;
 	end
 end
+assign stepgen1_acc_multiplier_1 = stepgen1_acc_mult;
+assign stepgen1_acc_multiplier = (1'd1 <<< (2'd3 * stepgen1_acc_multiplier_1));
 always @(*) begin
 	stepgen2_step <= 1'd0;
 	if ((stepgen2_inv_step == 1'd1)) begin
@@ -8776,6 +8810,8 @@ always @(*) begin
 		stepgen2_dir <= stepgen2_sdir;
 	end
 end
+assign stepgen2_acc_multiplier_1 = stepgen2_acc_mult;
+assign stepgen2_acc_multiplier = (1'd1 <<< (2'd3 * stepgen2_acc_multiplier_1));
 always @(*) begin
 	stepgen3_step <= 1'd0;
 	if ((stepgen3_inv_step == 1'd1)) begin
@@ -8792,6 +8828,8 @@ always @(*) begin
 		stepgen3_dir <= stepgen3_sdir;
 	end
 end
+assign stepgen3_acc_multiplier_1 = stepgen3_acc_mult;
+assign stepgen3_acc_multiplier = (1'd1 <<< (2'd3 * stepgen3_acc_multiplier_1));
 always @(*) begin
 	stepgen4_step <= 1'd0;
 	if ((stepgen4_inv_step == 1'd1)) begin
@@ -8808,6 +8846,8 @@ always @(*) begin
 		stepgen4_dir <= stepgen4_sdir;
 	end
 end
+assign stepgen4_acc_multiplier_1 = stepgen4_acc_mult;
+assign stepgen4_acc_multiplier = (1'd1 <<< (2'd3 * stepgen4_acc_multiplier_1));
 always @(*) begin
 	stepgen5_step <= 1'd0;
 	if ((stepgen5_inv_step == 1'd1)) begin
@@ -8824,6 +8864,8 @@ always @(*) begin
 		stepgen5_dir <= stepgen5_sdir;
 	end
 end
+assign stepgen5_acc_multiplier_1 = stepgen5_acc_mult;
+assign stepgen5_acc_multiplier = (1'd1 <<< (2'd3 * stepgen5_acc_multiplier_1));
 always @(*) begin
 	basesoc_we <= 1'd0;
 	basesoc_dat_w <= 32'd0;
@@ -9226,11 +9268,23 @@ assign csr_bankarray_csrbank0_velocity_20_w = MMIO_inst_csrstorage2_storage[31:0
 assign csr_bankarray_csrbank0_velocity_30_w = MMIO_inst_csrstorage3_storage[31:0];
 assign csr_bankarray_csrbank0_velocity_40_w = MMIO_inst_csrstorage4_storage[31:0];
 assign csr_bankarray_csrbank0_velocity_50_w = MMIO_inst_csrstorage5_storage[31:0];
+assign MMIO_inst_acc0 = MMIO_inst_csrstorage6_storage[29:0];
+assign MMIO_inst_acc_mult0 = MMIO_inst_csrstorage6_storage[31:30];
 assign csr_bankarray_csrbank0_max_acc_00_w = MMIO_inst_csrstorage6_storage[31:0];
+assign MMIO_inst_acc1 = MMIO_inst_csrstorage7_storage[29:0];
+assign MMIO_inst_acc_mult1 = MMIO_inst_csrstorage7_storage[31:30];
 assign csr_bankarray_csrbank0_max_acc_10_w = MMIO_inst_csrstorage7_storage[31:0];
+assign MMIO_inst_acc2 = MMIO_inst_csrstorage8_storage[29:0];
+assign MMIO_inst_acc_mult2 = MMIO_inst_csrstorage8_storage[31:30];
 assign csr_bankarray_csrbank0_max_acc_20_w = MMIO_inst_csrstorage8_storage[31:0];
+assign MMIO_inst_acc3 = MMIO_inst_csrstorage9_storage[29:0];
+assign MMIO_inst_acc_mult3 = MMIO_inst_csrstorage9_storage[31:30];
 assign csr_bankarray_csrbank0_max_acc_30_w = MMIO_inst_csrstorage9_storage[31:0];
+assign MMIO_inst_acc4 = MMIO_inst_csrstorage10_storage[29:0];
+assign MMIO_inst_acc_mult4 = MMIO_inst_csrstorage10_storage[31:30];
 assign csr_bankarray_csrbank0_max_acc_40_w = MMIO_inst_csrstorage10_storage[31:0];
+assign MMIO_inst_acc5 = MMIO_inst_csrstorage11_storage[29:0];
+assign MMIO_inst_acc_mult5 = MMIO_inst_csrstorage11_storage[31:30];
 assign csr_bankarray_csrbank0_max_acc_50_w = MMIO_inst_csrstorage11_storage[31:0];
 assign MMIO_inst_sgreset = MMIO_inst_step_res_en_storage[15:0];
 assign MMIO_inst_sgenable = MMIO_inst_step_res_en_storage[31:16];
@@ -10415,7 +10469,8 @@ always @(posedge sys_clk) begin
 	stepgen0_dir_width <= MMIO_inst_dir_width;
 	stepgen0_dir_setuptime <= MMIO_inst_dir_setup;
 	stepgen0_velocity <= MMIO_inst_csrstorage0_storage;
-	stepgen0_max_acc <= MMIO_inst_csrstorage6_storage;
+	stepgen0_max_acc <= MMIO_inst_acc0;
+	stepgen0_acc_mult <= MMIO_inst_acc_mult0;
 	MMIO_inst_csrstatus1_status <= stepgen1_position_fb;
 	MMIO_inst_csrstatus1_we <= 1'd1;
 	MMIO_inst_csrstatus7_status <= stepgen1_velocity_fb;
@@ -10428,7 +10483,8 @@ always @(posedge sys_clk) begin
 	stepgen1_dir_width <= MMIO_inst_dir_width;
 	stepgen1_dir_setuptime <= MMIO_inst_dir_setup;
 	stepgen1_velocity <= MMIO_inst_csrstorage1_storage;
-	stepgen1_max_acc <= MMIO_inst_csrstorage7_storage;
+	stepgen1_max_acc <= MMIO_inst_acc1;
+	stepgen1_acc_mult <= MMIO_inst_acc_mult1;
 	MMIO_inst_csrstatus2_status <= stepgen2_position_fb;
 	MMIO_inst_csrstatus2_we <= 1'd1;
 	MMIO_inst_csrstatus8_status <= stepgen2_velocity_fb;
@@ -10441,7 +10497,8 @@ always @(posedge sys_clk) begin
 	stepgen2_dir_width <= MMIO_inst_dir_width;
 	stepgen2_dir_setuptime <= MMIO_inst_dir_setup;
 	stepgen2_velocity <= MMIO_inst_csrstorage2_storage;
-	stepgen2_max_acc <= MMIO_inst_csrstorage8_storage;
+	stepgen2_max_acc <= MMIO_inst_acc2;
+	stepgen2_acc_mult <= MMIO_inst_acc_mult2;
 	MMIO_inst_csrstatus3_status <= stepgen3_position_fb;
 	MMIO_inst_csrstatus3_we <= 1'd1;
 	MMIO_inst_csrstatus9_status <= stepgen3_velocity_fb;
@@ -10454,7 +10511,8 @@ always @(posedge sys_clk) begin
 	stepgen3_dir_width <= MMIO_inst_dir_width;
 	stepgen3_dir_setuptime <= MMIO_inst_dir_setup;
 	stepgen3_velocity <= MMIO_inst_csrstorage3_storage;
-	stepgen3_max_acc <= MMIO_inst_csrstorage9_storage;
+	stepgen3_max_acc <= MMIO_inst_acc3;
+	stepgen3_acc_mult <= MMIO_inst_acc_mult3;
 	MMIO_inst_csrstatus4_status <= stepgen4_position_fb;
 	MMIO_inst_csrstatus4_we <= 1'd1;
 	MMIO_inst_csrstatus10_status <= stepgen4_velocity_fb;
@@ -10467,7 +10525,8 @@ always @(posedge sys_clk) begin
 	stepgen4_dir_width <= MMIO_inst_dir_width;
 	stepgen4_dir_setuptime <= MMIO_inst_dir_setup;
 	stepgen4_velocity <= MMIO_inst_csrstorage4_storage;
-	stepgen4_max_acc <= MMIO_inst_csrstorage10_storage;
+	stepgen4_max_acc <= MMIO_inst_acc4;
+	stepgen4_acc_mult <= MMIO_inst_acc_mult4;
 	MMIO_inst_csrstatus5_status <= stepgen5_position_fb;
 	MMIO_inst_csrstatus5_we <= 1'd1;
 	MMIO_inst_csrstatus11_status <= stepgen5_velocity_fb;
@@ -10480,7 +10539,8 @@ always @(posedge sys_clk) begin
 	stepgen5_dir_width <= MMIO_inst_dir_width;
 	stepgen5_dir_setuptime <= MMIO_inst_dir_setup;
 	stepgen5_velocity <= MMIO_inst_csrstorage5_storage;
-	stepgen5_max_acc <= MMIO_inst_csrstorage11_storage;
+	stepgen5_max_acc <= MMIO_inst_acc5;
+	stepgen5_acc_mult <= MMIO_inst_acc_mult5;
 	MMIO_inst_csrstatus12_status <= quadenc0_out;
 	MMIO_inst_csrstatus12_we <= 1'd1;
 	quadenc0_enable <= MMIO_inst_enable[0];
@@ -10962,13 +11022,16 @@ always @(posedge sys_clk) begin
 	if ((stepgen0_acc_count == 1'd1)) begin
 		stepgen0_counter_acc <= (stepgen0_counter_acc + stepgen0_max_acc);
 	end
-	if ((stepgen0_counter_acc[32] == 1'd1)) begin
-		stepgen0_counter_acc[32] <= 1'd0;
-		if ((stepgen0_velocity_fb < stepgen0_velocity)) begin
-			stepgen0_velocity_fb <= (stepgen0_velocity_fb + $signed({1'd0, 1'd1}));
-		end
-		if ((stepgen0_velocity_fb > stepgen0_velocity)) begin
-			stepgen0_velocity_fb <= (stepgen0_velocity_fb - $signed({1'd0, 1'd1}));
+	if ((stepgen0_counter_acc[30] == 1'd1)) begin
+		stepgen0_counter_acc[30] <= 1'd0;
+		if ((stepgen0_velocity_fb < (stepgen0_velocity - $signed({1'd0, stepgen0_acc_multiplier})))) begin
+			stepgen0_velocity_fb <= (stepgen0_velocity_fb + $signed({1'd0, stepgen0_acc_multiplier}));
+		end else begin
+			if ((stepgen0_velocity_fb > (stepgen0_velocity + $signed({1'd0, stepgen0_acc_multiplier})))) begin
+				stepgen0_velocity_fb <= (stepgen0_velocity_fb - $signed({1'd0, stepgen0_acc_multiplier}));
+			end else begin
+				stepgen0_velocity_fb <= stepgen0_velocity;
+			end
 		end
 	end
 	if ((stepgen0_enable == 1'd1)) begin
@@ -11031,13 +11094,16 @@ always @(posedge sys_clk) begin
 	if ((stepgen1_acc_count == 1'd1)) begin
 		stepgen1_counter_acc <= (stepgen1_counter_acc + stepgen1_max_acc);
 	end
-	if ((stepgen1_counter_acc[32] == 1'd1)) begin
-		stepgen1_counter_acc[32] <= 1'd0;
-		if ((stepgen1_velocity_fb < stepgen1_velocity)) begin
-			stepgen1_velocity_fb <= (stepgen1_velocity_fb + $signed({1'd0, 1'd1}));
-		end
-		if ((stepgen1_velocity_fb > stepgen1_velocity)) begin
-			stepgen1_velocity_fb <= (stepgen1_velocity_fb - $signed({1'd0, 1'd1}));
+	if ((stepgen1_counter_acc[30] == 1'd1)) begin
+		stepgen1_counter_acc[30] <= 1'd0;
+		if ((stepgen1_velocity_fb < (stepgen1_velocity - $signed({1'd0, stepgen1_acc_multiplier})))) begin
+			stepgen1_velocity_fb <= (stepgen1_velocity_fb + $signed({1'd0, stepgen1_acc_multiplier}));
+		end else begin
+			if ((stepgen1_velocity_fb > (stepgen1_velocity + $signed({1'd0, stepgen1_acc_multiplier})))) begin
+				stepgen1_velocity_fb <= (stepgen1_velocity_fb - $signed({1'd0, stepgen1_acc_multiplier}));
+			end else begin
+				stepgen1_velocity_fb <= stepgen1_velocity;
+			end
 		end
 	end
 	if ((stepgen1_enable == 1'd1)) begin
@@ -11100,13 +11166,16 @@ always @(posedge sys_clk) begin
 	if ((stepgen2_acc_count == 1'd1)) begin
 		stepgen2_counter_acc <= (stepgen2_counter_acc + stepgen2_max_acc);
 	end
-	if ((stepgen2_counter_acc[32] == 1'd1)) begin
-		stepgen2_counter_acc[32] <= 1'd0;
-		if ((stepgen2_velocity_fb < stepgen2_velocity)) begin
-			stepgen2_velocity_fb <= (stepgen2_velocity_fb + $signed({1'd0, 1'd1}));
-		end
-		if ((stepgen2_velocity_fb > stepgen2_velocity)) begin
-			stepgen2_velocity_fb <= (stepgen2_velocity_fb - $signed({1'd0, 1'd1}));
+	if ((stepgen2_counter_acc[30] == 1'd1)) begin
+		stepgen2_counter_acc[30] <= 1'd0;
+		if ((stepgen2_velocity_fb < (stepgen2_velocity - $signed({1'd0, stepgen2_acc_multiplier})))) begin
+			stepgen2_velocity_fb <= (stepgen2_velocity_fb + $signed({1'd0, stepgen2_acc_multiplier}));
+		end else begin
+			if ((stepgen2_velocity_fb > (stepgen2_velocity + $signed({1'd0, stepgen2_acc_multiplier})))) begin
+				stepgen2_velocity_fb <= (stepgen2_velocity_fb - $signed({1'd0, stepgen2_acc_multiplier}));
+			end else begin
+				stepgen2_velocity_fb <= stepgen2_velocity;
+			end
 		end
 	end
 	if ((stepgen2_enable == 1'd1)) begin
@@ -11169,13 +11238,16 @@ always @(posedge sys_clk) begin
 	if ((stepgen3_acc_count == 1'd1)) begin
 		stepgen3_counter_acc <= (stepgen3_counter_acc + stepgen3_max_acc);
 	end
-	if ((stepgen3_counter_acc[32] == 1'd1)) begin
-		stepgen3_counter_acc[32] <= 1'd0;
-		if ((stepgen3_velocity_fb < stepgen3_velocity)) begin
-			stepgen3_velocity_fb <= (stepgen3_velocity_fb + $signed({1'd0, 1'd1}));
-		end
-		if ((stepgen3_velocity_fb > stepgen3_velocity)) begin
-			stepgen3_velocity_fb <= (stepgen3_velocity_fb - $signed({1'd0, 1'd1}));
+	if ((stepgen3_counter_acc[30] == 1'd1)) begin
+		stepgen3_counter_acc[30] <= 1'd0;
+		if ((stepgen3_velocity_fb < (stepgen3_velocity - $signed({1'd0, stepgen3_acc_multiplier})))) begin
+			stepgen3_velocity_fb <= (stepgen3_velocity_fb + $signed({1'd0, stepgen3_acc_multiplier}));
+		end else begin
+			if ((stepgen3_velocity_fb > (stepgen3_velocity + $signed({1'd0, stepgen3_acc_multiplier})))) begin
+				stepgen3_velocity_fb <= (stepgen3_velocity_fb - $signed({1'd0, stepgen3_acc_multiplier}));
+			end else begin
+				stepgen3_velocity_fb <= stepgen3_velocity;
+			end
 		end
 	end
 	if ((stepgen3_enable == 1'd1)) begin
@@ -11238,13 +11310,16 @@ always @(posedge sys_clk) begin
 	if ((stepgen4_acc_count == 1'd1)) begin
 		stepgen4_counter_acc <= (stepgen4_counter_acc + stepgen4_max_acc);
 	end
-	if ((stepgen4_counter_acc[32] == 1'd1)) begin
-		stepgen4_counter_acc[32] <= 1'd0;
-		if ((stepgen4_velocity_fb < stepgen4_velocity)) begin
-			stepgen4_velocity_fb <= (stepgen4_velocity_fb + $signed({1'd0, 1'd1}));
-		end
-		if ((stepgen4_velocity_fb > stepgen4_velocity)) begin
-			stepgen4_velocity_fb <= (stepgen4_velocity_fb - $signed({1'd0, 1'd1}));
+	if ((stepgen4_counter_acc[30] == 1'd1)) begin
+		stepgen4_counter_acc[30] <= 1'd0;
+		if ((stepgen4_velocity_fb < (stepgen4_velocity - $signed({1'd0, stepgen4_acc_multiplier})))) begin
+			stepgen4_velocity_fb <= (stepgen4_velocity_fb + $signed({1'd0, stepgen4_acc_multiplier}));
+		end else begin
+			if ((stepgen4_velocity_fb > (stepgen4_velocity + $signed({1'd0, stepgen4_acc_multiplier})))) begin
+				stepgen4_velocity_fb <= (stepgen4_velocity_fb - $signed({1'd0, stepgen4_acc_multiplier}));
+			end else begin
+				stepgen4_velocity_fb <= stepgen4_velocity;
+			end
 		end
 	end
 	if ((stepgen4_enable == 1'd1)) begin
@@ -11307,13 +11382,16 @@ always @(posedge sys_clk) begin
 	if ((stepgen5_acc_count == 1'd1)) begin
 		stepgen5_counter_acc <= (stepgen5_counter_acc + stepgen5_max_acc);
 	end
-	if ((stepgen5_counter_acc[32] == 1'd1)) begin
-		stepgen5_counter_acc[32] <= 1'd0;
-		if ((stepgen5_velocity_fb < stepgen5_velocity)) begin
-			stepgen5_velocity_fb <= (stepgen5_velocity_fb + $signed({1'd0, 1'd1}));
-		end
-		if ((stepgen5_velocity_fb > stepgen5_velocity)) begin
-			stepgen5_velocity_fb <= (stepgen5_velocity_fb - $signed({1'd0, 1'd1}));
+	if ((stepgen5_counter_acc[30] == 1'd1)) begin
+		stepgen5_counter_acc[30] <= 1'd0;
+		if ((stepgen5_velocity_fb < (stepgen5_velocity - $signed({1'd0, stepgen5_acc_multiplier})))) begin
+			stepgen5_velocity_fb <= (stepgen5_velocity_fb + $signed({1'd0, stepgen5_acc_multiplier}));
+		end else begin
+			if ((stepgen5_velocity_fb > (stepgen5_velocity + $signed({1'd0, stepgen5_acc_multiplier})))) begin
+				stepgen5_velocity_fb <= (stepgen5_velocity_fb - $signed({1'd0, stepgen5_acc_multiplier}));
+			end else begin
+				stepgen5_velocity_fb <= stepgen5_velocity;
+			end
 		end
 	end
 	if ((stepgen5_enable == 1'd1)) begin
@@ -11791,7 +11869,8 @@ always @(posedge sys_clk) begin
 		stepgen0_step1 <= 1'd0;
 		stepgen0_sdir <= 1'd0;
 		stepgen0_velocity <= 32'd0;
-		stepgen0_max_acc <= 32'd0;
+		stepgen0_max_acc <= 30'd0;
+		stepgen0_acc_mult <= 2'd0;
 		stepgen0_reset <= 1'd0;
 		stepgen0_enable <= 1'd0;
 		stepgen0_inv_step <= 1'd0;
@@ -11802,7 +11881,7 @@ always @(posedge sys_clk) begin
 		stepgen0_position_fb <= 32'd0;
 		stepgen0_velocity_fb <= 32'd0;
 		stepgen0_counter_vel <= 33'd0;
-		stepgen0_counter_acc <= 33'd0;
+		stepgen0_counter_acc <= 31'd0;
 		stepgen0_acc_count <= 1'd0;
 		stepgen0_step_tmr <= 9'd0;
 		stepgen0_dir_tmr <= 9'd0;
@@ -11811,7 +11890,8 @@ always @(posedge sys_clk) begin
 		stepgen1_step1 <= 1'd0;
 		stepgen1_sdir <= 1'd0;
 		stepgen1_velocity <= 32'd0;
-		stepgen1_max_acc <= 32'd0;
+		stepgen1_max_acc <= 30'd0;
+		stepgen1_acc_mult <= 2'd0;
 		stepgen1_reset <= 1'd0;
 		stepgen1_enable <= 1'd0;
 		stepgen1_inv_step <= 1'd0;
@@ -11822,7 +11902,7 @@ always @(posedge sys_clk) begin
 		stepgen1_position_fb <= 32'd0;
 		stepgen1_velocity_fb <= 32'd0;
 		stepgen1_counter_vel <= 33'd0;
-		stepgen1_counter_acc <= 33'd0;
+		stepgen1_counter_acc <= 31'd0;
 		stepgen1_acc_count <= 1'd0;
 		stepgen1_step_tmr <= 9'd0;
 		stepgen1_dir_tmr <= 9'd0;
@@ -11831,7 +11911,8 @@ always @(posedge sys_clk) begin
 		stepgen2_step1 <= 1'd0;
 		stepgen2_sdir <= 1'd0;
 		stepgen2_velocity <= 32'd0;
-		stepgen2_max_acc <= 32'd0;
+		stepgen2_max_acc <= 30'd0;
+		stepgen2_acc_mult <= 2'd0;
 		stepgen2_reset <= 1'd0;
 		stepgen2_enable <= 1'd0;
 		stepgen2_inv_step <= 1'd0;
@@ -11842,7 +11923,7 @@ always @(posedge sys_clk) begin
 		stepgen2_position_fb <= 32'd0;
 		stepgen2_velocity_fb <= 32'd0;
 		stepgen2_counter_vel <= 33'd0;
-		stepgen2_counter_acc <= 33'd0;
+		stepgen2_counter_acc <= 31'd0;
 		stepgen2_acc_count <= 1'd0;
 		stepgen2_step_tmr <= 9'd0;
 		stepgen2_dir_tmr <= 9'd0;
@@ -11851,7 +11932,8 @@ always @(posedge sys_clk) begin
 		stepgen3_step1 <= 1'd0;
 		stepgen3_sdir <= 1'd0;
 		stepgen3_velocity <= 32'd0;
-		stepgen3_max_acc <= 32'd0;
+		stepgen3_max_acc <= 30'd0;
+		stepgen3_acc_mult <= 2'd0;
 		stepgen3_reset <= 1'd0;
 		stepgen3_enable <= 1'd0;
 		stepgen3_inv_step <= 1'd0;
@@ -11862,7 +11944,7 @@ always @(posedge sys_clk) begin
 		stepgen3_position_fb <= 32'd0;
 		stepgen3_velocity_fb <= 32'd0;
 		stepgen3_counter_vel <= 33'd0;
-		stepgen3_counter_acc <= 33'd0;
+		stepgen3_counter_acc <= 31'd0;
 		stepgen3_acc_count <= 1'd0;
 		stepgen3_step_tmr <= 9'd0;
 		stepgen3_dir_tmr <= 9'd0;
@@ -11871,7 +11953,8 @@ always @(posedge sys_clk) begin
 		stepgen4_step1 <= 1'd0;
 		stepgen4_sdir <= 1'd0;
 		stepgen4_velocity <= 32'd0;
-		stepgen4_max_acc <= 32'd0;
+		stepgen4_max_acc <= 30'd0;
+		stepgen4_acc_mult <= 2'd0;
 		stepgen4_reset <= 1'd0;
 		stepgen4_enable <= 1'd0;
 		stepgen4_inv_step <= 1'd0;
@@ -11882,7 +11965,7 @@ always @(posedge sys_clk) begin
 		stepgen4_position_fb <= 32'd0;
 		stepgen4_velocity_fb <= 32'd0;
 		stepgen4_counter_vel <= 33'd0;
-		stepgen4_counter_acc <= 33'd0;
+		stepgen4_counter_acc <= 31'd0;
 		stepgen4_acc_count <= 1'd0;
 		stepgen4_step_tmr <= 9'd0;
 		stepgen4_dir_tmr <= 9'd0;
@@ -11891,7 +11974,8 @@ always @(posedge sys_clk) begin
 		stepgen5_step1 <= 1'd0;
 		stepgen5_sdir <= 1'd0;
 		stepgen5_velocity <= 32'd0;
-		stepgen5_max_acc <= 32'd0;
+		stepgen5_max_acc <= 30'd0;
+		stepgen5_acc_mult <= 2'd0;
 		stepgen5_reset <= 1'd0;
 		stepgen5_enable <= 1'd0;
 		stepgen5_inv_step <= 1'd0;
@@ -11902,7 +11986,7 @@ always @(posedge sys_clk) begin
 		stepgen5_position_fb <= 32'd0;
 		stepgen5_velocity_fb <= 32'd0;
 		stepgen5_counter_vel <= 33'd0;
-		stepgen5_counter_acc <= 33'd0;
+		stepgen5_counter_acc <= 31'd0;
 		stepgen5_acc_count <= 1'd0;
 		stepgen5_step_tmr <= 9'd0;
 		stepgen5_dir_tmr <= 9'd0;
@@ -12562,5 +12646,5 @@ TRELLIS_IO #(
 endmodule
 
 // -----------------------------------------------------------------------------
-//  Auto-Generated by LiteX on 2022-10-28 15:04:53.
+//  Auto-Generated by LiteX on 2022-11-04 16:02:34.
 //------------------------------------------------------------------------------

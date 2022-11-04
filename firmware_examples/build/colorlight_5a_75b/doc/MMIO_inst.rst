@@ -116,51 +116,78 @@ MMIO_INST_MAX_ACC_0
 
 `Address: 0x00000000 + 0xc = 0x0000000c`
 
-    Stepgen max acceleration
+    Stepgen acceleration
 
     .. wavedrom::
         :caption: MMIO_INST_MAX_ACC_0
 
         {
             "reg": [
-                {"name": "max_acc_0[31:0]", "bits": 32}
-            ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+                {"name": "acc",  "bits": 30},
+                {"name": "acc_mult",  "bits": 2}
+            ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
         }
 
+
++---------+----------+--------------------------+
+| Field   | Name     | Description              |
++=========+==========+==========================+
+| [29:0]  | ACC      | Stepgen max acceleration |
++---------+----------+--------------------------+
+| [31:30] | ACC_MULT | Acceleration Multiplier  |
++---------+----------+--------------------------+
 
 MMIO_INST_MAX_ACC_1
 ^^^^^^^^^^^^^^^^^^^
 
 `Address: 0x00000000 + 0x10 = 0x00000010`
 
-    Stepgen max acceleration
+    Stepgen acceleration
 
     .. wavedrom::
         :caption: MMIO_INST_MAX_ACC_1
 
         {
             "reg": [
-                {"name": "max_acc_1[31:0]", "bits": 32}
-            ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+                {"name": "acc",  "bits": 30},
+                {"name": "acc_mult",  "bits": 2}
+            ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
         }
 
+
++---------+----------+--------------------------+
+| Field   | Name     | Description              |
++=========+==========+==========================+
+| [29:0]  | ACC      | Stepgen max acceleration |
++---------+----------+--------------------------+
+| [31:30] | ACC_MULT | Acceleration Multiplier  |
++---------+----------+--------------------------+
 
 MMIO_INST_MAX_ACC_2
 ^^^^^^^^^^^^^^^^^^^
 
 `Address: 0x00000000 + 0x14 = 0x00000014`
 
-    Stepgen max acceleration
+    Stepgen acceleration
 
     .. wavedrom::
         :caption: MMIO_INST_MAX_ACC_2
 
         {
             "reg": [
-                {"name": "max_acc_2[31:0]", "bits": 32}
-            ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+                {"name": "acc",  "bits": 30},
+                {"name": "acc_mult",  "bits": 2}
+            ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
         }
 
+
++---------+----------+--------------------------+
+| Field   | Name     | Description              |
++=========+==========+==========================+
+| [29:0]  | ACC      | Stepgen max acceleration |
++---------+----------+--------------------------+
+| [31:30] | ACC_MULT | Acceleration Multiplier  |
++---------+----------+--------------------------+
 
 MMIO_INST_STEP_RES_EN
 ^^^^^^^^^^^^^^^^^^^^^
