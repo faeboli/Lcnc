@@ -1,0 +1,1878 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>MMIO_INST &#8212; LiteX SoC Project  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/default.js"></script>
+    <script type="text/javascript" src="_static/WaveDrom.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CTRL" href="ctrl.html" />
+    <link rel="prev" title="Interrupt Controller" href="interrupts.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mmio-inst">
+<h1>MMIO_INST<a class="headerlink" href="#mmio-inst" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="register-listing-for-mmio-inst">
+<h2>Register Listing for MMIO_INST<a class="headerlink" href="#register-listing-for-mmio-inst" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="56%" />
+<col width="44%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Register</th>
+<th class="head">Address</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-velocity-0"><span class="std std-ref">MMIO_INST_VELOCITY_0</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-velocity-0"><span class="std std-ref">0x00000000</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-velocity-1"><span class="std std-ref">MMIO_INST_VELOCITY_1</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-velocity-1"><span class="std std-ref">0x00000004</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-velocity-2"><span class="std std-ref">MMIO_INST_VELOCITY_2</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-velocity-2"><span class="std std-ref">0x00000008</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-velocity-3"><span class="std std-ref">MMIO_INST_VELOCITY_3</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-velocity-3"><span class="std std-ref">0x0000000c</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-velocity-4"><span class="std std-ref">MMIO_INST_VELOCITY_4</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-velocity-4"><span class="std std-ref">0x00000010</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-velocity-5"><span class="std std-ref">MMIO_INST_VELOCITY_5</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-velocity-5"><span class="std std-ref">0x00000014</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-velocity-6"><span class="std std-ref">MMIO_INST_VELOCITY_6</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-velocity-6"><span class="std std-ref">0x00000018</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-velocity-7"><span class="std std-ref">MMIO_INST_VELOCITY_7</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-velocity-7"><span class="std std-ref">0x0000001c</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-velocity-8"><span class="std std-ref">MMIO_INST_VELOCITY_8</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-velocity-8"><span class="std std-ref">0x00000020</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-max-acc-0"><span class="std std-ref">MMIO_INST_MAX_ACC_0</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-max-acc-0"><span class="std std-ref">0x00000024</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-max-acc-1"><span class="std std-ref">MMIO_INST_MAX_ACC_1</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-max-acc-1"><span class="std std-ref">0x00000028</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-max-acc-2"><span class="std std-ref">MMIO_INST_MAX_ACC_2</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-max-acc-2"><span class="std std-ref">0x0000002c</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-max-acc-3"><span class="std std-ref">MMIO_INST_MAX_ACC_3</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-max-acc-3"><span class="std std-ref">0x00000030</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-max-acc-4"><span class="std std-ref">MMIO_INST_MAX_ACC_4</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-max-acc-4"><span class="std std-ref">0x00000034</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-max-acc-5"><span class="std std-ref">MMIO_INST_MAX_ACC_5</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-max-acc-5"><span class="std std-ref">0x00000038</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-max-acc-6"><span class="std std-ref">MMIO_INST_MAX_ACC_6</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-max-acc-6"><span class="std std-ref">0x0000003c</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-max-acc-7"><span class="std std-ref">MMIO_INST_MAX_ACC_7</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-max-acc-7"><span class="std std-ref">0x00000040</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-max-acc-8"><span class="std std-ref">MMIO_INST_MAX_ACC_8</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-max-acc-8"><span class="std std-ref">0x00000044</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-step-res-en"><span class="std std-ref">MMIO_INST_STEP_RES_EN</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-step-res-en"><span class="std std-ref">0x00000048</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-stepdirinv"><span class="std std-ref">MMIO_INST_STEPDIRINV</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-stepdirinv"><span class="std std-ref">0x0000004c</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-steptimes"><span class="std std-ref">MMIO_INST_STEPTIMES</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-steptimes"><span class="std std-ref">0x00000050</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-gpios-out"><span class="std std-ref">MMIO_INST_GPIOS_OUT</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-gpios-out"><span class="std std-ref">0x00000054</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-pwm-0"><span class="std std-ref">MMIO_INST_PWM_0</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-pwm-0"><span class="std std-ref">0x00000058</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-pwm-1"><span class="std std-ref">MMIO_INST_PWM_1</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-pwm-1"><span class="std std-ref">0x0000005c</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-pwm-2"><span class="std std-ref">MMIO_INST_PWM_2</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-pwm-2"><span class="std std-ref">0x00000060</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-pwm-3"><span class="std std-ref">MMIO_INST_PWM_3</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-pwm-3"><span class="std std-ref">0x00000064</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-pwm-4"><span class="std std-ref">MMIO_INST_PWM_4</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-pwm-4"><span class="std std-ref">0x00000068</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-pwm-5"><span class="std std-ref">MMIO_INST_PWM_5</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-pwm-5"><span class="std std-ref">0x0000006c</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-pwm-6"><span class="std std-ref">MMIO_INST_PWM_6</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-pwm-6"><span class="std std-ref">0x00000070</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-pwm-7"><span class="std std-ref">MMIO_INST_PWM_7</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-pwm-7"><span class="std std-ref">0x00000074</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-enc-res-en"><span class="std std-ref">MMIO_INST_ENC_RES_EN</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-enc-res-en"><span class="std std-ref">0x00000078</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-res-st-reg"><span class="std std-ref">MMIO_INST_RES_ST_REG</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-res-st-reg"><span class="std std-ref">0x0000007c</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-sg-count-0"><span class="std std-ref">MMIO_INST_SG_COUNT_0</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-count-0"><span class="std std-ref">0x00000080</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-sg-count-1"><span class="std std-ref">MMIO_INST_SG_COUNT_1</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-count-1"><span class="std std-ref">0x00000084</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-sg-count-2"><span class="std std-ref">MMIO_INST_SG_COUNT_2</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-count-2"><span class="std std-ref">0x00000088</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-sg-count-3"><span class="std std-ref">MMIO_INST_SG_COUNT_3</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-count-3"><span class="std std-ref">0x0000008c</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-sg-count-4"><span class="std std-ref">MMIO_INST_SG_COUNT_4</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-count-4"><span class="std std-ref">0x00000090</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-sg-count-5"><span class="std std-ref">MMIO_INST_SG_COUNT_5</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-count-5"><span class="std std-ref">0x00000094</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-sg-count-6"><span class="std std-ref">MMIO_INST_SG_COUNT_6</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-count-6"><span class="std std-ref">0x00000098</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-sg-count-7"><span class="std std-ref">MMIO_INST_SG_COUNT_7</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-count-7"><span class="std std-ref">0x0000009c</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-sg-count-8"><span class="std std-ref">MMIO_INST_SG_COUNT_8</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-count-8"><span class="std std-ref">0x000000a0</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-sg-vel-0"><span class="std std-ref">MMIO_INST_SG_VEL_0</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-vel-0"><span class="std std-ref">0x000000a4</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-sg-vel-1"><span class="std std-ref">MMIO_INST_SG_VEL_1</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-vel-1"><span class="std std-ref">0x000000a8</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-sg-vel-2"><span class="std std-ref">MMIO_INST_SG_VEL_2</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-vel-2"><span class="std std-ref">0x000000ac</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-sg-vel-3"><span class="std std-ref">MMIO_INST_SG_VEL_3</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-vel-3"><span class="std std-ref">0x000000b0</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-sg-vel-4"><span class="std std-ref">MMIO_INST_SG_VEL_4</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-vel-4"><span class="std std-ref">0x000000b4</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-sg-vel-5"><span class="std std-ref">MMIO_INST_SG_VEL_5</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-vel-5"><span class="std std-ref">0x000000b8</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-sg-vel-6"><span class="std std-ref">MMIO_INST_SG_VEL_6</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-vel-6"><span class="std std-ref">0x000000bc</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-sg-vel-7"><span class="std std-ref">MMIO_INST_SG_VEL_7</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-vel-7"><span class="std std-ref">0x000000c0</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-sg-vel-8"><span class="std std-ref">MMIO_INST_SG_VEL_8</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-sg-vel-8"><span class="std std-ref">0x000000c4</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-wallclock"><span class="std std-ref">MMIO_INST_WALLCLOCK</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-wallclock"><span class="std std-ref">0x000000c8</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-gpios-in"><span class="std std-ref">MMIO_INST_GPIOS_IN</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-gpios-in"><span class="std std-ref">0x000000cc</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-enc-count-0"><span class="std std-ref">MMIO_INST_ENC_COUNT_0</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-enc-count-0"><span class="std std-ref">0x000000d0</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-enc-count-1"><span class="std std-ref">MMIO_INST_ENC_COUNT_1</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-enc-count-1"><span class="std std-ref">0x000000d4</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-enc-count-2"><span class="std std-ref">MMIO_INST_ENC_COUNT_2</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-enc-count-2"><span class="std std-ref">0x000000d8</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-enc-count-3"><span class="std std-ref">MMIO_INST_ENC_COUNT_3</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-enc-count-3"><span class="std std-ref">0x000000dc</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-enc-count-4"><span class="std std-ref">MMIO_INST_ENC_COUNT_4</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-enc-count-4"><span class="std std-ref">0x000000e0</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-enc-count-5"><span class="std std-ref">MMIO_INST_ENC_COUNT_5</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-enc-count-5"><span class="std std-ref">0x000000e4</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-enc-count-6"><span class="std std-ref">MMIO_INST_ENC_COUNT_6</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-enc-count-6"><span class="std std-ref">0x000000e8</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mmio-inst-enc-count-7"><span class="std std-ref">MMIO_INST_ENC_COUNT_7</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-enc-count-7"><span class="std std-ref">0x000000ec</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mmio-inst-enc-count-8"><span class="std std-ref">MMIO_INST_ENC_COUNT_8</span></a></td>
+<td><a class="reference internal" href="#mmio-inst-enc-count-8"><span class="std std-ref">0x000000f0</span></a></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="mmio-inst-velocity-0">
+<h3>MMIO_INST_VELOCITY_0<a class="headerlink" href="#mmio-inst-velocity-0" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x0 = 0x00000000</cite></p>
+<blockquote>
+<div><p>Stepgen velocity</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "velocity_0[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-velocity-1">
+<h3>MMIO_INST_VELOCITY_1<a class="headerlink" href="#mmio-inst-velocity-1" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x4 = 0x00000004</cite></p>
+<blockquote>
+<div><p>Stepgen velocity</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "velocity_1[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-velocity-2">
+<h3>MMIO_INST_VELOCITY_2<a class="headerlink" href="#mmio-inst-velocity-2" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x8 = 0x00000008</cite></p>
+<blockquote>
+<div><p>Stepgen velocity</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "velocity_2[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-velocity-3">
+<h3>MMIO_INST_VELOCITY_3<a class="headerlink" href="#mmio-inst-velocity-3" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xc = 0x0000000c</cite></p>
+<blockquote>
+<div><p>Stepgen velocity</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "velocity_3[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-velocity-4">
+<h3>MMIO_INST_VELOCITY_4<a class="headerlink" href="#mmio-inst-velocity-4" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x10 = 0x00000010</cite></p>
+<blockquote>
+<div><p>Stepgen velocity</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "velocity_4[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-velocity-5">
+<h3>MMIO_INST_VELOCITY_5<a class="headerlink" href="#mmio-inst-velocity-5" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x14 = 0x00000014</cite></p>
+<blockquote>
+<div><p>Stepgen velocity</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "velocity_5[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-velocity-6">
+<h3>MMIO_INST_VELOCITY_6<a class="headerlink" href="#mmio-inst-velocity-6" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x18 = 0x00000018</cite></p>
+<blockquote>
+<div><p>Stepgen velocity</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "velocity_6[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-velocity-7">
+<h3>MMIO_INST_VELOCITY_7<a class="headerlink" href="#mmio-inst-velocity-7" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x1c = 0x0000001c</cite></p>
+<blockquote>
+<div><p>Stepgen velocity</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "velocity_7[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-velocity-8">
+<h3>MMIO_INST_VELOCITY_8<a class="headerlink" href="#mmio-inst-velocity-8" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x20 = 0x00000020</cite></p>
+<blockquote>
+<div><p>Stepgen velocity</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "velocity_8[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-max-acc-0">
+<h3>MMIO_INST_MAX_ACC_0<a class="headerlink" href="#mmio-inst-max-acc-0" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x24 = 0x00000024</cite></p>
+<blockquote>
+<div><p>Stepgen acceleration</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "acc",  "bits": 30},
+        {"name": "acc_mult",  "bits": 2}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[29:0]</td>
+<td>ACC</td>
+<td>Stepgen max acceleration</td>
+</tr>
+<tr class="row-odd"><td>[31:30]</td>
+<td>ACC_MULT</td>
+<td>Acceleration Multiplier</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-max-acc-1">
+<h3>MMIO_INST_MAX_ACC_1<a class="headerlink" href="#mmio-inst-max-acc-1" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x28 = 0x00000028</cite></p>
+<blockquote>
+<div><p>Stepgen acceleration</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "acc",  "bits": 30},
+        {"name": "acc_mult",  "bits": 2}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[29:0]</td>
+<td>ACC</td>
+<td>Stepgen max acceleration</td>
+</tr>
+<tr class="row-odd"><td>[31:30]</td>
+<td>ACC_MULT</td>
+<td>Acceleration Multiplier</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-max-acc-2">
+<h3>MMIO_INST_MAX_ACC_2<a class="headerlink" href="#mmio-inst-max-acc-2" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x2c = 0x0000002c</cite></p>
+<blockquote>
+<div><p>Stepgen acceleration</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "acc",  "bits": 30},
+        {"name": "acc_mult",  "bits": 2}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[29:0]</td>
+<td>ACC</td>
+<td>Stepgen max acceleration</td>
+</tr>
+<tr class="row-odd"><td>[31:30]</td>
+<td>ACC_MULT</td>
+<td>Acceleration Multiplier</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-max-acc-3">
+<h3>MMIO_INST_MAX_ACC_3<a class="headerlink" href="#mmio-inst-max-acc-3" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x30 = 0x00000030</cite></p>
+<blockquote>
+<div><p>Stepgen acceleration</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "acc",  "bits": 30},
+        {"name": "acc_mult",  "bits": 2}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[29:0]</td>
+<td>ACC</td>
+<td>Stepgen max acceleration</td>
+</tr>
+<tr class="row-odd"><td>[31:30]</td>
+<td>ACC_MULT</td>
+<td>Acceleration Multiplier</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-max-acc-4">
+<h3>MMIO_INST_MAX_ACC_4<a class="headerlink" href="#mmio-inst-max-acc-4" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x34 = 0x00000034</cite></p>
+<blockquote>
+<div><p>Stepgen acceleration</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "acc",  "bits": 30},
+        {"name": "acc_mult",  "bits": 2}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[29:0]</td>
+<td>ACC</td>
+<td>Stepgen max acceleration</td>
+</tr>
+<tr class="row-odd"><td>[31:30]</td>
+<td>ACC_MULT</td>
+<td>Acceleration Multiplier</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-max-acc-5">
+<h3>MMIO_INST_MAX_ACC_5<a class="headerlink" href="#mmio-inst-max-acc-5" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x38 = 0x00000038</cite></p>
+<blockquote>
+<div><p>Stepgen acceleration</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "acc",  "bits": 30},
+        {"name": "acc_mult",  "bits": 2}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[29:0]</td>
+<td>ACC</td>
+<td>Stepgen max acceleration</td>
+</tr>
+<tr class="row-odd"><td>[31:30]</td>
+<td>ACC_MULT</td>
+<td>Acceleration Multiplier</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-max-acc-6">
+<h3>MMIO_INST_MAX_ACC_6<a class="headerlink" href="#mmio-inst-max-acc-6" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x3c = 0x0000003c</cite></p>
+<blockquote>
+<div><p>Stepgen acceleration</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "acc",  "bits": 30},
+        {"name": "acc_mult",  "bits": 2}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[29:0]</td>
+<td>ACC</td>
+<td>Stepgen max acceleration</td>
+</tr>
+<tr class="row-odd"><td>[31:30]</td>
+<td>ACC_MULT</td>
+<td>Acceleration Multiplier</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-max-acc-7">
+<h3>MMIO_INST_MAX_ACC_7<a class="headerlink" href="#mmio-inst-max-acc-7" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x40 = 0x00000040</cite></p>
+<blockquote>
+<div><p>Stepgen acceleration</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "acc",  "bits": 30},
+        {"name": "acc_mult",  "bits": 2}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[29:0]</td>
+<td>ACC</td>
+<td>Stepgen max acceleration</td>
+</tr>
+<tr class="row-odd"><td>[31:30]</td>
+<td>ACC_MULT</td>
+<td>Acceleration Multiplier</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-max-acc-8">
+<h3>MMIO_INST_MAX_ACC_8<a class="headerlink" href="#mmio-inst-max-acc-8" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x44 = 0x00000044</cite></p>
+<blockquote>
+<div><p>Stepgen acceleration</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "acc",  "bits": 30},
+        {"name": "acc_mult",  "bits": 2}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 4 }, "options": {"hspace": 400, "bits": 32, "lanes": 4}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="22%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[29:0]</td>
+<td>ACC</td>
+<td>Stepgen max acceleration</td>
+</tr>
+<tr class="row-odd"><td>[31:30]</td>
+<td>ACC_MULT</td>
+<td>Acceleration Multiplier</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-step-res-en">
+<h3>MMIO_INST_STEP_RES_EN<a class="headerlink" href="#mmio-inst-step-res-en" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x48 = 0x00000048</cite></p>
+<blockquote>
+<div><p>Stepgen Enable and Reset flags</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sgreset",  "bits": 16},
+        {"name": "sgenable",  "bits": 16}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="31%" />
+<col width="41%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[15:0]</td>
+<td>SGRESET</td>
+<td>Reset</td>
+</tr>
+<tr class="row-odd"><td>[31:16]</td>
+<td>SGENABLE</td>
+<td>Enable</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-stepdirinv">
+<h3>MMIO_INST_STEPDIRINV<a class="headerlink" href="#mmio-inst-stepdirinv" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x4c = 0x0000004c</cite></p>
+<blockquote>
+<div><p>Stepgen Dir and Step inversion</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "dir_inv",  "bits": 16},
+        {"name": "step_inv",  "bits": 16}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="26%" />
+<col width="51%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[15:0]</td>
+<td>DIR_INV</td>
+<td>Dir Pin Inversion</td>
+</tr>
+<tr class="row-odd"><td>[31:16]</td>
+<td>STEP_INV</td>
+<td>Step Pin Inversion</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-steptimes">
+<h3>MMIO_INST_STEPTIMES<a class="headerlink" href="#mmio-inst-steptimes" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x50 = 0x00000050</cite></p>
+<blockquote>
+<div><p>Stepgen steptime</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "dir_setup",  "bits": 14},
+        {"name": "dir_width",  "bits": 9},
+        {"name": "step_width",  "bits": 9}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="27%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[13:0]</td>
+<td>DIR_SETUP</td>
+<td>Dir Pin Setup time</td>
+</tr>
+<tr class="row-odd"><td>[22:14]</td>
+<td>DIR_WIDTH</td>
+<td>Dir Pin Minimum width</td>
+</tr>
+<tr class="row-even"><td>[31:23]</td>
+<td>STEP_WIDTH</td>
+<td>Step Pin Minimum width</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-gpios-out">
+<h3>MMIO_INST_GPIOS_OUT<a class="headerlink" href="#mmio-inst-gpios-out" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x54 = 0x00000054</cite></p>
+<blockquote>
+<div><p>gpios out</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "gpios_out[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-pwm-0">
+<h3>MMIO_INST_PWM_0<a class="headerlink" href="#mmio-inst-pwm-0" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x58 = 0x00000058</cite></p>
+<blockquote>
+<div><p>PWM width and period</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "width",  "bits": 16},
+        {"name": "period",  "bits": 16}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="27%" />
+<col width="43%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[15:0]</td>
+<td>WIDTH</td>
+<td>PWM Width</td>
+</tr>
+<tr class="row-odd"><td>[31:16]</td>
+<td>PERIOD</td>
+<td>PWM Period</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-pwm-1">
+<h3>MMIO_INST_PWM_1<a class="headerlink" href="#mmio-inst-pwm-1" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x5c = 0x0000005c</cite></p>
+<blockquote>
+<div><p>PWM width and period</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "width",  "bits": 16},
+        {"name": "period",  "bits": 16}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="27%" />
+<col width="43%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[15:0]</td>
+<td>WIDTH</td>
+<td>PWM Width</td>
+</tr>
+<tr class="row-odd"><td>[31:16]</td>
+<td>PERIOD</td>
+<td>PWM Period</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-pwm-2">
+<h3>MMIO_INST_PWM_2<a class="headerlink" href="#mmio-inst-pwm-2" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x60 = 0x00000060</cite></p>
+<blockquote>
+<div><p>PWM width and period</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "width",  "bits": 16},
+        {"name": "period",  "bits": 16}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="27%" />
+<col width="43%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[15:0]</td>
+<td>WIDTH</td>
+<td>PWM Width</td>
+</tr>
+<tr class="row-odd"><td>[31:16]</td>
+<td>PERIOD</td>
+<td>PWM Period</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-pwm-3">
+<h3>MMIO_INST_PWM_3<a class="headerlink" href="#mmio-inst-pwm-3" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x64 = 0x00000064</cite></p>
+<blockquote>
+<div><p>PWM width and period</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "width",  "bits": 16},
+        {"name": "period",  "bits": 16}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="27%" />
+<col width="43%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[15:0]</td>
+<td>WIDTH</td>
+<td>PWM Width</td>
+</tr>
+<tr class="row-odd"><td>[31:16]</td>
+<td>PERIOD</td>
+<td>PWM Period</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-pwm-4">
+<h3>MMIO_INST_PWM_4<a class="headerlink" href="#mmio-inst-pwm-4" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x68 = 0x00000068</cite></p>
+<blockquote>
+<div><p>PWM width and period</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "width",  "bits": 16},
+        {"name": "period",  "bits": 16}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="27%" />
+<col width="43%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[15:0]</td>
+<td>WIDTH</td>
+<td>PWM Width</td>
+</tr>
+<tr class="row-odd"><td>[31:16]</td>
+<td>PERIOD</td>
+<td>PWM Period</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-pwm-5">
+<h3>MMIO_INST_PWM_5<a class="headerlink" href="#mmio-inst-pwm-5" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x6c = 0x0000006c</cite></p>
+<blockquote>
+<div><p>PWM width and period</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "width",  "bits": 16},
+        {"name": "period",  "bits": 16}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="27%" />
+<col width="43%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[15:0]</td>
+<td>WIDTH</td>
+<td>PWM Width</td>
+</tr>
+<tr class="row-odd"><td>[31:16]</td>
+<td>PERIOD</td>
+<td>PWM Period</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-pwm-6">
+<h3>MMIO_INST_PWM_6<a class="headerlink" href="#mmio-inst-pwm-6" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x70 = 0x00000070</cite></p>
+<blockquote>
+<div><p>PWM width and period</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "width",  "bits": 16},
+        {"name": "period",  "bits": 16}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="27%" />
+<col width="43%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[15:0]</td>
+<td>WIDTH</td>
+<td>PWM Width</td>
+</tr>
+<tr class="row-odd"><td>[31:16]</td>
+<td>PERIOD</td>
+<td>PWM Period</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-pwm-7">
+<h3>MMIO_INST_PWM_7<a class="headerlink" href="#mmio-inst-pwm-7" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x74 = 0x00000074</cite></p>
+<blockquote>
+<div><p>PWM width and period</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "width",  "bits": 16},
+        {"name": "period",  "bits": 16}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="27%" />
+<col width="43%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[15:0]</td>
+<td>WIDTH</td>
+<td>PWM Width</td>
+</tr>
+<tr class="row-odd"><td>[31:16]</td>
+<td>PERIOD</td>
+<td>PWM Period</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-enc-res-en">
+<h3>MMIO_INST_ENC_RES_EN<a class="headerlink" href="#mmio-inst-enc-res-en" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x78 = 0x00000078</cite></p>
+<blockquote>
+<div><p>Encoder enable and reset flags</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "reset",  "bits": 16},
+        {"name": "enable",  "bits": 16}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="27%" />
+<col width="43%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[15:0]</td>
+<td>RESET</td>
+<td>Reset</td>
+</tr>
+<tr class="row-odd"><td>[31:16]</td>
+<td>ENABLE</td>
+<td>Enable</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-res-st-reg">
+<h3>MMIO_INST_RES_ST_REG<a class="headerlink" href="#mmio-inst-res-st-reg" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x7c = 0x0000007c</cite></p>
+<blockquote>
+<div><p>Reset and status register</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"bits": 10},
+        {"name": "watchdog",  "bits": 22}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="24%" />
+<col width="55%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field</th>
+<th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[31:10]</td>
+<td>WATCHDOG</td>
+<td>watchdog down counter</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mmio-inst-sg-count-0">
+<h3>MMIO_INST_SG_COUNT_0<a class="headerlink" href="#mmio-inst-sg-count-0" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x80 = 0x00000080</cite></p>
+<blockquote>
+<div><p>Stepgen 0 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_count_0[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-count-1">
+<h3>MMIO_INST_SG_COUNT_1<a class="headerlink" href="#mmio-inst-sg-count-1" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x84 = 0x00000084</cite></p>
+<blockquote>
+<div><p>Stepgen 1 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_count_1[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-count-2">
+<h3>MMIO_INST_SG_COUNT_2<a class="headerlink" href="#mmio-inst-sg-count-2" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x88 = 0x00000088</cite></p>
+<blockquote>
+<div><p>Stepgen 2 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_count_2[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-count-3">
+<h3>MMIO_INST_SG_COUNT_3<a class="headerlink" href="#mmio-inst-sg-count-3" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x8c = 0x0000008c</cite></p>
+<blockquote>
+<div><p>Stepgen 3 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_count_3[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-count-4">
+<h3>MMIO_INST_SG_COUNT_4<a class="headerlink" href="#mmio-inst-sg-count-4" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x90 = 0x00000090</cite></p>
+<blockquote>
+<div><p>Stepgen 4 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_count_4[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-count-5">
+<h3>MMIO_INST_SG_COUNT_5<a class="headerlink" href="#mmio-inst-sg-count-5" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x94 = 0x00000094</cite></p>
+<blockquote>
+<div><p>Stepgen 5 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_count_5[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-count-6">
+<h3>MMIO_INST_SG_COUNT_6<a class="headerlink" href="#mmio-inst-sg-count-6" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x98 = 0x00000098</cite></p>
+<blockquote>
+<div><p>Stepgen 6 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_count_6[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-count-7">
+<h3>MMIO_INST_SG_COUNT_7<a class="headerlink" href="#mmio-inst-sg-count-7" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0x9c = 0x0000009c</cite></p>
+<blockquote>
+<div><p>Stepgen 7 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_count_7[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-count-8">
+<h3>MMIO_INST_SG_COUNT_8<a class="headerlink" href="#mmio-inst-sg-count-8" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xa0 = 0x000000a0</cite></p>
+<blockquote>
+<div><p>Stepgen 8 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_count_8[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-vel-0">
+<h3>MMIO_INST_SG_VEL_0<a class="headerlink" href="#mmio-inst-sg-vel-0" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xa4 = 0x000000a4</cite></p>
+<blockquote>
+<div><p>Stepgen 0 vel</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_vel_0[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-vel-1">
+<h3>MMIO_INST_SG_VEL_1<a class="headerlink" href="#mmio-inst-sg-vel-1" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xa8 = 0x000000a8</cite></p>
+<blockquote>
+<div><p>Stepgen 1 vel</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_vel_1[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-vel-2">
+<h3>MMIO_INST_SG_VEL_2<a class="headerlink" href="#mmio-inst-sg-vel-2" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xac = 0x000000ac</cite></p>
+<blockquote>
+<div><p>Stepgen 2 vel</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_vel_2[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-vel-3">
+<h3>MMIO_INST_SG_VEL_3<a class="headerlink" href="#mmio-inst-sg-vel-3" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xb0 = 0x000000b0</cite></p>
+<blockquote>
+<div><p>Stepgen 3 vel</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_vel_3[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-vel-4">
+<h3>MMIO_INST_SG_VEL_4<a class="headerlink" href="#mmio-inst-sg-vel-4" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xb4 = 0x000000b4</cite></p>
+<blockquote>
+<div><p>Stepgen 4 vel</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_vel_4[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-vel-5">
+<h3>MMIO_INST_SG_VEL_5<a class="headerlink" href="#mmio-inst-sg-vel-5" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xb8 = 0x000000b8</cite></p>
+<blockquote>
+<div><p>Stepgen 5 vel</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_vel_5[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-vel-6">
+<h3>MMIO_INST_SG_VEL_6<a class="headerlink" href="#mmio-inst-sg-vel-6" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xbc = 0x000000bc</cite></p>
+<blockquote>
+<div><p>Stepgen 6 vel</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_vel_6[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-vel-7">
+<h3>MMIO_INST_SG_VEL_7<a class="headerlink" href="#mmio-inst-sg-vel-7" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xc0 = 0x000000c0</cite></p>
+<blockquote>
+<div><p>Stepgen 7 vel</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_vel_7[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-sg-vel-8">
+<h3>MMIO_INST_SG_VEL_8<a class="headerlink" href="#mmio-inst-sg-vel-8" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xc4 = 0x000000c4</cite></p>
+<blockquote>
+<div><p>Stepgen 8 vel</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "sg_vel_8[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-wallclock">
+<h3>MMIO_INST_WALLCLOCK<a class="headerlink" href="#mmio-inst-wallclock" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xc8 = 0x000000c8</cite></p>
+<blockquote>
+<div><p>wallclock time</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "wallclock[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-gpios-in">
+<h3>MMIO_INST_GPIOS_IN<a class="headerlink" href="#mmio-inst-gpios-in" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xcc = 0x000000cc</cite></p>
+<blockquote>
+<div><p>gpios in</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "gpios_in[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-enc-count-0">
+<h3>MMIO_INST_ENC_COUNT_0<a class="headerlink" href="#mmio-inst-enc-count-0" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xd0 = 0x000000d0</cite></p>
+<blockquote>
+<div><p>Encoder 0 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "enc_count_0[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-enc-count-1">
+<h3>MMIO_INST_ENC_COUNT_1<a class="headerlink" href="#mmio-inst-enc-count-1" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xd4 = 0x000000d4</cite></p>
+<blockquote>
+<div><p>Encoder 1 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "enc_count_1[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-enc-count-2">
+<h3>MMIO_INST_ENC_COUNT_2<a class="headerlink" href="#mmio-inst-enc-count-2" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xd8 = 0x000000d8</cite></p>
+<blockquote>
+<div><p>Encoder 2 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "enc_count_2[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-enc-count-3">
+<h3>MMIO_INST_ENC_COUNT_3<a class="headerlink" href="#mmio-inst-enc-count-3" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xdc = 0x000000dc</cite></p>
+<blockquote>
+<div><p>Encoder 3 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "enc_count_3[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-enc-count-4">
+<h3>MMIO_INST_ENC_COUNT_4<a class="headerlink" href="#mmio-inst-enc-count-4" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xe0 = 0x000000e0</cite></p>
+<blockquote>
+<div><p>Encoder 4 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "enc_count_4[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-enc-count-5">
+<h3>MMIO_INST_ENC_COUNT_5<a class="headerlink" href="#mmio-inst-enc-count-5" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xe4 = 0x000000e4</cite></p>
+<blockquote>
+<div><p>Encoder 5 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "enc_count_5[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-enc-count-6">
+<h3>MMIO_INST_ENC_COUNT_6<a class="headerlink" href="#mmio-inst-enc-count-6" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xe8 = 0x000000e8</cite></p>
+<blockquote>
+<div><p>Encoder 6 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "enc_count_6[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-enc-count-7">
+<h3>MMIO_INST_ENC_COUNT_7<a class="headerlink" href="#mmio-inst-enc-count-7" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xec = 0x000000ec</cite></p>
+<blockquote>
+<div><p>Encoder 7 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "enc_count_7[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="mmio-inst-enc-count-8">
+<h3>MMIO_INST_ENC_COUNT_8<a class="headerlink" href="#mmio-inst-enc-count-8" title="Permalink to this headline">¶</a></h3>
+<p><cite>Address: 0x00000000 + 0xf0 = 0x000000f0</cite></p>
+<blockquote>
+<div><p>Encoder 8 count</p>
+
+<div style="overflow-x:auto">
+<script type="WaveDrom">
+{
+    "reg": [
+        {"name": "enc_count_8[31:0]", "bits": 32}
+    ], "config": {"hspace": 400, "bits": 32, "lanes": 1 }, "options": {"hspace": 400, "bits": 32, "lanes": 1}
+}
+</script>
+</div>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+    <script type="text/javascript">
+        function init() {
+            WaveDrom.ProcessAll();
+        }
+        window.onload = init;
+    </script>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">LiteX SoC Project</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="interrupts.html">Interrupt Controller</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MMIO_INST</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ctrl.html">CTRL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ethphy.html">ETHPHY</a></li>
+<li class="toctree-l1"><a class="reference internal" href="identifier_mem.html">IDENTIFIER_MEM</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="interrupts.html" title="previous chapter">Interrupt Controller</a></li>
+      <li>Next: <a href="ctrl.html" title="next chapter">CTRL</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Anonymous.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/MMIO_inst.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

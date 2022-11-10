@@ -263,3 +263,8 @@ aggiungere la sequenza di indirizzi da leggere
 mandare il pacchetto
 attendere e leggere il pacchetto ricevuto
 interpretare i valori nel payload alla luce degli indirizzi inviati in precedenza
+
+Generare configurazioni preconfezionate interessanti:
+ - 75b: 14o11i6s6e6p 26o23i6p
+ - 75e: 30o29i9s9e8p
+

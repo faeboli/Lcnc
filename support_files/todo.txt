@@ -31,6 +31,7 @@ x testare lettura encoders
 x interfacciare con linuxcnc
 5A75E
 x modificare .c e .h per encoder
+
 - riscrittura firmware e driver
     x riscrivere la comunicazione e verificare a connessione base con i componenti
     x ristrutturare il codice driver
@@ -48,10 +49,10 @@ x modificare .c e .h per encoder
     x rinominare position in step counter
     x calcolare il tempo trascorso tra due chiamate per le integrazioni e differenze (es calcolo delle velocità)
     x implementare limite di accelerazione stepgen
-    - avere un moltiplicatore della accelerazione per ogni stepgen invece di un singolo moltiplicatore per tutti
-      - con 2 bit ciascuno e base 8 si spazia da 8^0=1 a 8^3=512
-    - configurare automaticamente il moltiplicatore in funzione del valore di accelerazione richiesto
-    - valutare di annegare il moltiplicatore nel valore di accelerazione massima per ridurre il numero di registri
+    x avere un moltiplicatore della accelerazione per ogni stepgen invece di un singolo moltiplicatore per tutti
+      x con 2 bit ciascuno e base 8 si spazia da 8^0=1 a 8^3=512
+    x configurare automaticamente il moltiplicatore in funzione del valore di accelerazione richiesto
+    x valutare di annegare il moltiplicatore nel valore di accelerazione massima per ridurre il numero di registri
     x implementare check sui limiti degli input dei parametri e valori
     x introdurre una logica di reset nel driver se la scheda non risponde
     x decidere cosa fare nel driver in caso di reset o enabled=0 
@@ -60,12 +61,15 @@ x modificare .c e .h per encoder
     x aggiungere input hw di fpga che resetti la scheda
     x velocità come int32
     - aggiungere la ragione dell'ultimo reset nel registro di stato
-    - analizzare e ridurre i tempi di esecuzione (attualmente va da 130 a 250us con picchi di 700us)
+    - usare led per comunicare lo stato: non connesso (acceso fisso)/reset (lamp lento)/attivo (lamp veloce)
+    x analizzare e ridurre i tempi di esecuzione (attualmente va da 130 a 250us con picchi di 700us) (era colpa dei tempi di lettura/scrittura)
     - mandare i parametri solo se sono cambiati
-    - mandare solo i dati cambiati
-
+    - creare una serie di firmware/drivers preconfezionati con le configurazioni più interessanti
+    - rendere il driver unico, in modo che si adatti alla configurazione del firmware connesso
+      - creare una coppia di registri per comunicare la configurazione come handshake, su uno si scrive per richiederla, sul'altro si legge
+      - configurare il driver in modo che legga la configurazione all'avvio e generi il pinout di conseguenza
     - aggiungere filtro variabile agli encoders
-    - automatizare un minimo la creazione del numero di periferiche nel driver, partendo dal file python del fw
+    - automatizare la creazione della configurazione del firmware usando un file di testo
     - configuratore visuale delle periferiche
       - dearpygui
       - nel py chiedere se avviare il configuratore

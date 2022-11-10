@@ -14,7 +14,7 @@
 	net user-enable-out 	<= iocontrol.0.user-enable-out		=> Lcnc.00.enable
 	net user-request-enable <= iocontrol.0.user-request-enable	=> Lcnc.00.enable-request
 	net Lcnc-status 	   <= Lcnc.00.enabled => and2.0.in0
-    net Drvr-alarm-n       <= Lcnc.00.input.03.in-n => and2.0.in1
+    net Drvr-alarm-n       <= Lcnc.00.input.03.in-n => and2.0.in1 # spostato su J5-4
 	net Lcnc-and-drv-ok    <= and2.0.out => iocontrol.0.emc-enable-in
 	net Lcnc-and-drv-ok    => Lcnc.00.output.06.out  #drivers power enable
 	net Lcnc-and-drv-ok    => not.0.in
