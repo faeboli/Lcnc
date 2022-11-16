@@ -267,4 +267,12 @@ interpretare i valori nel payload alla luce degli indirizzi inviati in precedenz
 Generare configurazioni preconfezionate interessanti:
  - 75b: 14o11i6s6e6p 26o23i6p
  - 75e: 30o29i9s9e8p
-
+ 
+- registro configurazione
+address 0 : scrivi magic
+address 1-2: leggi conf 1: configurazione 2:reserved
+7 bits num in (max 256)
+7 bits num out (max 256)
+6 bits stepgens (max 32)
+6 bits encoders (max 32)
+6 bits pwm (max 64)

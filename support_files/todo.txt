@@ -65,9 +65,9 @@ x modificare .c e .h per encoder
     x analizzare e ridurre i tempi di esecuzione (attualmente va da 130 a 250us con picchi di 700us) (era colpa dei tempi di lettura/scrittura)
     - mandare i parametri solo se sono cambiati
     - creare una serie di firmware/drivers preconfezionati con le configurazioni più interessanti
-    - rendere il driver unico, in modo che si adatti alla configurazione del firmware connesso
-      - creare una coppia di registri per comunicare la configurazione come handshake, su uno si scrive per richiederla, sul'altro si legge
-      - configurare il driver in modo che legga la configurazione all'avvio e generi il pinout di conseguenza
+    x rendere il driver unico, in modo che si adatti alla configurazione del firmware connesso
+      x creare una coppia di registri per comunicare la configurazione come handshake, su uno si scrive per richiederla, sul'altro si legge
+      x configurare il driver in modo che legga la configurazione all'avvio e generi il pinout di conseguenza
     - aggiungere filtro variabile agli encoders
     - automatizare la creazione della configurazione del firmware usando un file di testo
     - configuratore visuale delle periferiche
