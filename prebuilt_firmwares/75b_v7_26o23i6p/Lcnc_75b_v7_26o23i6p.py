@@ -261,7 +261,11 @@ class MMIO(Module,AutoCSR):
         self.init_write = CSRStorage(fields=[
         CSRField("magic", size=8, offset=0,description="Reset")],
         description="Write magic to start detection", write_from_dev=False)
+        self.working_reg_start_addr=1
 
+        self.regs_start = CSRStatus(size=32,description="registers start address", name='reg_start')
+        self.working_reg_start_addr=self.working_reg_start_addr+1
+        
         self.configuration = CSRStatus(
         fields=[
         CSRField("n_in",size=7,offset=0,description="number of inputs"),
@@ -270,7 +274,9 @@ class MMIO(Module,AutoCSR):
         CSRField("n_en",size=6,offset=20,description="number of encoders"),
         CSRField("n_pwm",size=6,offset=26,description="number of pwm"),],
         description="Device configuration for detection", name='configuration')
-
+        self.working_reg_start_addr=self.working_reg_start_addr+1 # used to count the number of registers used at init
+        # working_reg_start_addr now is the address of next register
+        
         for i in range(num_stepgens):
            setattr(self,f'velocity{i}', CSRStorage(size=32, description="Stepgen velocity", write_from_dev=False, name='velocity_'+str(i)))
         for i in range(num_stepgens):
@@ -279,21 +285,25 @@ class MMIO(Module,AutoCSR):
         CSRField("acc_mult",size=2,offset=30,description="Acceleration Multiplier")],
         description="Stepgen acceleration", write_from_dev=False, name='max_acc_'+str(i)))
 
-        self.step_res_en = CSRStorage(fields=[
+        if(num_stepgens>0):
+            self.step_res_en = CSRStorage(fields=[
         CSRField("sgreset", size=16, offset=0,description="Reset"),
         CSRField("sgenable", size=16, offset=16,description="Enable")],
         description="Stepgen Enable and Reset flags", write_from_dev=False)
-        self.step_dir_inv = CSRStorage(fields=[
+        if(num_stepgens>0):
+            self.step_dir_inv = CSRStorage(fields=[
         CSRField("dir_inv", size=16, offset=0,description="Dir Pin Inversion"),
         CSRField("step_inv", size=16, offset=16,description="Step Pin Inversion")],
         description="Stepgen Dir and Step inversion", write_from_dev=False, name='stepdirinv')
-        self.steptimes = CSRStorage(fields=[
+        if(num_stepgens>0):
+            self.steptimes = CSRStorage(fields=[
         CSRField("dir_setup", size=14, offset=0,description="Dir Pin Setup time"),
         CSRField("dir_width", size=9, offset=14,description="Dir Pin Minimum width"),
         CSRField("step_width", size=9, offset=23,description="Step Pin Minimum width")],
         description="Stepgen steptime", write_from_dev=False, name='steptimes')
 
-        self.gpios_out = CSRStorage(size=32, description="gpios out", write_from_dev=False, name='gpios_out')
+        if(num_outputs>0):
+            self.gpios_out = CSRStorage(size=32, description="gpios out", write_from_dev=False, name='gpios_out')
 
         for i in range(num_pwm):
             setattr(self,f'pwm{i}', CSRStorage(fields=[
@@ -301,7 +311,8 @@ class MMIO(Module,AutoCSR):
         CSRField("period", size=16, offset=16,description="PWM Period")],
         description="PWM width and period", write_from_dev=False, name='pwm_'+str(i)))
         
-        self.enc_res_en = CSRStorage(fields=[
+        if(num_encoders>0):
+            self.enc_res_en = CSRStorage(fields=[
         CSRField("reset", size=16, offset=0,description="Reset"),
         CSRField("enable", size=16, offset=16,description="Enable")],
         description="Encoder enable and reset flags", write_from_dev=False)        
@@ -316,7 +327,9 @@ class MMIO(Module,AutoCSR):
             setattr(self,f'sg_vel{i}', CSRStatus(size=32, description="Stepgen "+str(i)+" vel", name="sg_vel_"+str(i)))
                     
         self.wallclock = CSRStatus(size=32, description="wallclock time", name='wallclock')
-        self.gpios_in = CSRStatus(size=32, description="gpios in", name='gpios_in')
+
+        if(num_inputs>0):
+            self.gpios_in = CSRStatus(size=32, description="gpios in", name='gpios_in')
 
         for i in range(num_encoders):
             setattr(self,f'enc_count{i}', CSRStatus(size=32, description="Encoder "+str(i)+" count", name="enc_count_"+str(i)))
@@ -392,6 +405,8 @@ class BaseSoC(SoCMini):
 
         self.submodules.MMIO_inst = MMIO_inst = MMIO()
 
+        self.sync+=[self.MMIO_inst.regs_start.status.eq(self.MMIO_inst.working_reg_start_addr*4),
+        self.MMIO_inst.configuration.we.eq(True)] 
         self.sync+=[
         If(self.MMIO_inst.init_write.fields.magic == 0x55,
         self.MMIO_inst.configuration.fields.n_in.eq(num_inputs),
@@ -440,9 +455,9 @@ class BaseSoC(SoCMini):
 
         for i in range(num_outputs):
             self.sync+=[
-			If(global_reset==True,
-			self.gpio_outputs[i].eq(False)).Else(
-			self.gpio_outputs[i].eq(self.MMIO_inst.gpios_out.storage[i]))]
+            If(global_reset==True,
+            self.gpio_outputs[i].eq(False)).Else(
+            self.gpio_outputs[i].eq(self.MMIO_inst.gpios_out.storage[i]))]
         
         for i in range(num_inputs):
             self.sync+=[self.MMIO_inst.gpios_in.status[i].eq(self.gpio_inputs[i])]

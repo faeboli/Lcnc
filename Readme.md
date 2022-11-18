@@ -1,20 +1,61 @@
-Lcnc is an fpga firmware that will enable colorlight 
-boards such as 5A-75B or 5A-75E to become a linuxcnc peripheral board.
-The communication with the host pc is trough gigabit ethernet.
-The protocol used is etherbone.
-The firmware is written in migen, using Litex framework.
+Lcnc is an fpga firmware to be used in LinuxCNC.
 
 Lcnc is my own interpretation of colorcnc form 
 Roman Pechenko <romanetz4@gmail.com> "romanetz"
 https://forum.linuxcnc.org/27-driver-boards/44422-colorcnc
 
-Getting started:
-- colorlight 5a 75b or 75e board
+It implements stepgenerators, general purpose in/out, encoder inputs, pwm
+in the fpga, and a gigabit ethernet link used to talk to the host pc running LinuxCNC.
+
+There are several FPGA configurations available, ready to be uploaded
+on FPGA boards, also eventually new user defined configurations can be generated.
+
+The work now is focused on Colorligh 5a-75b and 5a-65e boards.
+
+The HOST side LinuxCNC driver is provided, it will interface
+with FPGA firmware, and provide pins and parameters that will connect
+fpga peripherals to LinuxCNC. The driver is unique and will be able
+to talk to every possible configuration.
+
+The protocol used is etherbone.
+The firmware is written in migen, using Litex framework.
+
+# Getting started:
+- you will need a colorlight 5a 75b or 75e board
 - jtag adapter for loading and flashing bitfiles
-- boards hw info and pin maps are available here https://github.com/q3k/chubby75
+- boards hw info and pin maps for jtag are available here https://github.com/q3k/chubby75
+- Choose the firmware you want to try, the names reflect the peripherals available, for example 75b_v6_14o11i6s6e6p will go to a colorlight 5a75b V6.0 and will contain 14 outputs 11 inputs 6 stepgens 6 encoders interfaces 6 pwm generators.
+- Upload the firmware on the board, I'm using openFPGAloader but any such tool is good.
+- Connect the board to the host pc and try to ping the board, the default ip address is 192.168.2.50 a Gigabit ethernet port is needed.
+- If the board responds to pings then you can build the driver in LinuxCNC wih the command "sudo halcompile --install Lcnc.c" and start to work with the board.
+
+# Communication and first enabling of the the board:
+- ensure that the RESET pin on the board is grounded, you can find it's position on the 
+  pinout document "Lcnc_configurations_pinout.ods", for example for 75b_v6_14o11i6s6e6p the RESET pin is J8 pin7
+
+I have attached a very basic HAL configuration for initial testing, the basic checks can be executed trough halshow interface. 
+
+**Basic functionality check:**
+
+- in the terminal start the HAL configuration: "halrun -I -V  HAL.hal"
+- open a second terminal and start "halshow"
+- Lcnc.00.update.time: this will show the update time for the component, in my system is around 200000ns
+- Lcnc.00.watchdog-write: this is the board watchdog time, in seconds, I have it set to 0.01s (10ms) as default
+- Lcnc.00.watchdog-read: this is the watchdog remaining time when petted, in seconds, check the value to be sure that is far from zero, and near to Lcnc.
+- The above values should be updated continuosly if the board and driver are working correctly.
+- set Lcnc.00.watchdog-write to 1
+- Lcnc.00.enable to 1
+- toggle Lcnc.00.enable-request from 0 to 1, then back to 0
+- Lcnc.00.enabled should become 1, in this case the board is enabled and ready
+- Lcnc.00.enable is the global enable flag for board, if set to true, the board can become ready to be enabled, the effective enabling will be requested by Lcnc.00.enable-request.
+- Lcnc.00.enabled is the feedback confirmation that the board is enabled, as soon as Lcnc.00.enable will be set to false, the board will be disabled. The board can be disabed also if the onboard watchdog bites (to test this try to set Lcnc.00.watchdog-write to lower values until the board spontaneously disables). The board will disable also if it's hardware reset pin will be set to high (see "_ext_reset_in" in Lcnc.py for it's mapping).
+- Set Lcnc.00.enable-request this interface is checked only on it's rising edge from False to True, then it is ignored, if there are no watchdog problems or hw reset request, the board will enable and set back Lcnc.00.enabled to True.
+
+
+# Create your own configuration:
 - Litex installed and working, see https://github.com/enjoy-digital/litex
 - clone Lcnc repo on your pc
-- optionally edit Lcnc.py:
+- edit Lcnc.py:
   modify what is between
   "Devices configuration start"
   and
@@ -31,40 +72,12 @@ Getting started:
 - the target board can be changed adding to the command "board" and "revision" parameters, 
   for example "--board=5a-75b --revision=8.0"
 - ip address can be configured with "eth-ip" parameter, for example "--eth-ip=192.168.1.100"
-- the script, if succesful, will generate many files, 3 of these are needed:
-  - bitfile, you will find it in /build/colorlight_5a_75e/gateware/Lcnc.bit
-    you will load this file on the board's fpga, I'm using openFPGAloader utility, with a ftdi jtag adapter
-  - etherbone registers definition under /build/colorlight_5a_75e/software/include/generated/csr.h
-    this file will be needed by the linuxcnc driver, copy this file in the folder driver/include/
-  - autogenerated driver header configuration_auto.h, copy also this file in the folder driver/include/
-- now copy the driver folder on the machine that runs Linuxcnc, in my case it is different than the machine with litex, since I'm using a raspberry
-- build the driver with the command "sudo halcompile --install Lcnc.c"
-- connect the board, ping it to make sure that the the board is alive and connected "ping 192.168.2.50"
+- the script, if succesful, will generate many files, bitfile is located in /build/colorlight_5a_75e/gateware/Lcnc.bit
+- upload the bitfile on the board
+- connect the board, ping it to make sure that the the board is alive and connected
 
-I have attached a very basic HAL configuration for initial testing,the basic checks can be executed trough halshow interface. 
 
-Basic functionality check:
-- in the first terminal start the HAL configuration: "halrun -I -V  HAL.hal"
-- open a second terminal and start halshow GUI "halshow"
-- in halshow GUI watch tab choose the following interfaces:
-  - Lcnc.00.update.time: this will show the update time for the component, in my system is around 200000ns
-  - Lcnc.00.watchdog-write: this is the board watchdog time, in seconds, I have it set to 0.01s (10ms) as default
-  - Lcnc.00.watchdog-read: this is the watchdog remaining time when petted, in seconds, check the value to be sure that is far from zero, and near to Lcnc.00.watchdog-write value
-
-The above values should be updated continuosly if the board and driver are working correctly.
-
-Enabling the board:
-- in halshow GUI add the following:
-  - Lcnc.00.enable
-  - Lcnc.00.enabled
-  - Lcnc.00.enable-request
-
-- Set Lcnc.00.enable to True, this is the global enable flag for board, if set to true, the board can become ready to be enabled. 
-The effective enabling will be requested by Lcnc.00.enable-request.
-- Lcnc.00.enabled is the feedback confirmation that the board is enabled, as soon as Lcnc.00.enable will be set to false, the board will be disabled. The board can be disabed also if the onboard watchdog bites (to test this try to set Lcnc.00.watchdog-write to lower values until the board spontaneously disables). The board will disable also if it's hardware reset pin will be set to high (see "_ext_reset_in" in Lcnc.py for it's mapping).
-- Set Lcnc.00.enable-request to True, then to False. This interface is checked only on it's rising edge from False to True, then it is ignored, if there are no watchdog problems or hw reset request, the board will enable and set back Lcnc.00.enabled to True.
-
-Working with peripherals:
+# Working with peripherals:
 -- doc in construction, the peripherals are what they seem, you can play with them, only to be noted that stepgen is velocity mode only.
 
 Digital inputs to the board, the pins are defined in "_gpios_in" list un Lcnc.py script, maximum number of 32 inputs can be defined:

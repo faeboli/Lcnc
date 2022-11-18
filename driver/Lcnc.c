@@ -41,7 +41,7 @@ static int comp_id;     /* component ID */
 static int num_ports;       /* number of ports configured */
 static struct timespec spec_old;
 uint8_t n_in,n_out,n_sg,n_en,n_pwm,intf_ver=0; /* number of each peripheral and interface version*/
-uint32_t INIT_WRITE_addr,CONFIGURATION_addr,VELOCITY0_addr,VELOCITYlast_addr,MAX_ACC0_addr,MAX_ACClast_addr;
+uint32_t INIT_WRITE_addr,CONFIGURATION_addr,REGS_START_addr,REGS_START_value,VELOCITY0_addr,VELOCITYlast_addr,MAX_ACC0_addr,MAX_ACClast_addr;
 uint32_t STEP_RES_EN_addr,STEPDIRINV_addr,STEPTIMES_addr,GPIOS_OUT_addr,PWM_0_addr,PWM_last_addr,ENC_RES_EN_addr;
 uint32_t RES_ST_REG_addr,SG_COUNT_0_addr,SG_COUNT_last_addr,SG_VEL_0_addr,SG_VEL_last_addr,WALLCLOCK_addr,GPIOS_IN_addr;
 uint32_t ENC_COUNT_0_addr,ENC_COUNT_last_addr,LAST_addr,TX_PAYLOAD_size,RX_PAYLOAD_size;
@@ -291,42 +291,44 @@ int rtapi_app_main(void)
 ///// INIT ETH BOARD ; TRY TO CONNECT TO BOARD AND GATHER CONFIGURATON INFO
 //###################################################
 
-    // !! prepare packet for read registers one by one from here
+    
+    // Step 1: Init register set to zero
 
-    // Reset init register to zero
     // Header setup
-    eb_fill_header(tx_write_packet_buffer,0,1,0); // (buffer,is_read,number of read/writes,start address)
+    eb_fill_header(tx_write_packet_buffer,0,1,INIT_REG_ADDR); // (buffer,is_read,number of read/writes,start address)
     // payload setup
     tempvalue=(uint32_t)(0x00000000);
-    temp_reg_value.value=htobe32(tempvalue); // watchdog
-    memcpy((void*)(tx_write_packet_buffer+EB_HEADER_SIZE+0),(void*)temp_reg_value.bytes,4); 
+    temp_reg_value.value=htobe32(tempvalue); // 
+    memcpy((void*)(tx_write_packet_buffer+EB_HEADER_SIZE+INIT_REG_ADDR),(void*)temp_reg_value.bytes,4); 
 
     // #################  TRANSMIT DATA  ###############################################################
     eb_send(device_data->eb, tx_write_packet_buffer, EB_HEADER_SIZE+INIT_TX_PAYLOAD_SIZE);
     // #################################################################################################
 
-    // Step 1: try to read signature from configuration register, in order to verify we are talking to 
+    // Step 2: try to read signature from configuration register, in order to verify we are talking to 
     // a correctly configured board
 
     // Header setup
-    eb_fill_header(tx_read_packet_buffer,1,1,0); // (buffer,is_read,number of read/writes,start address)
+    eb_fill_header(tx_read_packet_buffer,1,2,0); // (buffer,is_read,number of read/writes,start address)
     // Payload setup
     // first step: try to read configuration register for signature and version
-    temp_reg_value.value=htobe32(0x4L); 
-    memcpy((void*)(tx_read_packet_buffer+EB_HEADER_SIZE+0),(void*)temp_reg_value.bytes,4);
+    temp_reg_value.value=htobe32(REG_START_REG_ADDR); 
+    memcpy((void*)(tx_read_packet_buffer+EB_HEADER_SIZE+REG_START_REG_ADDR-REG_START_REG_ADDR),(void*)temp_reg_value.bytes,4);
+    temp_reg_value.value=htobe32(CONFIGURATION_REG_ADDR); 
+    memcpy((void*)(tx_read_packet_buffer+EB_HEADER_SIZE+CONFIGURATION_REG_ADDR-REG_START_REG_ADDR),(void*)temp_reg_value.bytes,4);
     
     first_timestamp=get_timestamp();
     while(init_ok<1 && (timestamp-first_timestamp)<10) // expire after 10 secs
     {
 
         // #################  TRANSMIT DATA  ###############################################################
-        eb_send(device_data->eb, tx_read_packet_buffer, EB_HEADER_SIZE+4);
+        eb_send(device_data->eb, tx_read_packet_buffer, EB_HEADER_SIZE+INIT_RX_PAYLOAD_SIZE);
         // #################  RECEIVE DATA  ###############################################################
 
         int count = eb_recv(device_data->eb, rx_read_packet_buffer, sizeof(rx_read_packet_buffer));
         if (count == EB_HEADER_SIZE+INIT_RX_PAYLOAD_SIZE)
         {
-            memcpy((void*)temp_reg_value.bytes,(void*)(rx_read_packet_buffer+EB_HEADER_SIZE+0),4);
+            memcpy((void*)temp_reg_value.bytes,(void*)(rx_read_packet_buffer+EB_HEADER_SIZE+CONFIGURATION_REG_ADDR-REG_START_REG_ADDR),4);
             tempvalue=be32toh(temp_reg_value.value);
             init_ok++;
         }
@@ -338,53 +340,63 @@ int rtapi_app_main(void)
         }
     }
 
+
     // check if the value read is coherent
     if(init_ok==1)
     {
         intf_ver=(uint8_t)( tempvalue & 0x000000ff);
         if( intf_ver==1 && (uint8_t)((tempvalue & 0x0000ff00)>>8) =='n' && (uint8_t)((tempvalue & 0x00ff0000)>>16) == 'c'&&  (uint8_t)((tempvalue & 0xff000000)>>24 == 'L'))
         {
+            init_ok++;
             fprintf(stderr, "Lcnc:%f detected board with interface version %d\n",get_timestamp(),intf_ver);
         }
     }
 
+    // Step 3: set Init register to 0x55
+
     // Header setup
-    eb_fill_header(tx_write_packet_buffer,0,1,0); // (buffer,is_read,number of read/writes,start address)
+    eb_fill_header(tx_write_packet_buffer,0,1,INIT_REG_ADDR); // (buffer,is_read,number of read/writes,start address)
     // payload setup
-    tempvalue=(uint32_t)(0x00000055);
+    tempvalue=(uint32_t)(0x55L);
     temp_reg_value.value=htobe32(tempvalue); // watchdog
-    memcpy((void*)(tx_write_packet_buffer+EB_HEADER_SIZE+0),(void*)temp_reg_value.bytes,4); 
+    memcpy((void*)(tx_write_packet_buffer+EB_HEADER_SIZE+INIT_REG_ADDR),(void*)temp_reg_value.bytes,4); 
 
     // #################  TRANSMIT DATA  ###############################################################
     eb_send(device_data->eb, tx_write_packet_buffer, EB_HEADER_SIZE+INIT_TX_PAYLOAD_SIZE);
     // #################################################################################################
 
 
+    // Step 4: read back REGS_START register and also Configuration register
+
     // Header setup
-    eb_fill_header(tx_read_packet_buffer,1,1,0); // (buffer,is_read,number of read/writes,start address)
+    eb_fill_header(tx_read_packet_buffer,1,2,0); // (buffer,is_read,number of read/writes,start address)
     // Payload setup
-    // second step: read configuration register for peripheral configuration
-    temp_reg_value.value=htobe32(0x4L); 
-    memcpy((void*)(tx_read_packet_buffer+EB_HEADER_SIZE+0),(void*)temp_reg_value.bytes,4);
+    // read register start address register and configuration register for peripheral configuration
+    temp_reg_value.value=htobe32(REG_START_REG_ADDR); 
+    memcpy((void*)(tx_read_packet_buffer+EB_HEADER_SIZE+REG_START_REG_ADDR-REG_START_REG_ADDR),(void*)temp_reg_value.bytes,4);
+    temp_reg_value.value=htobe32(CONFIGURATION_REG_ADDR); 
+    memcpy((void*)(tx_read_packet_buffer+EB_HEADER_SIZE+CONFIGURATION_REG_ADDR-REG_START_REG_ADDR),(void*)temp_reg_value.bytes,4);
 
     first_timestamp=get_timestamp();
-    while(init_ok<2 && (timestamp-first_timestamp)<10) // expire after 10 secs
+    while(init_ok==2 && (timestamp-first_timestamp)<10) // expire after 10 secs
     {
 
         // #################  TRANSMIT DATA  ###############################################################
-        eb_send(device_data->eb, tx_read_packet_buffer, EB_HEADER_SIZE+4);
+        eb_send(device_data->eb, tx_read_packet_buffer, EB_HEADER_SIZE+INIT_RX_PAYLOAD_SIZE);
         // #################  RECEIVE DATA  ###############################################################
 
         int count = eb_recv(device_data->eb, rx_read_packet_buffer, sizeof(rx_read_packet_buffer));
         if (count == EB_HEADER_SIZE+INIT_RX_PAYLOAD_SIZE) 
         {
-            memcpy((void*)temp_reg_value.bytes,(void*)(rx_read_packet_buffer+EB_HEADER_SIZE+0),4);
+            memcpy((void*)temp_reg_value.bytes,(void*)(rx_read_packet_buffer+EB_HEADER_SIZE+CONFIGURATION_REG_ADDR-REG_START_REG_ADDR),4);
             tempvalue=be32toh(temp_reg_value.value);
             n_in  = (uint8_t)( tempvalue & 0x0000007f);
             n_out = (uint8_t)((tempvalue & 0x00003f80)>>7);
             n_sg  = (uint8_t)((tempvalue & 0x000fc000)>>14);
             n_en  = (uint8_t)((tempvalue & 0x03f00000)>>20);
             n_pwm = (uint8_t)((tempvalue & 0xfc000000)>>26);
+            memcpy((void*)temp_reg_value.bytes,(void*)(rx_read_packet_buffer+EB_HEADER_SIZE+REG_START_REG_ADDR-REG_START_REG_ADDR),4);
+            REGS_START_value=be32toh(temp_reg_value.value); 
             timestamp=get_timestamp();
             fprintf(stderr, "Lcnc:%f peripherals detected: \n%d inputs, \n%d outputs, \n%d stepgens, \n%d encoders, \n%d pwm \n",timestamp,n_in,n_out,n_sg,n_en,n_pwm);
             init_ok++;
@@ -397,7 +409,7 @@ int rtapi_app_main(void)
         }
     }
 
-    if(init_ok<2) //failed init
+    if(init_ok<3) //failed init
     {
     fprintf(stderr, "Lcnc:%f init failed, connection error\n", get_timestamp());
         r = -1;
@@ -410,8 +422,9 @@ int rtapi_app_main(void)
  * the amount of increment depends on the size of the previous register set
  * */
     INIT_WRITE_addr     = 0x00;
-    CONFIGURATION_addr  = INIT_WRITE_addr+0x04;
-    VELOCITY0_addr      = CONFIGURATION_addr+(n_sg>0?0x04:0);
+    REGS_START_addr     = INIT_WRITE_addr+0x04;
+    CONFIGURATION_addr  = REGS_START_addr+0x08;
+    VELOCITY0_addr      = (n_sg>0?REGS_START_value:REGS_START_value-0x04);
     VELOCITYlast_addr   = VELOCITY0_addr+(n_sg>0?0x04*(n_sg-1):0);
     MAX_ACC0_addr       = VELOCITYlast_addr+(n_sg>0?0x04:0);
     MAX_ACClast_addr    = MAX_ACC0_addr+(n_sg>0?0x04*(n_sg-1):0);

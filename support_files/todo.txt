@@ -68,6 +68,7 @@ x modificare .c e .h per encoder
     x rendere il driver unico, in modo che si adatti alla configurazione del firmware connesso
       x creare una coppia di registri per comunicare la configurazione come handshake, su uno si scrive per richiederla, sul'altro si legge
       x configurare il driver in modo che legga la configurazione all'avvio e generi il pinout di conseguenza
+    - introdurre nell'init anche l'informazione su qual è l'indirizzo base del primo registro, per adattare la mappa dei registri a espansioni future
     - aggiungere filtro variabile agli encoders
     - automatizare la creazione della configurazione del firmware usando un file di testo
     - configuratore visuale delle periferiche

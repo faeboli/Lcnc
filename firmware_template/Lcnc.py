@@ -152,6 +152,9 @@ num_encoders=len(encoders)
 num_pwm=len(_pwm_out)
 num_stepgens=len(stepgens)
 
+#register map configuration
+working_reg_start_addr = 0   # used to count the number of registers used at init
+
 class QuadEnc(Module,AutoCSR):
     def __init__(self, pads):
         self.pads = pads
@@ -288,7 +291,11 @@ class MMIO(Module,AutoCSR):
         self.init_write = CSRStorage(fields=[
         CSRField("magic", size=8, offset=0,description="Reset")],
         description="Write magic to start detection", write_from_dev=False)
+        working_reg_start_addr=1
 
+        self.regs_start = CSRStatus(size=32,description="registers start address", name='reg_start')
+        working_reg_start_addr=working_reg_start_addr+1
+        
         self.configuration = CSRStatus(
         fields=[
         CSRField("n_in",size=7,offset=0,description="number of inputs"),
@@ -297,7 +304,9 @@ class MMIO(Module,AutoCSR):
         CSRField("n_en",size=6,offset=20,description="number of encoders"),
         CSRField("n_pwm",size=6,offset=26,description="number of pwm"),],
         description="Device configuration for detection", name='configuration')
+        working_reg_start_addr=working_reg_start_addr+1
 
+        # working_reg_start_addr now is the address of next register
         for i in range(num_stepgens):
            setattr(self,f'velocity{i}', CSRStorage(size=32, description="Stepgen velocity", write_from_dev=False, name='velocity_'+str(i)))
         for i in range(num_stepgens):
@@ -419,6 +428,7 @@ class BaseSoC(SoCMini):
 
         self.submodules.MMIO_inst = MMIO_inst = MMIO()
 
+        self.comb+=[self.MMIO_inst.regs_start.status.eq(working_reg_start_addr*4)] 
         self.sync+=[
         If(self.MMIO_inst.init_write.fields.magic == 0x55,
         self.MMIO_inst.configuration.fields.n_in.eq(num_inputs),

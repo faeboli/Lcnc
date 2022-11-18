@@ -14,6 +14,11 @@ extern "C" {
 #define UDP_PORT "1234"
 #define F_FPGA (40000000.0)
 
+//--- init registers addresses
+#define INIT_REG_ADDR 0x00L
+#define REG_START_REG_ADDR 0x04L
+#define CONFIGURATION_REG_ADDR 0x08L
+
 //---Registers fields size and offsets---
 #define CSR_MMIO_INST_MAX_ACC_0_ACC_SIZE 30
 #define CSR_MMIO_INST_MAX_ACC_0_ACC_OFFSET 0
@@ -46,9 +51,10 @@ extern "C" {
  * SIZE             register        R/W
  * init registers
  * 0x04             INIT_WRITE       W 
- * 0x04             CONFIGURATION    R 
+ * 0x04             REGS_START       R  here is stored the start address of working registers
+ * 0x04             CONFIGURATION    R  the size can be variable
  * stepgen related registers
- * 0x04*n_sg        VELOCITYn        W 
+ * 0x04*n_sg        VELOCITYn        W  the address of this element is stored in REGS_START register
  * 0x04*n_sg        MAX_ACCn         W 
  * 0x04             STEP_RES_EN      W 
  * 0x04             STEPDIRINV       W 
@@ -77,7 +83,7 @@ extern "C" {
 #define WDT_SCALE (64/F_FPGA) // 
 #define VEL_SIZE_BITS 32 // width of command word in bits
 #define EB_HEADER_SIZE 16  // etherbone header size in bytes
-#define INIT_RX_PAYLOAD_SIZE 4
+#define INIT_RX_PAYLOAD_SIZE 8
 #define INIT_TX_PAYLOAD_SIZE 4
 #define RX_PAYLOAD_MAX_SIZE 256
 #define TX_PAYLOAD_MAX_SIZE 256
