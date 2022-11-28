@@ -10,7 +10,6 @@ extern "C" {
 #include <stdlib.h>
 
 //---Board configuration---
-#define IP_ADDR  "192.168.2.50"
 #define UDP_PORT "1234"
 #define F_FPGA (40000000.0)
 

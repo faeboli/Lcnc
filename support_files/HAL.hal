@@ -1,11 +1,5 @@
 # components
 loadrt threads name1=Thread1 period1=1000000
-#loadrt __Thread2  (not loaded by loadrt, no args saved)
-loadrt Lcnc
-# pin aliases
-# param aliases
-# signals
-# nets
-# realtime thread/function links
+loadrt Lcnc ipaddr="192.168.2.50"
 addf Lcnc.00.update Thread1
 start

@@ -11,6 +11,8 @@ There are several FPGA configurations available, ready to be uploaded
 on FPGA boards, also eventually new user defined configurations can be generated.
 
 The work now is focused on Colorligh 5a-75b and 5a-65e boards.
+These boards have the pins configured as output-only, in order 
+to have access to inputs some soldering is required.
 
 The HOST side LinuxCNC driver is provided, it will interface
 with FPGA firmware, and provide pins and parameters that will connect

@@ -64,11 +64,11 @@ x modificare .c e .h per encoder
     - usare led per comunicare lo stato: non connesso (acceso fisso)/reset (lamp lento)/attivo (lamp veloce)
     x analizzare e ridurre i tempi di esecuzione (attualmente va da 130 a 250us con picchi di 700us) (era colpa dei tempi di lettura/scrittura)
     - mandare i parametri solo se sono cambiati
-    - creare una serie di firmware/drivers preconfezionati con le configurazioni più interessanti
+    x creare una serie di firmware/drivers preconfezionati con le configurazioni più interessanti
     x rendere il driver unico, in modo che si adatti alla configurazione del firmware connesso
       x creare una coppia di registri per comunicare la configurazione come handshake, su uno si scrive per richiederla, sul'altro si legge
       x configurare il driver in modo che legga la configurazione all'avvio e generi il pinout di conseguenza
-    - introdurre nell'init anche l'informazione su qual è l'indirizzo base del primo registro, per adattare la mappa dei registri a espansioni future
+    x introdurre nell'init anche l'informazione su qual è l'indirizzo base del primo registro, per adattare la mappa dei registri a espansioni future
     - aggiungere filtro variabile agli encoders
     - automatizare la creazione della configurazione del firmware usando un file di testo
     - configuratore visuale delle periferiche
@@ -79,3 +79,11 @@ x modificare .c e .h per encoder
       - all'uscita fa partire la generazione del firmware con le definizioni create nella gui
       - salva la configurazione in un file di testo
     - consentire l'esecuzione di + istanze del driver
+    x configurare l'ip all'invocazione di hal
+    - allocare un certo numero di pins per definire in hw l'indirizzo ip
+    - Creare una macchina a stati per la procedura di init
+    - creare una configurazione base per testare Lcnc con 3 step out 
+    - Consentire il raddoppio del numero di canali del driver, 
+      per comunicare con 2 schede all'inizio o più nel lungo termine vedi ad es:
+      https://github.com/LinuxCNC/linuxcnc/blob/9e28b3d8fe23fff0e08fc0f8d232c96be04404a6/src/hal/components/pid.c 
+

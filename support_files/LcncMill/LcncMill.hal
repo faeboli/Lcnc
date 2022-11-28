@@ -3,7 +3,7 @@
 
 	loadrt [KINS]KINEMATICS
 	loadrt [EMCMOT]EMCMOT base_period_nsec=[EMCMOT]BASE_PERIOD servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[KINS]JOINTS num_aio=13
-	loadrt Lcnc
+	loadrt Lcnc ipaddr="192.168.2.50"
 	loadrt pid num_chan=3
 	loadusr -W hal_manualtoolchange
 	loadrt debounce cfg=3

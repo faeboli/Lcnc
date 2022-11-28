@@ -30,6 +30,10 @@ MODULE_AUTHOR("");
 MODULE_DESCRIPTION("");
 MODULE_LICENSE("");
 
+static int num_boards;
+#define MAX_CHAN 4
+char *ipaddr[MAX_CHAN] ={0,};
+RTAPI_MP_ARRAY_STRING(ipaddr, MAX_CHAN,"ip addresses");
 
 /***********************************************************************
 *                STRUCTURES AND GLOBAL VARIABLES                       *
@@ -241,7 +245,7 @@ double get_timestamp()
 int rtapi_app_main(void)
 {
     char name[HAL_NAME_LEN + 1];
-    int i,r ;
+    int i,r;
     uint_fast32_t tempvalue;
     union EbData 
     {
@@ -257,6 +261,13 @@ int rtapi_app_main(void)
     float timestamp,last_cycle_timestamp,first_timestamp;
     int count;
 
+    for (i = 0; i < MAX_CHAN; i++) 
+    {
+        if ( (ipaddr[i] == NULL) || (*ipaddr[i] == 0) ) break;
+        num_boards = i + 1;
+        rtapi_print_msg(RTAPI_MSG_ERR ,"Lcnc:%f requested board: %d with ip: %s\n",get_timestamp(),num_boards,ipaddr[i]);
+    }
+    
     // STEP 1: initialise the driver 
     comp_id = hal_init(DRIVER_NAME);
     if (comp_id < 0) 
@@ -279,14 +290,14 @@ int rtapi_app_main(void)
 //###################################################
 ///// INIT ETH BOARD ; OPEN SOCKET
 //###################################################
-    device_data->eb = eb_connect(IP_ADDR, UDP_PORT);
+    device_data->eb = eb_connect(ipaddr[0], UDP_PORT);
 
     if (!device_data->eb)
     {
         rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: ERROR: failed to connect to board\n");
         goto fail1;
     }
-    else rtapi_print_msg(RTAPI_MSG_INFO ,"Lcnc:%f connected to board \n",get_timestamp());
+    else rtapi_print_msg(RTAPI_MSG_ERR ,"Lcnc:%f connected to board \n",get_timestamp());
 //###################################################
 ///// INIT ETH BOARD ; TRY TO CONNECT TO BOARD AND GATHER CONFIGURATON INFO
 //###################################################
