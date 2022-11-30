@@ -376,7 +376,8 @@ class BaseSoC(SoCMini):
                           sys_clk_freq=int(50e6),
                           mac_address=0x10e2d5000000, 
                           ip_address="192.168.1.50",
-                          eth_phy=0, **kwargs):
+                          eth_phy=0,
+                          udp_port=1234, **kwargs):
         
         #external reset from pins
         external_reset = Signal(1)
@@ -413,7 +414,8 @@ class BaseSoC(SoCMini):
         self.add_etherbone(phy=self.ethphy,
             buffer_depth=255,
             mac_address=mac_address,
-            ip_address=ip_address)
+            ip_address=ip_address,
+            udp_port=udp_port)
 
         platform.add_extension(_ext_reset_in) 
         platform.add_extension(_gpios_in)
@@ -520,6 +522,7 @@ def main():
     target_group.add_argument("--revision",          default="8.0", type=str,          help="Board revision (6.0, 6.1, 7.0 or 8.0).")
     target_group.add_argument("--sys-clk-freq",      default=40e6,                     help="System clock frequency")
     target_group.add_argument("--eth-ip",            default="192.168.2.50", type=str, help="Ethernet/Etherbone IP address.")
+    target_group.add_argument("--eth-port",          default=1234, type=int,           help="Ethernet UDP Port.")
     target_group.add_argument("--eth-phy",           default=0, type=int,              help="Ethernet PHY (0 or 1).")
     target_group.add_argument("--mac-address",           default="0x10e2d5000000",              help="Ethernet MAC address in hex format")
     builder_args(parser)
@@ -544,10 +547,11 @@ def main():
     assert num_outputs < 32 , "Maximum number of outputs is 32 due to MMIO register definition"
         
     soc = BaseSoC(board=args.board, revision=args.revision,
-        sys_clk_freq     = int(float(args.sys_clk_freq)),
+        sys_clk_freq  = int(float(args.sys_clk_freq)),
         mac_address   = int(args.mac_address,16),
-        ip_address           = args.eth_ip,
-        eth_phy          = args.eth_phy,
+        ip_address    = args.eth_ip,
+        udp_port      = args.eth_port,
+        eth_phy       = args.eth_phy,
         **soc_core_argdict(args)
     )
     builder = Builder(soc, **builder_argdict(args))
