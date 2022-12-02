@@ -1,13 +1,15 @@
-Configuration for a colorlight 5a75b V6.1 with
-- 14 outputs
-- 11 inputs
-- 6 stepgens
-- 6 encoders
-- 6 pwm generators
-
-Defaults: ip address 192.168.2.50 port 1234 MAC 0x10e2d5000000
-Pinout can be found in file Lcnc_configurations_pinout.ods
+- Configuration for a colorlight 5a75b V6.1 with
+    - 14 outputs
+    - 11 inputs
+    - 6 stepgens
+    - 6 encoders
+    - 6 pwm generators
+- ip address 192.168.2.50 port 1234 MAC 0x10e2d5000000
+- build command: ./Lcnc_75b_v6_14o11i6s6e6p.py --board=5a-75b --revision=6.1 --eth-ip=192.168.2.50 --eth-port=1234 --mac-address=0x10e2d5000000 --build --doc
+- if you want to try dual board configuration use Lcnc_75b_v6_14o11i6s6e6p_1.bit for the second board, it was built with the following options in order to use it as second board
+    - ip address 192.168.2.51 port 1235 MAC 0x10e2d5000001
+    - build command: ./Lcnc_75b_v6_14o11i6s6e6p.py --board=5a-75b --revision=6.1 --eth-ip=192.168.2.51 --eth-port=1235 --mac-address=0x10e2d5000001 --build --doc
+- if you rebuild with your options, the bit file will be located in /build/colorlight_5a_75b/gateware
+- pinout can be found in file Lcnc_configurations_pinout.ods
 - reset port (to be held to zero): J8 pin 7 (starting to count from pin 1)
-- if you want to rebuild the bitfile in litex: ./Lcnc_75b_v6_14o11i6s6e6p.py --build --doc
-- if you want to change board revision/ip/port/MAC: ./Lcnc_75b_v6_14o11i6s6e6p.py --revision=8.0 --eth-ip=192.168.2.51 --eth-port=1235 --mac-address=0x10e2d5000001 --build --doc
 - load the bitfile to fpga with openFPGAloader in oss-cad-suite: ~/oss-cad-suite/bin/openFPGALoader --unprotect-flash -c ft232 -f ./Lcnc_75b_v6_14o11i6s6e6p.bit

@@ -78,12 +78,24 @@ x modificare .c e .h per encoder
       - verifica la coerenza dei valori
       - all'uscita fa partire la generazione del firmware con le definizioni create nella gui
       - salva la configurazione in un file di testo
-    - consentire l'esecuzione di + istanze del driver
+    x consentire l'esecuzione di + istanze del driver
     x configurare l'ip all'invocazione di hal
     - allocare un certo numero di pins per definire in hw l'indirizzo ip
-    - Creare una macchina a stati per la procedura di init
+    x Creare una macchina a stati per la procedura di init
+      - rivedere bene le condizioni di uscita per ripetere l'invio in caso di problemi
     - creare una configurazione base per testare Lcnc con 3 step out 
-    - Consentire il raddoppio del numero di canali del driver, 
-      per comunicare con 2 schede all'inizio o più nel lungo termine vedi ad es:
+    x Consentire il raddoppio del numero di canali del driver, 
+      per comunicare con 2 schede all'inizio o più nel lungo termine vedi ad es:	
       https://github.com/LinuxCNC/linuxcnc/blob/9e28b3d8fe23fff0e08fc0f8d232c96be04404a6/src/hal/components/pid.c 
+    - consolidare le condizioni di uscita in caso di errore nel driver
+    x aggiungere opzione debug per gli output verbosi
+    x usare ns per i tempi nei parametri
+    x Tempi
+     x T0 (write rx) mean 300ns sd 150 (dipende molto dalla conf)
+     - T1 (send rx)  mean 35000ns sd 10000 ottimizzare (sforamenti)
+     x T2 (receive)  mean 10000ns sd 6000 ottimizzare (parecchi sforamenti)
+     x T3 (read)     mean 800-1200ns sd 600
+     x T4 (wd & res) mean 150ns sd 90
+     x T5 (write tx) mean 1300ns sd 600
+     - T6 (send tx)  mean 33000 sd 6000
 

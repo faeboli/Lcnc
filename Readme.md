@@ -10,6 +10,8 @@ in the fpga, and a gigabit ethernet link used to talk to the host pc running Lin
 There are several FPGA configurations available, ready to be uploaded
 on FPGA boards, also eventually new user defined configurations can be generated.
 
+Up to 4 FPGA boards can be driven together, a gigabit ethernet switch is needed.
+
 The work now is focused on Colorligh 5a-75b and 5a-65e boards.
 These boards have the pins configured as output-only, in order 
 to have access to inputs some soldering is required.
@@ -17,7 +19,7 @@ to have access to inputs some soldering is required.
 The HOST side LinuxCNC driver is provided, it will interface
 with FPGA firmware, and provide pins and parameters that will connect
 fpga peripherals to LinuxCNC. The driver is unique and will be able
-to talk to every possible configuration.
+to talk to every possible configuration and to up to 4 boards.
 
 The protocol used is etherbone.
 The firmware is written in migen, using Litex framework.
@@ -28,14 +30,14 @@ The firmware is written in migen, using Litex framework.
 - boards hw info and pin maps for jtag are available here https://github.com/q3k/chubby75
 - Choose the firmware you want to try, the names reflect the peripherals available, for example 75b_v6_14o11i6s6e6p will go to a colorlight 5a75b V6.0 and will contain 14 outputs 11 inputs 6 stepgens 6 encoders interfaces 6 pwm generators.
 - Upload the firmware on the board, I'm using openFPGAloader but any such tool is good.
-- Connect the board to the host pc and try to ping the board, the default ip address is 192.168.2.50 a Gigabit ethernet port is needed.
+- Connect the board to the host pc and try to ping the board, the default ip address is 192.168.2.50, a Gigabit ethernet port is needed.
 - If the board responds to pings then you can build the driver in LinuxCNC wih the command "sudo halcompile --install Lcnc.c" and start to work with the board.
 
 # Communication and first enabling of the the board:
 - ensure that the RESET pin on the board is grounded, you can find it's position on the 
   pinout document "Lcnc_configurations_pinout.ods", for example for 75b_v6_14o11i6s6e6p the RESET pin is J8 pin7
 
-I have attached a very basic HAL configuration for initial testing, the basic checks can be executed trough halshow interface. 
+I have attached a very basic HAL configuration in the file HAL.hal for initial testing, the basic checks can be executed trough halshow interface. 
 
 **Basic functionality check:**
 
@@ -56,28 +58,26 @@ I have attached a very basic HAL configuration for initial testing, the basic ch
 
 # Create your own configuration:
 - Litex installed and working, see https://github.com/enjoy-digital/litex
+- oss-cad-suite 
 - clone Lcnc repo on your pc
-- edit Lcnc.py:
-  modify what is between
-  "Devices configuration start"
-  and
-  "Devices configuration end"
-  This part of the firmware script file contains the list of the peripherals you want to include in the build, 
-  and the board pins assigned to each. 
-  The default driver contains a basic example with several inputs, outputs, pwm generators
-  encoders, step generators.
+- edit Lcnc.py (or start from one of the preconfigured configurations):
+  modify what is between  "Devices configuration start"  and  "Devices configuration end" in python file. This part of the firmware script file contains the list of the peripherals you want to include in the build, and the board pins assigned to each. The default driver contains a basic example with several inputs, outputs, pwm generators encoders, step generators.
 - execute Lcnc.py:
   the command used to execute the firmware generation will accept arguments that will define
   the particular board to be used as target, and the ip address to assign to the board.
   the script can be run with default parameters, simply typing "./Lcnc.py --build --doc"
-  this will generate a firmware for a colorlight 5A-75E V6.0 with ip=192.168.2.50
+  this will generate a firmware for a colorlight 5A-75E V6.0 with ip=192.168.2.50 port=1234
 - the target board can be changed adding to the command "board" and "revision" parameters, 
   for example "--board=5a-75b --revision=8.0"
-- ip address can be configured with "eth-ip" parameter, for example "--eth-ip=192.168.1.100"
+- ip address can be configured with "--eth-ip" parameter, for example "--eth-ip=192.168.1.100"
+- port can be changed with parameter "--eth-port" parameter, for example "--eth-port=1234"
+- MAC address can be changed with parameter "--mac-address" parameter, for example "--mac-address=0x10e2d5000000"
 - the script, if succesful, will generate many files, bitfile is located in /build/colorlight_5a_75e/gateware/Lcnc.bit
 - upload the bitfile on the board
 - connect the board, ping it to make sure that the the board is alive and connected
 
+# Connecting to more than one board:
+- up to 4 boards can be driven together, the only condition needed is to have unique ip, port and MAC for each board. A gigabit ethernet switch is needed.
 
 # Working with peripherals:
 -- doc in construction, the peripherals are what they seem, you can play with them, only to be noted that stepgen is velocity mode only.
@@ -131,7 +131,7 @@ PWM outputs,the pins are defined in "_pwm_out" list un Lcnc.py script:
       - Lcnc.xx.pwm.yy.offs offset
       - Lcnc.xx.pwm.yy.inv inversion flag
     - inputs:
-      - Lcnc.xx.pwm.yy.freq frequency in Hz, acceptable value can be 765Hz to 2.5MHz, the higher frequency, the lower is the duty resolution
+      - Lcnc.xx.pwm.yy.freq frequency in Hz, acceptable values are 612Hz to 2MHz at 40MHz FPGA internal clock, the higher frequency, the lower is the duty resolution
       - Lcnc.xx.pwm.yy.value value, from 0.0 to full scale value
       - Lcnc.xx.pwm.yy.enable ebable flag
     - outputs: none
@@ -139,16 +139,17 @@ PWM outputs,the pins are defined in "_pwm_out" list un Lcnc.py script:
     - MMIO_INST_PWM_0 (16bit period MSB,16bit width LSB)
   - registers -> driver: none
 
-Step generator, the pins are defined in "stepgens" list un Lcnc.py script, maximum 16 instances possible:
+Step generator, the pins are defined in "stepgens" list un Lcnc.py script, maximum 16 instances possible, maximum steprate about half of FPGA internal clock (20MHz step rate at 40MHz clock, step width and step space set at 25ns).
+The steprate is limited by minimum step space and step width, for example at 500ns step space and 500ns step width the maximum step rate is 1MHz.
 - step generator (sg)
   - linuxcnc -> driver
     - parameters:
       - Lcnc.xx.stepgen.yy.step_inv step inversion
-      - Lcnc.xx.stepgen-step_width minimum step pulse width in us (parameter is applied to all stepgens)
-      - Lcnc.xx.stepgen-step_space minimum interval between two steps pulses in us (parameter is applied to all stepgens)
+      - Lcnc.xx.stepgen-step_width minimum step pulse width in ns, maximum 12775ns, resolution 25ns at 40MHz (parameter is applied to all stepgens)
+      - Lcnc.xx.stepgen-step_space minimum interval between two steps pulses in ns,  maximum 12775ns, resolution 25ns at 40MHz (parameter is applied to all stepgens)
       - Lcnc.xx.stepgen.yy.dir_inv dir inversion
-      - Lcnc.xx.stepgen-dir_width minimum dir pulse width in us (parameter is applied to all stepgens)
-      - Lcnc.xx.stepgen-setup_time minimum interval between dir change and next step in us (parameter is applied to all stepgens)
+      - Lcnc.xx.stepgen-dir_width minimum dir pulse width in ns, maximum 12775ns, resolution 25ns at 40MHz (parameter is applied to all stepgens)
+      - Lcnc.xx.stepgen-setup_time minimum interval between dir change and next step in ns, maximum 409575ns resolution 25ns at 40MHz (parameter is applied to all stepgens)
       - Lcnc.xx.stepgen.yy.scale scale in step/mm
     - inputs:
       - Lcnc.xx.stepgen.yy.reset reset internal state to default

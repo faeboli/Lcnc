@@ -3,7 +3,7 @@
 
 	loadrt [KINS]KINEMATICS
 	loadrt [EMCMOT]EMCMOT base_period_nsec=[EMCMOT]BASE_PERIOD servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[KINS]JOINTS num_aio=13
-	loadrt Lcnc ipaddr="192.168.2.50"
+	loadrt Lcnc ipaddr="192.168.2.50" ipport"1234"
 	loadrt pid num_chan=3
 	loadusr -W hal_manualtoolchange
 	loadrt debounce cfg=3
@@ -35,11 +35,11 @@
 	addf not.0 servo-thread
 	addf and2.0 servo-thread
 	
-# stepgen setup
-	setp Lcnc.00.stepgen-dir_width  1
-	setp Lcnc.00.stepgen-setup_time  1
-	setp Lcnc.00.stepgen-step_space  0.5
-	setp Lcnc.00.stepgen-step_width  0.5
+# stepgen setup, times in ns
+	setp Lcnc.00.stepgen-dir_width  1000
+	setp Lcnc.00.stepgen-setup_time  1000
+	setp Lcnc.00.stepgen-step_space  500
+	setp Lcnc.00.stepgen-step_width  500
 
 # Joint 0 setup
 

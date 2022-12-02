@@ -1,5 +1,5 @@
-#define SEND_TIMEOUT_US 1
-#define RECV_TIMEOUT_US 100
+#define SEND_TIMEOUT_US 200
+#define RECV_TIMEOUT_US 50
 #define DRIVER_NAME "Lcnc"
 
 #ifdef __cplusplus
@@ -10,7 +10,6 @@ extern "C" {
 #include <stdlib.h>
 
 //---Board configuration---
-#define UDP_PORT "1234"
 #define F_FPGA (40000000.0)
 
 //--- init registers addresses
@@ -78,7 +77,7 @@ extern "C" {
  * */
 
 //------------------------------------------------------------------
-#define F_FPGA_TIME_US (1.0E6/F_FPGA) // fpga clock time in us
+#define F_FPGA_TIME_NS (1.0E9/F_FPGA) // fpga clock time in ns
 #define WDT_SCALE (64/F_FPGA) // 
 #define VEL_SIZE_BITS 32 // width of command word in bits
 #define EB_HEADER_SIZE 16  // etherbone header size in bytes
@@ -149,9 +148,6 @@ struct eb_connection {
     struct addrinfo* addr;
 };
 
-struct eb_connection *eb_connect(const char *addr, const char *port);
-void eb_disconnect(struct eb_connection **conn);
-int eb_fill_header(uint8_t wb_buffer[20],int is_read, uint8_t num, uint32_t base_addr);
 
 #ifdef __cplusplus
 };
@@ -161,29 +157,29 @@ int eb_fill_header(uint8_t wb_buffer[20],int is_read, uint8_t num, uint32_t base
 
 typedef struct {
 	// hal work signals
-  	hal_bit_t *digital_in[MAX_N_INPUTS];
-	hal_bit_t *digital_in_n[MAX_N_INPUTS];
-  	hal_bit_t *digital_out[MAX_N_OUTPUTS]; 
+  	hal_bit_t* digital_in[MAX_N_INPUTS];
+	hal_bit_t* digital_in_n[MAX_N_INPUTS];
+  	hal_bit_t* digital_out[MAX_N_OUTPUTS]; 
   	hal_bit_t digital_out_inv[MAX_N_OUTPUTS]; 
-  	hal_u32_t *wallclock;
-  	hal_float_t *watchdog_rd;
+  	hal_u32_t* wallclock;
+  	hal_float_t* watchdog_rd;
   	hal_float_t watchdog_rd_old;
   	hal_float_t watchdog_wr;
 	hal_u32_t wallclock_old;
-	hal_float_t *wallclock_intvl;
-	hal_float_t *enc_pos_fb[MAX_N_ENCODERS];
+	hal_float_t* wallclock_intvl;
+	hal_float_t* enc_pos_fb[MAX_N_ENCODERS];
 	hal_float_t enc_pos_fb_old[MAX_N_ENCODERS];
-	hal_bit_t *enc_res[MAX_N_ENCODERS];
-	hal_bit_t *enc_en[MAX_N_ENCODERS];
-	hal_float_t *enc_vel_fb[MAX_N_ENCODERS];
+	hal_bit_t* enc_res[MAX_N_ENCODERS];
+	hal_bit_t* enc_en[MAX_N_ENCODERS];
+	hal_float_t* enc_vel_fb[MAX_N_ENCODERS];
 	hal_float_t enc_scale[MAX_N_ENCODERS];
 	hal_bit_t enc_inv[MAX_N_ENCODERS];
-	hal_float_t *stepgen_velocity_cmd[MAX_N_STEPGENS];
-	hal_float_t *stepgen_acc_lim[MAX_N_STEPGENS];
-	hal_float_t *stepgen_velocity_fb[MAX_N_STEPGENS];
-	hal_float_t *stepgen_position_fb[MAX_N_STEPGENS];
-	hal_bit_t *stepgen_enable[MAX_N_STEPGENS];
-	hal_bit_t *stepgen_reset[MAX_N_STEPGENS];
+	hal_float_t* stepgen_velocity_cmd[MAX_N_STEPGENS];
+	hal_float_t* stepgen_acc_lim[MAX_N_STEPGENS];
+	hal_float_t* stepgen_velocity_fb[MAX_N_STEPGENS];
+	hal_float_t* stepgen_position_fb[MAX_N_STEPGENS];
+	hal_bit_t* stepgen_enable[MAX_N_STEPGENS];
+	hal_bit_t* stepgen_reset[MAX_N_STEPGENS];
 	hal_float_t stepgen_scale[MAX_N_STEPGENS];
 	hal_bit_t stepgen_step_inv[MAX_N_STEPGENS];
 	hal_bit_t stepgen_dir_inv[MAX_N_STEPGENS];
@@ -191,20 +187,60 @@ typedef struct {
 	hal_float_t stepgen_step_space;
 	hal_float_t stepgen_dir_width;
 	hal_float_t stepgen_setup;
-	hal_float_t *pwm_freq[MAX_N_PWM];
-	hal_float_t *pwm_value[MAX_N_PWM];
-	hal_bit_t *pwm_enable[MAX_N_PWM];
+	hal_float_t* pwm_freq[MAX_N_PWM];
+	hal_float_t* pwm_value[MAX_N_PWM];
+	hal_bit_t* pwm_enable[MAX_N_PWM];
 	hal_float_t pwm_scale[MAX_N_PWM];
 	hal_float_t pwm_offs[MAX_N_PWM];
 	hal_bit_t pwm_inv[MAX_N_PWM];
-	hal_bit_t *enable;
-	hal_bit_t *enable_req;
-	hal_bit_t *enabled;
+	hal_bit_t* enable;
+	hal_bit_t* enable_req;
+	hal_bit_t* enabled;
 	hal_bit_t enable_req_old;
 	hal_u32_t tx_max_retries;
 	hal_u32_t num_errors_reported;
-	struct eb_connection* eb;
+    int64_t internal_step_count[MAX_N_STEPGENS];
+    uint32_t step_count[MAX_N_STEPGENS];
+    uint32_t step_count_old[MAX_N_STEPGENS];
+    int64_t internal_enc_count[MAX_N_ENCODERS];
+    uint32_t enc_count[MAX_N_ENCODERS];
+    uint32_t enc_count_old[MAX_N_ENCODERS];
+    uint8_t conn_err_notified;
+    uint8_t enable_err_notified;
+    uint8_t n_in,n_out,n_sg,n_en,n_pwm,intf_ver; /* number of each peripheral and interface version*/
+    uint32_t INIT_WRITE_addr,CONFIGURATION_addr,REGS_START_addr,REGS_START_value,VELOCITY0_addr,VELOCITYlast_addr,MAX_ACC0_addr,MAX_ACClast_addr;
+    uint32_t STEP_RES_EN_addr,STEPDIRINV_addr,STEPTIMES_addr,GPIOS_OUT_addr,PWM_0_addr,PWM_last_addr,ENC_RES_EN_addr;
+    uint32_t RES_ST_REG_addr,SG_COUNT_0_addr,SG_COUNT_last_addr,SG_VEL_0_addr,SG_VEL_last_addr,WALLCLOCK_addr,GPIOS_IN_addr;
+    uint32_t ENC_COUNT_0_addr,ENC_COUNT_last_addr,LAST_addr,TX_PAYLOAD_size,RX_PAYLOAD_size;
+    uint32_t TX_SECTION_START_addr,TX_SECTION_END_addr,RX_SECTION_START_addr,RX_SECTION_END_addr;
+    struct eb_connection* eb;
+    char ip_board_address[16];
+    char udp_port[8];
+    uint8_t board_id;
+    hal_u32_t* T[8];
 } data_hal;
 
+typedef enum {
+    ConfInit,
+    ConfReadSign,
+    ConfSetReg,
+    ConfReadConf,
+    ConfSuccess,
+    ConfFail
+}conf_st_type;
 
+
+struct eb_connection *eb_connect(const char *addr, const char *port);
+void eb_disconnect(struct eb_connection **conn);
+int eb_fill_header(uint8_t wb_buffer[20],int is_read, uint8_t num, uint32_t base_addr);
+int eb_send(struct eb_connection *conn, const void *bytes, size_t len);
+int eb_recv(struct eb_connection *conn, void *bytes, size_t max_len);
+int configure_board(data_hal*);
+float get_timestamp_f(void);
+unsigned long get_timestamp_ns(void);
+
+/* These are the functions that actually do the I/O
+   everything else is just init code
+*/
+static void update_port(void *arg, long period);
 

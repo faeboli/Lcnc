@@ -485,7 +485,7 @@ def main():
     target_group.add_argument("--build",             action="store_true",              help="Build design.")
     target_group.add_argument("--load",              action="store_true",              help="Load bitstream.")
     target_group.add_argument("--board",             default="5a-75b",                 help="Board type (5a-75b or 5a-75e).")
-    target_group.add_argument("--revision",          default="6.1", type=str,          help="Board revision (6.0, 6.1, 7.0 or 8.0).")
+    target_group.add_argument("--revision",          default="8.0", type=str,          help="Board revision (6.0, 6.1, 7.0 or 8.0).")
     target_group.add_argument("--sys-clk-freq",      default=40e6,                     help="System clock frequency")
     target_group.add_argument("--eth-ip",            default="192.168.2.50", type=str, help="Ethernet/Etherbone IP address.")
     target_group.add_argument("--eth-port",          default=1234, type=int,           help="Ethernet UDP Port.")

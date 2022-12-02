@@ -95,9 +95,9 @@ width counter setup:
 tempo in ns = numero di conteggi*10^6/frequenza di clock
 numero di conteggi= tempo in ns * frequenza di clock/10^6
 
-step width counter 9bit: max 511 conteggi = 10.22us risoluzione 20ns
+step width counter 9bit: max 511 conteggi = 12775ns risoluzione 25ns @40MHz
 dir width counter 9bit: vedi sopra
-dir setup counter 14bit: max 16383 conteggi = 327.66us risoluzione 20ns
+dir setup counter 14bit: max 16383 conteggi = 409575ns risoluzione 25ns @40MHz
 step space + step width = min period
 1/min period = max frequency
 
