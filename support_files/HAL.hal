@@ -1,7 +1,7 @@
 # components
 loadrt threads name1=Thread1 period1=1000000
-loadrt Lcnc ipaddr="192.168.2.50" ipport="1234"
-#loadrt Lcnc ipaddr="192.168.2.50","192.168.2.51" ipport="1234","1235" debug=1 #in case of multiple boards and show debug messages
+loadrt Lcnc ipaddr="192.168.2.50" udpport="1234"
+#loadrt Lcnc ipaddr="192.168.2.50","192.168.2.51" udpport="1234","1235" debug=1 #in case of multiple boards and show debug messages
 addf Lcnc.00.update Thread1
 #addf Lcnc.01.update Thread1 #in case of multiple boards
 start

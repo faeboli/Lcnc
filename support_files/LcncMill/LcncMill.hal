@@ -3,7 +3,7 @@
 
 	loadrt [KINS]KINEMATICS
 	loadrt [EMCMOT]EMCMOT base_period_nsec=[EMCMOT]BASE_PERIOD servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[KINS]JOINTS num_aio=13
-	loadrt Lcnc ipaddr="192.168.2.50" ipport"1234"
+	loadrt Lcnc ipaddr="192.168.2.50" udpport="1234"
 	loadrt pid num_chan=3
 	loadusr -W hal_manualtoolchange
 	loadrt debounce cfg=3
@@ -14,7 +14,7 @@
 	net user-enable-out 	<= iocontrol.0.user-enable-out		=> Lcnc.00.enable
 	net user-request-enable <= iocontrol.0.user-request-enable	=> Lcnc.00.enable-request
 	net Lcnc-status 	   <= Lcnc.00.enabled => and2.0.in0
-    net Drvr-alarm-n       <= Lcnc.00.input.03.in-n => and2.0.in1 # spostato su J5-4
+    	net Drvr-alarm-n       <= Lcnc.00.input.03.in-n => and2.0.in1 # spostato su J5-4
 	net Lcnc-and-drv-ok    <= and2.0.out => iocontrol.0.emc-enable-in
 	net Lcnc-and-drv-ok    => Lcnc.00.output.06.out  #drivers power enable
 	net Lcnc-and-drv-ok    => not.0.in
@@ -44,7 +44,7 @@
 # Joint 0 setup
 
 	setp Lcnc.00.stepgen.02.scale 		[JOINT_0]SCALE
-#	setp remora.joint.0.maxaccel 	[JOINT_0]STEPGEN_MAXACCEL
+	setp Lcnc.00.stepgen.02.acc_lim	 	[JOINT_0]STEPGEN_MAXACCEL
 #	setp Lcnc.00.stepgen.02.enable  true
 	setp pid.0.FF1 1.0
 	setp pid.0.Pgain 200
@@ -64,7 +64,7 @@
 # Joint 1 setup
 
 	setp Lcnc.00.stepgen.01.scale 		[JOINT_1]SCALE
-#	setp remora.joint.0.maxaccel 	[JOINT_1]STEPGEN_MAXACCEL
+	setp Lcnc.00.stepgen.01.acc_lim 		[JOINT_1]STEPGEN_MAXACCEL
 #	setp Lcnc.00.stepgen.01.enable  true
 	setp pid.1.FF1 1.0
 	setp pid.1.Pgain 200
@@ -84,7 +84,7 @@
 # Joint 2 setup
 
 	setp Lcnc.00.stepgen.00.scale 		[JOINT_2]SCALE
-#	setp remora.joint.0.maxaccel 	[JOINT_2]STEPGEN_MAXACCEL
+	setp Lcnc.00.stepgen.02.acc_lim	 	[JOINT_2]STEPGEN_MAXACCEL
 #	setp Lcnc.00.stepgen.00.enable  true
 	setp pid.2.FF1 1.0
 	setp pid.2.Pgain 200
@@ -113,7 +113,7 @@
 #	net Z-stop 	Lcnc.00.input.02.in-n 	=> debounce.0.2.in 
 #	net Z-stop-dbc debounce.0.2.out => joint.2.home-sw-in
 
-# remora command outputs
+# outputs
 
 	net cool-flood 	iocontrol.0.coolant-flood => Lcnc.00.output.04.out
 	net cool-mist  	iocontrol.0.coolant-mist => Lcnc.00.output.05.out

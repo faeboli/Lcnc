@@ -564,19 +564,19 @@ int configure_board(data_hal* device_data)
 
     r = hal_param_float_newf(HAL_RW, &(device_data->stepgen_step_width), comp_id, "Lcnc.%02d.stepgen-step_width",device_data->board_id);
     if(r != 0) return r;
-    device_data->stepgen_step_width = (hal_float_t)0.1;
+    device_data->stepgen_step_width = (hal_float_t)100;
 
     r = hal_param_float_newf(HAL_RW, &(device_data->stepgen_step_space), comp_id, "Lcnc.%02d.stepgen-step_space",device_data->board_id);
     if(r != 0) return r;
-    device_data->stepgen_step_space =(hal_float_t)0.1;
+    device_data->stepgen_step_space =(hal_float_t)100;
 
     r = hal_param_float_newf(HAL_RW, &(device_data->stepgen_dir_width), comp_id, "Lcnc.%02d.stepgen-dir_width",device_data->board_id);
     if(r != 0) return r;
-    device_data->stepgen_dir_width = (hal_float_t)0.1;
+    device_data->stepgen_dir_width = (hal_float_t)100;
 
     r = hal_param_float_newf(HAL_RW, &(device_data->stepgen_setup), comp_id, "Lcnc.%02d.stepgen-setup_time",device_data->board_id);
     if(r != 0) return r;
-    device_data->stepgen_setup = (hal_float_t)1.0;
+    device_data->stepgen_setup = (hal_float_t)1000;
 
 // PWM
     for(i=0;i<device_data->n_pwm;i++) 
