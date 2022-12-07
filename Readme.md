@@ -12,7 +12,7 @@ on FPGA boards, also eventually new user defined configurations can be generated
 
 Up to 4 FPGA boards can be driven together, a gigabit ethernet switch is needed.
 
-The work now is focused on Colorligh 5a-75b and 5a-65e boards.
+The work now is focused on Colorligh 5a-75b and 5a-75e boards.
 These boards have the pins configured as output-only, in order 
 to have access to inputs some soldering is required.
 
@@ -25,7 +25,7 @@ The protocol used is etherbone.
 The firmware is written in migen, using Litex framework.
 
 # Getting started:
-- you will need a colorlight 5a 75b or 75e board
+- you will need a colorlight 5a-75b or 75e board
 - jtag adapter for loading and flashing bitfiles
 - boards hw info and pin maps for jtag are available here https://github.com/q3k/chubby75
 - Choose the firmware you want to try, the names reflect the peripherals available, for example 75b_v6_14o11i6s6e6p will go to a colorlight 5a75b V6.0 and will contain 14 outputs 11 inputs 6 stepgens 6 encoders interfaces 6 pwm generators.

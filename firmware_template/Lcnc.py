@@ -12,6 +12,7 @@ import os
 import argparse
 import platform
 import time
+import configparser
 
 from migen import *
 
@@ -37,105 +38,32 @@ from liteeth.core import LiteEthUDPIPCore
 from liteeth.common import *
 
 # Devices configuration start ----------------------------------------------------------------------------------------
-encoders=([
-    ("encoder", 0,
-     Subsignal("A", Pins("j1:0")),
-     Subsignal("B", Pins("j1:1")),
-     IOStandard("LVCMOS33")
-     ),
-    ("encoder", 1,
-     Subsignal("A", Pins("j1:2")),
-     Subsignal("B", Pins("j1:4")),
-     IOStandard("LVCMOS33")
-     ),
-    ("encoder", 2,
-     Subsignal("A", Pins("j1:5")),
-     Subsignal("B", Pins("j1:6")),
-     IOStandard("LVCMOS33")
-     ),
-    ("encoder", 3,
-     Subsignal("A", Pins("j2:0")),
-     Subsignal("B", Pins("j2:1")),
-     IOStandard("LVCMOS33")
-     ),
-    ("encoder", 4,
-     Subsignal("A", Pins("j2:2")), 
-     Subsignal("B", Pins("j2:4")),
-     IOStandard("LVCMOS33")
-     ),
-    ("encoder", 5,
-     Subsignal("A", Pins("j2:5")),
-     Subsignal("B", Pins("j2:6")),
-     IOStandard("LVCMOS33")
-     ),
-])
 
-stepgens=([
-    ("stepgen", 0,
-     Subsignal("step", Pins("j9:0")),
-     Subsignal("dir", Pins("j9:1")),
-     IOStandard("LVCMOS33")),
-    ("stepgen", 1,
-     Subsignal("step", Pins("j9:2")),
-     Subsignal("dir", Pins("j9:4")),
-     IOStandard("LVCMOS33")
-     ),
-    ("stepgen", 2,
-     Subsignal("step", Pins("j9:5")),
-     Subsignal("dir", Pins("j9:6")),
-     IOStandard("LVCMOS33")
-     ),
-    ("stepgen", 3,
-     Subsignal("step", Pins("j10:0")),
-     Subsignal("dir", Pins("j10:1")),
-     IOStandard("LVCMOS33")
-     ),
-    ("stepgen", 4,
-     Subsignal("step", Pins("j10:2")),
-     Subsignal("dir", Pins("j10:4")),
-     IOStandard("LVCMOS33")
-     ),
-    ("stepgen", 5,
-     Subsignal("step", Pins("j10:5")),
-     Subsignal("dir", Pins("j10:6")),
-     IOStandard("LVCMOS33")
-     ),
-])
-#gpios in
-_gpios_in = [
-    ("gpio_in", 0, Pins("j3:0"), IOStandard("LVCMOS33")),
-    ("gpio_in", 1, Pins("j3:1"), IOStandard("LVCMOS33")),
-    ("gpio_in", 2, Pins("j3:2"), IOStandard("LVCMOS33")),
-    ("gpio_in", 3, Pins("j3:4"), IOStandard("LVCMOS33")),
-    ("gpio_in", 4, Pins("j3:5"), IOStandard("LVCMOS33")),
-    ("gpio_in", 5, Pins("j3:6"), IOStandard("LVCMOS33")),
-    ("gpio_in", 6, Pins("j4:1"), IOStandard("LVCMOS33")),
-    ("gpio_in", 7, Pins("j4:2"), IOStandard("LVCMOS33")),
-    ("gpio_in", 8, Pins("j4:4"), IOStandard("LVCMOS33")),
-    ("gpio_in", 9, Pins("j4:5"), IOStandard("LVCMOS33")),
-    ("gpio_in", 10, Pins("j4:6"), IOStandard("LVCMOS33")),
-]
-#gpios out
-_gpios_out = [ \
-    ("gpio_out", 0, Pins("j11:1"), IOStandard("LVCMOS33")),
-    ("gpio_out", 1, Pins("j11:2"), IOStandard("LVCMOS33")),
-    ("gpio_out", 2, Pins("j11:5"), IOStandard("LVCMOS33")),
-    ("gpio_out", 3, Pins("j11:6"), IOStandard("LVCMOS33")),
-    ("gpio_out", 4, Pins("j12:0"), IOStandard("LVCMOS33")),
-    ("gpio_out", 5, Pins("j12:1"), IOStandard("LVCMOS33")),
-    ("gpio_out", 6, Pins("j12:2"), IOStandard("LVCMOS33")),
-    ("gpio_out", 7, Pins("j12:4"), IOStandard("LVCMOS33")),
-    ("gpio_out", 8, Pins("j12:5"), IOStandard("LVCMOS33")),
-    ("gpio_out", 9, Pins("j12:6"), IOStandard("LVCMOS33")),
-]
-
-_pwm_out = [ \
-    ("pwm_out", 0, Pins("j11:0"), IOStandard("LVCMOS33")),
-    ("pwm_out", 1, Pins("j11:4"), IOStandard("LVCMOS33")),
-]
-
-_ext_reset_in = [("ext_reset_in", 0, Pins("j4:0"), IOStandard("LVCMOS33"))]
-
+configuration={
+    'reset':'j4:0',
+    'inputs':['j3:0','j3:1','j3:2','j3:4','j3:5','j3:6','j4:1','j4:2','j4:4','j4:5','j4:6'],
+    'num_inputs':11,
+    'outputs':['j11:1','j11:2','j11:5','j11:6','j12:0','j12:1','j12:2','j12:4','j12:5','j12:6'],
+    'num_outputs':10,
+    'pwms':['j11:0','j11:4'],
+    'num_pwms':2,
+    'stepgens':[
+            {'step':'j9:0','dir':'j9:1'},
+            {'step':'j9:2','dir':'j9:4'},
+            {'step':'j9:5','dir':'j9:6'},
+            {'step':'j10:0','dir':'j10:1'},
+            {'step':'j10:2','dir':'j10:4'},
+            {'step':'j10:5','dir':'j10:6'}],
+    'num_stepgens':6,
+    'encoders':[
+        {'a':'j1:0','b':'j1:1'},
+        {'a':'j1:2','b':'j1:4'},
+        {'a':'j1:5','b':'j1:6'},
+        {'a':'j2:0','b':'j2:1'},
+        {'a':'j2:2','b':'j2:4'},
+        {'a':'j2:5','b':'j2:6'}],
+    'num_encoders':6
+    }
 # Devices configuration end ----------------------------------------------------------------------------------------
 
 #watchdog register setup
@@ -145,12 +73,13 @@ watchdog_offs=10
 #acceleration limit multiplier setup
 acc_mult_exp=3
 
-# global for number of each device
-num_inputs=len(_gpios_in)
-num_outputs=len(_gpios_out)
-num_encoders=len(encoders)
-num_pwm=len(_pwm_out)
-num_stepgens=len(stepgens)
+# globals
+_enc_int=([])
+_stepg_int=([])
+_gpios_in = []
+_gpios_out = []
+_pwm_out = []
+_ext_reset_in = []
 
 class QuadEnc(Module,AutoCSR):
     def __init__(self, pads):
@@ -171,8 +100,8 @@ class QuadEnc(Module,AutoCSR):
         ns=Signal(2) #new state
         tmp=Signal(2) #
 
-        self.comb += a.eq(pads.A)
-        self.comb += b.eq(pads.B)
+        self.comb += a.eq(pads.a)
+        self.comb += b.eq(pads.b)
         self.sync+=If(self.enable==1,              # first syncronizer
         syncr.eq(Cat(a,b))) 
         self.sync+=AB.eq(syncr)                      # second syncronizer
@@ -283,6 +212,8 @@ class StepGen(Module,AutoCSR):
 
 class MMIO(Module,AutoCSR):
     def __init__(self):
+        global configuration
+        
         self.wallclock = Signal(32) #implement overflow
 
         self.init_write = CSRStorage(fields=[
@@ -304,41 +235,41 @@ class MMIO(Module,AutoCSR):
         self.working_reg_start_addr=self.working_reg_start_addr+1 # used to count the number of registers used at init
         # working_reg_start_addr now is the address of next register
         
-        for i in range(num_stepgens):
+        for i in range(configuration['num_stepgens']):
            setattr(self,f'velocity{i}', CSRStorage(size=32, description="Stepgen velocity", write_from_dev=False, name='velocity_'+str(i)))
-        for i in range(num_stepgens):
+        for i in range(configuration['num_stepgens']):
           setattr(self,f'max_acc{i}', CSRStorage(fields=[
         CSRField("acc",size=30,offset=0,description="Stepgen max acceleration"),
         CSRField("acc_mult",size=2,offset=30,description="Acceleration Multiplier")],
         description="Stepgen acceleration", write_from_dev=False, name='max_acc_'+str(i)))
 
-        if(num_stepgens>0):
+        if(configuration['num_stepgens']>0):
             self.step_res_en = CSRStorage(fields=[
         CSRField("sgreset", size=16, offset=0,description="Reset"),
         CSRField("sgenable", size=16, offset=16,description="Enable")],
         description="Stepgen Enable and Reset flags", write_from_dev=False)
-        if(num_stepgens>0):
+        if(configuration['num_stepgens']>0):
             self.step_dir_inv = CSRStorage(fields=[
         CSRField("dir_inv", size=16, offset=0,description="Dir Pin Inversion"),
         CSRField("step_inv", size=16, offset=16,description="Step Pin Inversion")],
         description="Stepgen Dir and Step inversion", write_from_dev=False, name='stepdirinv')
-        if(num_stepgens>0):
+        if(configuration['num_stepgens']>0):
             self.steptimes = CSRStorage(fields=[
         CSRField("dir_setup", size=14, offset=0,description="Dir Pin Setup time"),
         CSRField("dir_width", size=9, offset=14,description="Dir Pin Minimum width"),
         CSRField("step_width", size=9, offset=23,description="Step Pin Minimum width")],
         description="Stepgen steptime", write_from_dev=False, name='steptimes')
 
-        if(num_outputs>0):
+        if(configuration['num_outputs']>0):
             self.gpios_out = CSRStorage(size=32, description="gpios out", write_from_dev=False, name='gpios_out')
 
-        for i in range(num_pwm):
+        for i in range(configuration['num_pwms']):
             setattr(self,f'pwm{i}', CSRStorage(fields=[
         CSRField("width", size=16, offset=0,description="PWM Width"),
         CSRField("period", size=16, offset=16,description="PWM Period")],
         description="PWM width and period", write_from_dev=False, name='pwm_'+str(i)))
         
-        if(num_encoders>0):
+        if(configuration['num_encoders']>0):
             self.enc_res_en = CSRStorage(fields=[
         CSRField("reset", size=16, offset=0,description="Reset"),
         CSRField("enable", size=16, offset=16,description="Enable")],
@@ -348,17 +279,17 @@ class MMIO(Module,AutoCSR):
         CSRField("watchdog", size=watchdog_size, offset=watchdog_offs, access=2, description="watchdog down counter")],
         description="Reset and status register",write_from_dev=True, name='res_st_reg')
 
-        for i in range(num_stepgens):        
+        for i in range(configuration['num_stepgens']):        
             setattr(self,f'sg_count{i}', CSRStatus(size=32, description="Stepgen "+str(i)+" count", name="sg_count_"+str(i)))
-        for i in range(num_stepgens):        
+        for i in range(configuration['num_stepgens']):        
             setattr(self,f'sg_vel{i}', CSRStatus(size=32, description="Stepgen "+str(i)+" vel", name="sg_vel_"+str(i)))
                     
         self.wallclock = CSRStatus(size=32, description="wallclock time", name='wallclock')
 
-        if(num_inputs>0):
+        if(configuration['num_inputs']>0):
             self.gpios_in = CSRStatus(size=32, description="gpios in", name='gpios_in')
 
-        for i in range(num_encoders):
+        for i in range(configuration['num_encoders']):
             setattr(self,f'enc_count{i}', CSRStatus(size=32, description="Encoder "+str(i)+" count", name="enc_count_"+str(i)))
 
 def _to_signal(obj):
@@ -371,6 +302,8 @@ class BaseSoC(SoCMini):
                           ip_address="192.168.1.50",
                           eth_phy=0,
                           udp_port=1234, **kwargs):
+
+        global configuration
         
         #external reset from pins
         external_reset = Signal(1)
@@ -391,9 +324,9 @@ class BaseSoC(SoCMini):
         # SoCMini ----------------------------------------------------------------------------------
         SoCMini.__init__(self, platform, clk_freq=sys_clk_freq, ident="Lcnc " + board.upper())
 
-        platform.add_extension(encoders)
-        platform.add_extension(stepgens)
-	
+        platform.add_extension(_enc_int)
+        platform.add_extension(_stepg_int)
+
         # CRG --------------------------------------------------------------------------------------
         self.submodules.crg = _CRG(platform, sys_clk_freq, with_rst = False)        
 
@@ -420,16 +353,16 @@ class BaseSoC(SoCMini):
         self.gpio_out_pads  = platform.request_all("gpio_out")
         self.pwm_out_pads  = platform.request_all("pwm_out")
 
-        self.gpio_inputs = [(self.gpio_in_pads.l[i]) for i in range(num_inputs)]
-        self.gpio_outputs = [(self.gpio_out_pads.l[i]) for i in range(num_outputs)]
+        self.gpio_inputs = [(self.gpio_in_pads.l[i]) for i in range(configuration['num_inputs'])]
+        self.gpio_outputs = [(self.gpio_out_pads.l[i]) for i in range(configuration['num_outputs'])]
 
-        for i in range(num_encoders):
+        for i in range(configuration['num_encoders']):
             setattr(self.submodules,f'encoder{i}', QuadEnc(platform.request("encoder", i)))
 
-        for i in range(num_stepgens):
+        for i in range(configuration['num_stepgens']):
             setattr(self.submodules,f'stepgen{i}',StepGen(platform.request("stepgen", i)))
 
-        for i in range(num_pwm):
+        for i in range(configuration['num_pwms']):
             setattr(self.submodules,f'pwm{i}', PWM(pwm=self.pwm_out_pads.l[i], default_enable=True, default_width=16, default_period=16, with_csr=False))
 
         self.submodules.MMIO_inst = MMIO_inst = MMIO()
@@ -438,11 +371,11 @@ class BaseSoC(SoCMini):
         self.MMIO_inst.configuration.we.eq(True)] 
         self.sync+=[
         If(self.MMIO_inst.init_write.fields.magic == 0x55,
-        self.MMIO_inst.configuration.fields.n_in.eq(num_inputs),
-        self.MMIO_inst.configuration.fields.n_out.eq(num_outputs),
-        self.MMIO_inst.configuration.fields.n_sg.eq(num_stepgens),
-        self.MMIO_inst.configuration.fields.n_en.eq(num_encoders),
-        self.MMIO_inst.configuration.fields.n_pwm.eq(num_pwm)).
+        self.MMIO_inst.configuration.fields.n_in.eq(configuration['num_inputs']),
+        self.MMIO_inst.configuration.fields.n_out.eq(configuration['num_outputs']),
+        self.MMIO_inst.configuration.fields.n_sg.eq(configuration['num_stepgens']),
+        self.MMIO_inst.configuration.fields.n_en.eq(configuration['num_encoders']),
+        self.MMIO_inst.configuration.fields.n_pwm.eq(configuration['num_pwms'])).
         Else( # 0x4C636E01 = 'Lcn'+1
         self.MMIO_inst.configuration.fields.n_in.eq(0x01), 
         self.MMIO_inst.configuration.fields.n_out.eq(0x5C),
@@ -450,8 +383,8 @@ class BaseSoC(SoCMini):
         self.MMIO_inst.configuration.fields.n_en.eq(0x06),
         self.MMIO_inst.configuration.fields.n_pwm.eq(0x13)),
         self.MMIO_inst.configuration.we.eq(True)]
-		
-        for i in range(num_stepgens):
+
+        for i in range(configuration['num_stepgens']):
             self.sync+=[
             getattr(self.MMIO_inst,f'sg_count{i}').status.eq(getattr(self,f'stepgen{i}').position_fb),
             getattr(self.MMIO_inst,f'sg_count{i}').we.eq(True),
@@ -468,27 +401,27 @@ class BaseSoC(SoCMini):
             getattr(self,f'stepgen{i}').max_acc.eq(getattr(self.MMIO_inst,f'max_acc{i}').fields.acc),
             getattr(self,f'stepgen{i}').acc_mult.eq(getattr(self.MMIO_inst,f'max_acc{i}').fields.acc_mult)]
 
-        for i in range(num_encoders):
+        for i in range(configuration['num_encoders']):
             self.sync+=[
             getattr(self.MMIO_inst,f'enc_count{i}').status.eq(getattr(self,f'encoder{i}').out),
             getattr(self.MMIO_inst,f'enc_count{i}').we.eq(True),
             getattr(self,f'encoder{i}').enable.eq(self.MMIO_inst.enc_res_en.fields.enable[i]),
             getattr(self,f'encoder{i}').reset.eq(self.MMIO_inst.enc_res_en.fields.reset[i] | global_reset)]
 
-        for i in range(num_pwm):
+        for i in range(configuration['num_pwms']):
             self.sync+=[
             If(global_reset==True,
             getattr(self,f'pwm{i}').width.eq(0)).Else(
             getattr(self,f'pwm{i}').width.eq(getattr(self.MMIO_inst,f'pwm{i}').fields.width)),
             getattr(self,f'pwm{i}').period.eq(getattr(self.MMIO_inst,f'pwm{i}').fields.period)]
 
-        for i in range(num_outputs):
+        for i in range(configuration['num_outputs']):
             self.sync+=[
             If(global_reset==True,
             self.gpio_outputs[i].eq(False)).Else(
             self.gpio_outputs[i].eq(self.MMIO_inst.gpios_out.storage[i]))]
         
-        for i in range(num_inputs):
+        for i in range(configuration['num_inputs']):
             self.sync+=[self.MMIO_inst.gpios_in.status[i].eq(self.gpio_inputs[i])]
         self.sync+=[self.MMIO_inst.gpios_in.we.eq(True)]
         self.sync+=[self.MMIO_inst.wallclock.status.eq(self.MMIO_inst.wallclock.status+1)]
@@ -503,9 +436,154 @@ class BaseSoC(SoCMini):
         #connect external reset
         self.comb+=external_reset.eq(self.ext_reset_in)
  
+
+def importconf(args,configuration):
+    conf=configparser.ConfigParser()
+    conf.read(args.loadconf)
+    args.board=conf['Hardware']['board']
+    args.revision=conf['Hardware']['revision']
+    args.sys_clk_freq=conf['Hardware'].getfloat('clock')
+    args.eth_phy=conf['Ethernet'].getint('phy')
+    args.eth_ip=conf['Ethernet']['ip']
+    args.eth_port=conf['Ethernet'].getint('port')
+    args.mac_address=conf['Ethernet']['mac']
+    configuration['reset']=conf['Hardware']['reset_in']
+    configuration['inputs'].clear()
+    j=0
+    for i in conf['inputs']:
+        if(i!='num'):
+            configuration['inputs'].append(conf['inputs'][str(i)])
+            j+=1
+    configuration['num_inputs']=j
+    configuration['outputs'].clear()
+    j=0
+    for i in conf['outputs']:
+        if(i!='num'):
+            configuration['outputs'].append(conf['outputs'][str(i)])
+            j+=1
+    configuration['num_outputs']=j
+    configuration['pwms'].clear()
+    j=0
+    for i in conf['pwms']:
+        if(i!='num'):
+            configuration['pwms'].append(conf['pwms'][str(i)])
+            j+=1
+    configuration['num_pwms']=j
+    configuration['encoders'].clear()
+    j=0
+    for i,k in zip(list(conf['encoders'])[::2],list(conf['encoders'])[1::2]):
+        if(i!='num' and k!='num'):
+            configuration['encoders'].append({'a':conf['encoders'][ str(i)],'b':conf['encoders'][str(k)]})
+            j+=1
+    configuration['num_encoders']=j
+    configuration['stepgens'].clear()
+    j=0
+    for i,k in zip(list(conf['stepgens'])[::2],list(conf['stepgens'])[1::2]):
+        if(i!='num' and k!='num'):
+            configuration['stepgens'].append({'step':conf['stepgens'][str(i)],'dir':conf['stepgens'][str(k)]})
+            j+=1
+    configuration['num_stepgens']=j
+
+def exportconf(args,configuration):
+    conf=configparser.ConfigParser()
+    conf['Hardware']={  
+                    'board':args.board,
+                    'revision':args.revision,
+                    'clock':args.sys_clk_freq
+                    }
+    conf.set('Hardware','reset_in',configuration['reset'])
+    conf['Ethernet']={
+                    'phy':args.eth_phy,
+                    'ip':args.eth_ip,
+                    'port':args.eth_port,
+                    'mac':args.mac_address
+                    }
+    conf.add_section('inputs')
+    j=0
+    for i in configuration['inputs']:
+        conf.set('inputs',str(j),i)
+        j+=1
+    conf.set('inputs','num',str(j))
+    conf.add_section('outputs')
+    j=0
+    for i in configuration['outputs']:
+        conf.set('outputs',str(j),i)
+        j+=1
+    conf.set('outputs','num',str(j))
+    conf.add_section('pwms')
+    j=0
+    for i in configuration['pwms']:
+        conf.set('pwms',str(j),i)
+        j+=1
+    conf.set('pwms','num',str(j))
+    conf.add_section('encoders')
+    j=0
+    for i in configuration['encoders']:
+        conf.set('encoders',str(j)+'_a',i['a'])
+        conf.set('encoders',str(j)+'_b',i['b'])
+        j+=1
+    conf.set('encoders','num',str(j))
+    conf.add_section('stepgens')
+    j=0
+    for i in configuration['stepgens']:
+        conf.set('stepgens',str(j)+'_step',i['step'])
+        conf.set('stepgens',str(j)+'_dir',i['dir'])
+        j+=1
+    conf.set('stepgens','num',str(j))
+    with open(args.saveconf,'w') as configfile: 
+        conf.write(configfile)
+
+def create_conf(configuration):
+    global _ext_reset_in
+    global _gpios_in
+    global _gpios_out
+    global _pwm_out
+    global _enc_int
+    global _stepg_int
+
+    _ext_reset_in = [("ext_reset_in", 0, Pins(configuration['reset']), IOStandard("LVCMOS33"))]    
+    _gpios_in.clear()
+    j=0
+    for i in configuration['inputs']:
+        _gpios_in.append(("gpio_in",j,Pins(i),IOStandard("LVCMOS33")))
+        j+=1
+    configuration['num_inputs']=j
+    _gpios_out.clear()
+    j=0
+    for i in configuration['outputs']:
+        _gpios_out.append(("gpio_out",j,Pins(i),IOStandard("LVCMOS33")))
+        j+=1
+    configuration['num_outputs']=j
+    _pwm_out.clear()
+    j=0
+    for i in configuration['pwms']:
+        _pwm_out.append(("pwm_out",j,Pins(i),IOStandard("LVCMOS33")))
+        j+=1
+    configuration['num_pwms']=j
+    _enc_int.clear()
+    j=0
+    for i in configuration['encoders']:
+        _enc_int.append(("encoder",j,
+        Subsignal('a',Pins(i['a'])),
+        Subsignal('b',Pins(i['b'])),
+        IOStandard("LVCMOS33")))
+        j+=1
+    configuration['num_encoders']=j
+    _stepg_int.clear()
+    j=0
+    for i in configuration['stepgens']:
+        _stepg_int.append(("stepgen",j,
+        Subsignal('step',Pins(i['step'])),
+        Subsignal('dir',Pins(i['dir'])),
+        IOStandard("LVCMOS33")))
+        j+=1
+    configuration['num_stepgens']=j
+
 # Build ---------------------------------------------------------------------------------------------
 
 def main():
+    global configuration
+
     from litex.soc.integration.soc import LiteXSoCArgumentParser
     parser = LiteXSoCArgumentParser(description="Lcnc")
     target_group = parser.add_argument_group(title="Target options")
@@ -517,28 +595,36 @@ def main():
     target_group.add_argument("--eth-ip",            default="192.168.2.50", type=str, help="Ethernet/Etherbone IP address.")
     target_group.add_argument("--eth-port",          default=1234, type=int,           help="Ethernet UDP Port.")
     target_group.add_argument("--eth-phy",           default=0, type=int,              help="Ethernet PHY (0 or 1).")
-    target_group.add_argument("--mac-address",           default="0x10e2d5000000",              help="Ethernet MAC address in hex format")
+    target_group.add_argument("--mac-address",       default="0x10e2d5000000",         help="Ethernet MAC address in hex format")
+    target_group.add_argument("--loadconf",          default="",type=str,              help="Load configuration from file")
+    target_group.add_argument("--saveconf",          default="",type=str,              help="Save configuration from file")
+    target_group.add_argument("--gui",               default="",                       help="Start the configurator GUI")
     builder_args(parser)
     soc_core_args(parser)
     trellis_args(parser)
     args = parser.parse_args()
-  
-    num_inputs=len(_gpios_in)
-    num_outputs=len(_gpios_out)
-    num_encoders=len(encoders)
-    num_pwm=len(_pwm_out)
-    num_stepgens=len(stepgens)
-    print('Num inputs=  ',str(num_inputs))
-    print('Num outputs=  ',str(num_outputs))
-    print('Num encoders=  ',str(num_encoders))
-    print('Num pwm=  ',str(num_pwm))
-    print('Num stepgens=  ',str(num_stepgens))
 
-    assert num_encoders < 16 , "Maximum number of encoders is 16 due to MMIO register definition"
-    assert num_stepgens < 16 , "Maximum number of stepgens is 16 due to MMIO register definition"
-    assert num_inputs < 32 , "Maximum number of inputs is 32 due to MMIO register definition"
-    assert num_outputs < 32 , "Maximum number of outputs is 32 due to MMIO register definition"
+    if args.loadconf:
+        print('Selected load configuration from file '+args.loadconf)
+        importconf(args,configuration)
+
+    create_conf(configuration)
+
+    if args.saveconf:
+        print('Saving configuration to file '+args.saveconf)
+        exportconf(args,configuration)
+
+    print('Num inputs=  ',str(configuration['num_inputs']))
+    print('Num outputs=  ',str(configuration['num_outputs']))
+    print('Num encoders=  ',str(configuration['num_encoders']))
+    print('Num pwm=  ',str(configuration['num_pwms']))
+    print('Num stepgens=  ',str(configuration['num_stepgens']))
         
+    assert configuration['num_encoders'] < 16 , "Maximum number of encoders is 16 due to MMIO register definition"
+    assert configuration['num_stepgens'] < 16 , "Maximum number of stepgens is 16 due to MMIO register definition"
+    assert configuration['num_inputs'] < 32 , "Maximum number of inputs is 32 due to MMIO register definition"
+    assert configuration['num_outputs'] < 32 , "Maximum number of outputs is 32 due to MMIO register definition"
+
     soc = BaseSoC(board=args.board, revision=args.revision,
         sys_clk_freq  = int(float(args.sys_clk_freq)),
         mac_address   = int(args.mac_address,16),
@@ -548,7 +634,7 @@ def main():
         **soc_core_argdict(args)
     )
     builder = Builder(soc, **builder_argdict(args))
-    
+
     if args.build:
         builder.build(build_name="Lcnc",**trellis_argdict(args))
         
