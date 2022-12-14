@@ -56,12 +56,37 @@ I have attached a very basic HAL configuration in the file HAL.hal for initial t
 - Set Lcnc.00.enable-request this interface is checked only on it's rising edge from False to True, then it is ignored, if there are no watchdog problems or hw reset request, the board will enable and set back Lcnc.00.enabled to True.
 
 
-# Create your own configuration:
+# Create your own configuration, what is needed:
 - Litex installed and working, see https://github.com/enjoy-digital/litex
 - oss-cad-suite 
+- if you want to try the gui configurator install also dearpygui package
 - clone Lcnc repo on your pc
-- edit Lcnc.py (or start from one of the preconfigured configurations):
-  modify what is between  "Devices configuration start"  and  "Devices configuration end" in python file. This part of the firmware script file contains the list of the peripherals you want to include in the build, and the board pins assigned to each. The default driver contains a basic example with several inputs, outputs, pwm generators encoders, step generators.
+
+There are three ways to edit the configuration to create your own:
+- gui configurator
+- edit coniguration .ini file
+- edit configuration dictionary in Lcnc.py
+
+# gui configurator utility
+**experimental**
+the GUI is invoked with the --gui option:
+./Lcnc.py --gui
+- you can load a configuration ini file with the menu "open" option
+- you can edit the peripheral lists and pin assignments
+- you can save the configuration with the menu "save" option
+- once done the menu option "generate" will start the firmware generation
+
+# editing the .ini configuration file
+- the configuration is stored and retrieved in an human readable .ini file
+- as stating point, an initial configuration file can be created from default configuration with the command ./Lcnc --saveconf=filename.ini
+- this is useful also in case the configuration file is broken and you want to start from scratch
+- filename.ini will be created with default configuration parameters
+- you can edit this file and use it as starting point for your own configuration
+- once edited you can build the configuration stored in the ini file with the command: ./Lcnc --loadconf=filename.ini --build
+
+# editing the configuration dictionary in .py
+- edit Lcnc.py modifying what is between  "Devices configuration start"  and  "Devices configuration end" in python file. This part of the firmware script file contains the list of the peripherals you want to include in the build, and the board pins assigned to each. The default driver contains a basic example with several inputs, outputs, pwm generators encoders, step generators.
+- once edited the internal dictionary, if you want to change the board type, port, mac address ecc you will use the command line options
 - execute Lcnc.py:
   the command used to execute the firmware generation will accept arguments that will define
   the particular board to be used as target, and the ip address to assign to the board.

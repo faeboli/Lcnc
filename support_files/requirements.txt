@@ -276,3 +276,12 @@ address 1-2: leggi conf 1: configurazione 2:reserved
 6 bits stepgens (max 32)
 6 bits encoders (max 32)
 6 bits pwm (max 64)
+
+configuration -> gui -> inti (conf to gui) -> gui to conf
+conf -> elenco
+
+- la gui si avvia da linea di comando con l'opzione -gui
+- la configurazione è passata come parametro
+- ogni interazione della gui aggiorna la configurazione
+- la configurazione aggiorna successivamente tutte le parti della gui che ne dipendono
+

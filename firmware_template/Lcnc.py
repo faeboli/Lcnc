@@ -37,9 +37,18 @@ from liteeth.frontend.stream import *
 from liteeth.core import LiteEthUDPIPCore
 from liteeth.common import *
 
+from gui.LcncGui import *
+
 # Devices configuration start ----------------------------------------------------------------------------------------
 
 configuration={
+    'board' : '5a-75e',
+    'revision' : '6.0',
+    'clock' : 40000000,
+    'phy' : 0,
+    'ip' : '192.168.2.50',
+    'port' : 1234,
+    'mac' : '0x10e2d5000000',
     'reset':'j4:0',
     'inputs':['j3:0','j3:1','j3:2','j3:4','j3:5','j3:6','j4:1','j4:2','j4:4','j4:5','j4:6'],
     'num_inputs':11,
@@ -436,154 +445,155 @@ class BaseSoC(SoCMini):
         #connect external reset
         self.comb+=external_reset.eq(self.ext_reset_in)
  
+class SysConf:
+    def __init__(self):
+        pass
 
-def importconf(args,configuration):
-    conf=configparser.ConfigParser()
-    conf.read(args.loadconf)
-    args.board=conf['Hardware']['board']
-    args.revision=conf['Hardware']['revision']
-    args.sys_clk_freq=conf['Hardware'].getfloat('clock')
-    args.eth_phy=conf['Ethernet'].getint('phy')
-    args.eth_ip=conf['Ethernet']['ip']
-    args.eth_port=conf['Ethernet'].getint('port')
-    args.mac_address=conf['Ethernet']['mac']
-    configuration['reset']=conf['Hardware']['reset_in']
-    configuration['inputs'].clear()
-    j=0
-    for i in conf['inputs']:
-        if(i!='num'):
-            configuration['inputs'].append(conf['inputs'][str(i)])
+    def importconf(self,args,configuration):
+        conf=configparser.ConfigParser()
+        conf.read(args.loadconf)
+        configuration['board']=args.board=conf['Hardware']['board']
+        configuration['revision']=args.revision=conf['Hardware']['revision']
+        configuration['clock']=args.sys_clk_freq=conf['Hardware'].getfloat('clock')
+        configuration['phy']=args.eth_phy=conf['Hardware'].getint('phy')
+        configuration['ip']=args.eth_ip=conf['Hardware']['ip']
+        configuration['port']=args.eth_port=conf['Hardware'].getint('port')
+        configuration['mac']=args.mac_address=conf['Hardware']['mac']
+        configuration['reset']=conf['Hardware']['reset_in']
+        configuration['inputs'].clear()
+        j=0
+        for i in conf['inputs']:
+            if(i!='num'):
+                configuration['inputs'].append(conf['inputs'][str(i)])
+                j+=1
+        configuration['num_inputs']=j
+        configuration['outputs'].clear()
+        j=0
+        for i in conf['outputs']:
+            if(i!='num'):
+                configuration['outputs'].append(conf['outputs'][str(i)])
+                j+=1
+        configuration['num_outputs']=j
+        configuration['pwms'].clear()
+        j=0
+        for i in conf['pwms']:
+            if(i!='num'):
+                configuration['pwms'].append(conf['pwms'][str(i)])
+                j+=1
+        configuration['num_pwms']=j
+        configuration['encoders'].clear()
+        j=0
+        for i,k in zip(list(conf['encoders'])[::2],list(conf['encoders'])[1::2]):
+            if(i!='num' and k!='num'):
+                configuration['encoders'].append({'a':conf['encoders'][ str(i)],'b':conf['encoders'][str(k)]})
+                j+=1
+        configuration['num_encoders']=j
+        configuration['stepgens'].clear()
+        j=0
+        for i,k in zip(list(conf['stepgens'])[::2],list(conf['stepgens'])[1::2]):
+            if(i!='num' and k!='num'):
+                configuration['stepgens'].append({'step':conf['stepgens'][str(i)],'dir':conf['stepgens'][str(k)]})
+                j+=1
+        configuration['num_stepgens']=j
+    
+    def exportconf(self,args,configuration):
+        conf=configparser.ConfigParser()
+        conf['Hardware']={  
+                        'board':args.board,
+                        'revision':args.revision,
+                        'clock':args.sys_clk_freq,
+                        'phy':args.eth_phy,
+                        'ip':args.eth_ip,
+                        'port':args.eth_port,
+                        'mac':args.mac_address
+                        }
+        conf.set('Hardware','reset_in',configuration['reset'])
+        conf.add_section('inputs')
+        j=0
+        for i in configuration['inputs']:
+            conf.set('inputs',str(j),i)
             j+=1
-    configuration['num_inputs']=j
-    configuration['outputs'].clear()
-    j=0
-    for i in conf['outputs']:
-        if(i!='num'):
-            configuration['outputs'].append(conf['outputs'][str(i)])
+        conf.set('inputs','num',str(j))
+        conf.add_section('outputs')
+        j=0
+        for i in configuration['outputs']:
+            conf.set('outputs',str(j),i)
             j+=1
-    configuration['num_outputs']=j
-    configuration['pwms'].clear()
-    j=0
-    for i in conf['pwms']:
-        if(i!='num'):
-            configuration['pwms'].append(conf['pwms'][str(i)])
+        conf.set('outputs','num',str(j))
+        conf.add_section('pwms')
+        j=0
+        for i in configuration['pwms']:
+            conf.set('pwms',str(j),i)
             j+=1
-    configuration['num_pwms']=j
-    configuration['encoders'].clear()
-    j=0
-    for i,k in zip(list(conf['encoders'])[::2],list(conf['encoders'])[1::2]):
-        if(i!='num' and k!='num'):
-            configuration['encoders'].append({'a':conf['encoders'][ str(i)],'b':conf['encoders'][str(k)]})
+        conf.set('pwms','num',str(j))
+        conf.add_section('encoders')
+        j=0
+        for i in configuration['encoders']:
+            conf.set('encoders',str(j)+'_a',i['a'])
+            conf.set('encoders',str(j)+'_b',i['b'])
             j+=1
-    configuration['num_encoders']=j
-    configuration['stepgens'].clear()
-    j=0
-    for i,k in zip(list(conf['stepgens'])[::2],list(conf['stepgens'])[1::2]):
-        if(i!='num' and k!='num'):
-            configuration['stepgens'].append({'step':conf['stepgens'][str(i)],'dir':conf['stepgens'][str(k)]})
+        conf.set('encoders','num',str(j))
+        conf.add_section('stepgens')
+        j=0
+        for i in configuration['stepgens']:
+            conf.set('stepgens',str(j)+'_step',i['step'])
+            conf.set('stepgens',str(j)+'_dir',i['dir'])
             j+=1
-    configuration['num_stepgens']=j
-
-def exportconf(args,configuration):
-    conf=configparser.ConfigParser()
-    conf['Hardware']={  
-                    'board':args.board,
-                    'revision':args.revision,
-                    'clock':args.sys_clk_freq
-                    }
-    conf.set('Hardware','reset_in',configuration['reset'])
-    conf['Ethernet']={
-                    'phy':args.eth_phy,
-                    'ip':args.eth_ip,
-                    'port':args.eth_port,
-                    'mac':args.mac_address
-                    }
-    conf.add_section('inputs')
-    j=0
-    for i in configuration['inputs']:
-        conf.set('inputs',str(j),i)
-        j+=1
-    conf.set('inputs','num',str(j))
-    conf.add_section('outputs')
-    j=0
-    for i in configuration['outputs']:
-        conf.set('outputs',str(j),i)
-        j+=1
-    conf.set('outputs','num',str(j))
-    conf.add_section('pwms')
-    j=0
-    for i in configuration['pwms']:
-        conf.set('pwms',str(j),i)
-        j+=1
-    conf.set('pwms','num',str(j))
-    conf.add_section('encoders')
-    j=0
-    for i in configuration['encoders']:
-        conf.set('encoders',str(j)+'_a',i['a'])
-        conf.set('encoders',str(j)+'_b',i['b'])
-        j+=1
-    conf.set('encoders','num',str(j))
-    conf.add_section('stepgens')
-    j=0
-    for i in configuration['stepgens']:
-        conf.set('stepgens',str(j)+'_step',i['step'])
-        conf.set('stepgens',str(j)+'_dir',i['dir'])
-        j+=1
-    conf.set('stepgens','num',str(j))
-    with open(args.saveconf,'w') as configfile: 
-        conf.write(configfile)
-
-def create_conf(configuration):
-    global _ext_reset_in
-    global _gpios_in
-    global _gpios_out
-    global _pwm_out
-    global _enc_int
-    global _stepg_int
-
-    _ext_reset_in = [("ext_reset_in", 0, Pins(configuration['reset']), IOStandard("LVCMOS33"))]    
-    _gpios_in.clear()
-    j=0
-    for i in configuration['inputs']:
-        _gpios_in.append(("gpio_in",j,Pins(i),IOStandard("LVCMOS33")))
-        j+=1
-    configuration['num_inputs']=j
-    _gpios_out.clear()
-    j=0
-    for i in configuration['outputs']:
-        _gpios_out.append(("gpio_out",j,Pins(i),IOStandard("LVCMOS33")))
-        j+=1
-    configuration['num_outputs']=j
-    _pwm_out.clear()
-    j=0
-    for i in configuration['pwms']:
-        _pwm_out.append(("pwm_out",j,Pins(i),IOStandard("LVCMOS33")))
-        j+=1
-    configuration['num_pwms']=j
-    _enc_int.clear()
-    j=0
-    for i in configuration['encoders']:
-        _enc_int.append(("encoder",j,
-        Subsignal('a',Pins(i['a'])),
-        Subsignal('b',Pins(i['b'])),
-        IOStandard("LVCMOS33")))
-        j+=1
-    configuration['num_encoders']=j
-    _stepg_int.clear()
-    j=0
-    for i in configuration['stepgens']:
-        _stepg_int.append(("stepgen",j,
-        Subsignal('step',Pins(i['step'])),
-        Subsignal('dir',Pins(i['dir'])),
-        IOStandard("LVCMOS33")))
-        j+=1
-    configuration['num_stepgens']=j
+        conf.set('stepgens','num',str(j))
+        with open(args.saveconf,'w') as configfile: 
+            conf.write(configfile)
+    
+    def create_conf(self,configuration):
+        global _ext_reset_in
+        global _gpios_in
+        global _gpios_out
+        global _pwm_out
+        global _enc_int
+        global _stepg_int
+    
+        _ext_reset_in = [("ext_reset_in", 0, Pins(configuration['reset']), IOStandard("LVCMOS33"))]    
+        _gpios_in.clear()
+        j=0
+        for i in configuration['inputs']:
+            _gpios_in.append(("gpio_in",j,Pins(i),IOStandard("LVCMOS33")))
+            j+=1
+        configuration['num_inputs']=j
+        _gpios_out.clear()
+        j=0
+        for i in configuration['outputs']:
+            _gpios_out.append(("gpio_out",j,Pins(i),IOStandard("LVCMOS33")))
+            j+=1
+        configuration['num_outputs']=j
+        _pwm_out.clear()
+        j=0
+        for i in configuration['pwms']:
+            _pwm_out.append(("pwm_out",j,Pins(i),IOStandard("LVCMOS33")))
+            j+=1
+        configuration['num_pwms']=j
+        _enc_int.clear()
+        j=0
+        for i in configuration['encoders']:
+            _enc_int.append(("encoder",j,
+            Subsignal('a',Pins(i['a'])),
+            Subsignal('b',Pins(i['b'])),
+            IOStandard("LVCMOS33")))
+            j+=1
+        configuration['num_encoders']=j
+        _stepg_int.clear()
+        j=0
+        for i in configuration['stepgens']:
+            _stepg_int.append(("stepgen",j,
+            Subsignal('step',Pins(i['step'])),
+            Subsignal('dir',Pins(i['dir'])),
+            IOStandard("LVCMOS33")))
+            j+=1
+        configuration['num_stepgens']=j
 
 # Build ---------------------------------------------------------------------------------------------
 
 def main():
     global configuration
-
+    
     from litex.soc.integration.soc import LiteXSoCArgumentParser
     parser = LiteXSoCArgumentParser(description="Lcnc")
     target_group = parser.add_argument_group(title="Target options")
@@ -598,21 +608,26 @@ def main():
     target_group.add_argument("--mac-address",       default="0x10e2d5000000",         help="Ethernet MAC address in hex format")
     target_group.add_argument("--loadconf",          default="",type=str,              help="Load configuration from file")
     target_group.add_argument("--saveconf",          default="",type=str,              help="Save configuration from file")
-    target_group.add_argument("--gui",               default="",                       help="Start the configurator GUI")
+    target_group.add_argument("--gui",               action="store_true",              help="Start gui")
     builder_args(parser)
     soc_core_args(parser)
     trellis_args(parser)
     args = parser.parse_args()
 
+    conf=SysConf()
+
     if args.loadconf:
         print('Selected load configuration from file '+args.loadconf)
-        importconf(args,configuration)
-
-    create_conf(configuration)
-
+        conf.importconf(args,configuration)
+    
     if args.saveconf:
         print('Saving configuration to file '+args.saveconf)
-        exportconf(args,configuration)
+        conf.exportconf(args,configuration)
+
+    if args.gui:
+        RunGui(conf,args,configuration)
+
+    conf.create_conf(configuration)
 
     print('Num inputs=  ',str(configuration['num_inputs']))
     print('Num outputs=  ',str(configuration['num_outputs']))
