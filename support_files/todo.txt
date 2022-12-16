@@ -73,14 +73,14 @@ x modificare .c e .h per encoder
     x automatizare la creazione della configurazione del firmware usando un file di testo
     x pulire i tipi delle definizioni della configurazione
     x migliorare il file ini con il valore del numero di periferiche e un cross check sul numero di periferiche vs le loro definizioni
-    - configuratore visuale delle periferiche
+    x configuratore visuale delle periferiche
       x dearpygui
       x nel py chiedere se avviare il configuratore, o in alternativa aggiungere opzioni 
         da riga di comando per leggere la configurazione da ini file o avviare la gui
       x il configuratore consente di definire periferiche e pins
       x verifica la coerenza dei valori
       x all'uscita fa partire la generazione del firmware con le definizioni create nella gui
-      - salva la configurazione in un file di testo
+      x salva la configurazione in un file di testo
     x consentire l'esecuzione di + istanze del driver
     x configurare l'ip all'invocazione di hal
     - allocare un certo numero di pins per definire in hw l'indirizzo ip

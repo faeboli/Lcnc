@@ -71,10 +71,15 @@ There are three ways to edit the configuration to create your own:
 **experimental**
 the GUI is invoked with the --gui option:
 ./Lcnc.py --gui
+
+![Gui_1](../../../../../home/fabio/Immagini/Gui_1.png)
+
 - you can load a configuration ini file with the menu "open" option
 - you can edit the peripheral lists and pin assignments
 - you can save the configuration with the menu "save" option
 - once done the menu option "generate" will start the firmware generation
+
+![Gui_2](../../../../../home/fabio/Immagini/Gui_2.png)
 
 # editing the .ini configuration file
 - the configuration is stored and retrieved in an human readable .ini file

@@ -85,6 +85,11 @@ def RunGui(conf,args,configuration):
     # update all the pins lists in the peripherals according to the freepinslist
     def combo_lists_update():
         dpg.configure_item('reset',items=freepinslist)
+        if(configuration['board']=='5a-75b'):
+            dpg.configure_item('revision',items=("6.1","7.0","8.0"))
+        else:
+            if(configuration['board']=='5a-75e'):
+                dpg.configure_item('revision',items=("6.0","7.1"))
         for i in input_lines:
             dpg.configure_item(i,items=freepinslist)
         for i in output_lines:
@@ -103,21 +108,21 @@ def RunGui(conf,args,configuration):
     # here the pin for each peripheral is selected and the configuration is updated
     def pin_update(sender,app_data):
         if(sender=='board'):
-            configuration['board']=app_data
+            configuration['board']=args.board=app_data
         if(sender=='revision'):
-            configuration['revision']=app_data
+            configuration['revision']=args.revision=app_data
         if(sender=='clock'):
-            configuration['clock']=app_data
+            configuration['clock']=args.sys_clk_freq=app_data
         if(sender=='reset'):
             configuration['reset']=app_data
         if(sender=='phy'):
-            configuration['phy']=app_data
+            configuration['phy']=args.eth_phy=app_data
         if(sender=='ip'):
-            configuration['ip']=app_data
+            configuration['ip']=args.eth_ip=app_data
         if(sender=='port'):
-            configuration['port']=app_data
+            configuration['port']=args.eth_port=app_data
         if(sender=='mac'):
-            configuration['mac']=app_data
+            configuration['mac']=args.mac_address=app_data
         if(sender in input_lines):
             configuration['inputs'].clear()
             for i in input_lines:
@@ -300,15 +305,16 @@ def RunGui(conf,args,configuration):
 
     # shows the configuration raw dictionary
     def showconf_update():
-        dpg.set_value('show_conf',configuration)
+        paragraphs=''
+        for i in configuration:
+            paragraphs+=str(i)+'='+str(configuration[i])+"\n"
+        dpg.set_value('show_conf',paragraphs)
 
     # used to load or save the configuration from file
     def filedialog(sender,app_data):
         global fileoper
-        filename=app_data['selections'][list(app_data['selections'])[0]]
-        savefilename=app_data['file_path_name']
-        savefilename=savefilename.rstrip('*')+'ini'
         if(fileoper=='load'):
+            filename=app_data['selections'][list(app_data['selections'])[0]]
             print('Load from '+filename)
             args.loadconf=filename
             conf.importconf(args,configuration)
@@ -319,8 +325,14 @@ def RunGui(conf,args,configuration):
             pinshow_update()
             showconf_update()
         if(fileoper=='save'):
+            savefilename=app_data['file_path_name']
+            savefilename=savefilename.rstrip('*')+'ini'
             print('Save to '+savefilename)
             items_clean()
+            free_pins_update()
+            combo_lists_update()
+            pinshow_update()
+            showconf_update()
             args.saveconf=savefilename
             conf.exportconf(args,configuration)
 
@@ -344,7 +356,7 @@ def RunGui(conf,args,configuration):
     with dpg.file_dialog(label="File Dialog",modal=True, width=400, height=400, show=False, callback=filedialog ,tag="filedialog_id"):
         dpg.add_file_extension(".*")
     with dpg.window(tag="show_conf_win",label="Configuration Data", show=False, width=300, height=600, pos=[400,0]):
-        dpg.add_text(tag='show_conf',wrap=150)
+        dpg.add_text(tag='show_conf',wrap=300)
 
     dpg.create_viewport(title='Lcnc Configurator', width=700, height=600)    
 
@@ -355,10 +367,10 @@ def RunGui(conf,args,configuration):
                 dpg.add_menu_item(label="Open",callback=file_oper,tag='openfile')
                 dpg.add_menu_item(label="Save As...",callback=file_oper,tag='savefile')
                 dpg.add_menu_item(label="Generate and exit",callback=generate)
-                dpg.add_menu_item(label="Show Configuration",callback=lambda: dpg.show_item("show_conf_win"))
+                dpg.add_menu_item(label="Show configuration",callback=lambda: dpg.show_item("show_conf_win"))
         with dpg.collapsing_header(label="Hardware"):
             dpg.add_combo(("5a-75e", "5a-75b"),default_value=configuration['board'],label="Board",tag='board',callback=pin_update,width=150,indent=20)
-            dpg.add_combo(("6.0", "7.0","7.1","8.0"),default_value=configuration['revision'],tag='revision',label="Revision",callback=pin_update,width=150,indent=20)
+            dpg.add_combo(("6.0","6.1","7.0","7.1","8.0"),default_value=configuration['revision'],tag='revision',label="Revision",callback=pin_update,width=150,indent=20)
             dpg.add_input_float(default_value=configuration['clock'],label="clock",tag='clock',format="%f",callback=pin_update,width=150,indent=20)
             dpg.add_combo(freepinslist,default_value=configuration['reset'],label="ResetIn",tag='reset',callback=pin_update,width=150,indent=20)
             dpg.add_combo((0,1),default_value=configuration['phy'],label="Phy",tag='phy',callback=pin_update,width=150,indent=20)
