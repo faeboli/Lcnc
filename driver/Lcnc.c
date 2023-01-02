@@ -65,7 +65,7 @@ int rtapi_app_main(void)
     {
         if ( (ipaddr[i] == NULL) || (*ipaddr[i] == 0) || (udpport[i] == NULL) || (*udpport[i] == 0) ) break;
         num_boards = i + 1;
-        rtapi_print_msg(RTAPI_MSG_ERR ,"Lcnc:%f requested board: %d with ip: %s port: %s\n",get_timestamp_f(),num_boards-1,ipaddr[i],udpport[i]);
+        if(debug) fprintf(stderr,"Lcnc:%f requested board: %d with ip: %s port: %s\n",get_timestamp_f(),num_boards-1,ipaddr[i],udpport[i]);
     }
     
     // initialise the driver 
@@ -75,7 +75,10 @@ int rtapi_app_main(void)
         rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f ERROR: hal_init() failed\n",get_timestamp_f());
         return -1; 
     }
-    else rtapi_print_msg(RTAPI_MSG_INFO,"Lcnc:%f hal_init() ok\n",get_timestamp_f());
+    else 
+    {
+        if(debug) fprintf(stderr,"Lcnc:%f hal_init() ok\n",get_timestamp_f());
+    }
 
     for(i=0;i<num_boards;i++)
     {
@@ -89,7 +92,7 @@ int rtapi_app_main(void)
         }
         else 
         {
-            rtapi_print_msg(RTAPI_MSG_INFO ,"Lcnc:%f hal_malloc() ok for board %d\n",get_timestamp_f(),i);
+            if(debug) fprintf(stderr,"Lcnc:%f hal_malloc() ok for board %d\n",get_timestamp_f(),i);
             // initialize some data
             device_data_array[i]->board_id=i;
             sprintf(device_data_array[i]->ip_board_address,"%s",ipaddr[i]);
@@ -106,7 +109,7 @@ int rtapi_app_main(void)
         }
         else 
         {
-            rtapi_print_msg(RTAPI_MSG_INFO ,"Lcnc:%f board %d configured correctly\n",get_timestamp_f(),i);
+            if(debug) fprintf(stderr,"Lcnc:%f board %d configured correctly\n",get_timestamp_f(),i);
         }
     }
     //everything ready
@@ -150,7 +153,10 @@ int configure_board(data_hal* device_data)
         rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f ERROR: failed to connect to board %d\n",get_timestamp_f(),device_data->board_id);
         return -1;
     }
-    else rtapi_print_msg(RTAPI_MSG_ERR ,"Lcnc:%f connected to board %d\n",get_timestamp_f(),device_data->board_id);
+    else
+    {
+        if(debug) fprintf(stderr,"Lcnc:%f connected to board %d\n",get_timestamp_f(),device_data->board_id);
+    }
 
 
 /*
@@ -200,7 +206,7 @@ int configure_board(data_hal* device_data)
                 device_data->intf_ver=(uint8_t)( tempvalue & 0x000000ff);
                 if(device_data->intf_ver==1 && (uint8_t)((tempvalue & 0x0000ff00)>>8) =='n' && (uint8_t)((tempvalue & 0x00ff0000)>>16) == 'c'&&  (uint8_t)((tempvalue & 0xff000000)>>24 == 'L'))
                 {
-                    rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f board %d detected with interface version %d\n",get_timestamp_f(),device_data->board_id,device_data->intf_ver);
+                    if(debug) fprintf(stderr,"Lcnc:%f board %d detected with interface version %d\n",get_timestamp_f(),device_data->board_id,device_data->intf_ver);
                     // move to next state
                     conf_retry1=0;
                     conf_st=ConfSetReg;
@@ -233,7 +239,7 @@ int configure_board(data_hal* device_data)
                     {
                         conf_retry1++;
                         timestamp=get_timestamp_f();
-                        rtapi_print_msg(RTAPI_MSG_ERR ,"Lcnc:%f send retry %d\n",get_timestamp_f(),conf_retry1+1);
+                        if(debug) fprintf(stderr,"Lcnc:%f send retry %d\n",get_timestamp_f(),conf_retry1+1);
                         while(get_timestamp_f()-timestamp<0.1); // wait
                         conf_st=ConfInit;
                     }
@@ -286,14 +292,14 @@ int configure_board(data_hal* device_data)
                 device_data->n_pwm = (uint8_t)((tempvalue & 0xfc000000)>>26);
                 memcpy((void*)temp_reg_value.bytes,(void*)(rx_read_packet_buffer+EB_HEADER_SIZE+REG_START_REG_ADDR-REG_START_REG_ADDR),4);
                 device_data->REGS_START_value=be32toh(temp_reg_value.value); 
-                rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc:%f board %d peripherals detected: \n%d inputs, \n%d outputs, \n%d stepgens, \n%d encoders, \n%d pwm \n",get_timestamp_f(),device_data->board_id,device_data->n_in,device_data->n_out,device_data->n_sg,device_data->n_en,device_data->n_pwm);
+                if(debug) fprintf(stderr,"Lcnc:%f board %d peripherals detected: \n%d inputs, \n%d outputs, \n%d stepgens, \n%d encoders, \n%d pwm \n",get_timestamp_f(),device_data->board_id,device_data->n_in,device_data->n_out,device_data->n_sg,device_data->n_en,device_data->n_pwm);
                 // move to next state
                 conf_st=ConfSuccess;
             }
             else 
             {
                 timestamp=get_timestamp_f();
-                rtapi_print_msg(RTAPI_MSG_ERR ,"Lcnc:%f init board %d, connection error- unexpected read length: %d, retry %d\n",get_timestamp_f(),device_data->board_id,count,conf_retry+1);
+                fprintf(stderr ,"Lcnc:%f init board %d, connection error- unexpected read length: %d, retry %d\n",get_timestamp_f(),device_data->board_id,count,conf_retry+1);
                 if(conf_retry<11) 
                 {
                     conf_retry++;
@@ -302,7 +308,7 @@ int configure_board(data_hal* device_data)
                 else
                 {
                     timestamp=get_timestamp_f();
-                    rtapi_print_msg(RTAPI_MSG_ERR ,"Lcnc:%f value error, retry %d\n",get_timestamp_f(),conf_retry1+1);
+                    fprintf(stderr,"Lcnc:%f value error, retry %d\n",get_timestamp_f(),conf_retry1+1);
                     if(conf_retry1<5) 
                     {
                         conf_retry1++;
@@ -645,7 +651,7 @@ int configure_board(data_hal* device_data)
         return -1;
     }
 
-    rtapi_print_msg(RTAPI_MSG_ERR,"Lcnc: installed driver for board %d\n",device_data->board_id);
+    fprintf(stderr,"Lcnc: installed driver for board %d\n",device_data->board_id);
 
            
     return 0;

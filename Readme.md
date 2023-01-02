@@ -4,31 +4,36 @@ Lcnc is my own interpretation of colorcnc form
 Roman Pechenko <romanetz4@gmail.com> "romanetz"
 https://forum.linuxcnc.org/27-driver-boards/44422-colorcnc
 
-It implements stepgenerators, general purpose in/out, encoder inputs, pwm
-in the fpga, and a gigabit ethernet link used to talk to the host pc running LinuxCNC.
+Lcnc consists of a FPGA configuration file, a Linuxcnc driver
+and a set of tools for the creation of customizable FPGA configurations.
 
-There are several FPGA configurations available, ready to be uploaded
+The FPGA can contain a set of several perpherals:
+stepgenerators, general purpose in/out, encoder inputs, pwm.
+
+The communication to the host (running Linuxcnc) is trough a gigabit ethernet link.
+
+There are several ready FPGA configurations available, ready to be uploaded
 on FPGA boards, also eventually new user defined configurations can be generated.
 
-Up to 4 FPGA boards can be driven together, a gigabit ethernet switch is needed.
+Up to 4 FPGA boards can be driven at the same time, using a gigabit ethernet switch.
 
 The work now is focused on Colorligh 5a-75b and 5a-75e boards.
 These boards have the pins configured as output-only, in order 
 to have access to inputs some soldering is required.
 
-The HOST side LinuxCNC driver is provided, it will interface
-with FPGA firmware, and provide pins and parameters that will connect
-fpga peripherals to LinuxCNC. The driver is unique and will be able
-to talk to every possible configuration and to up to 4 boards.
+The host side LinuxCNC driver will interface with FPGA firmware, 
+on initial startup the driver will ask the board(s) their internal configuration
+structure, and will self configure to provide pins and parameters that will 
+enable the connection of the peripherals to LinuxCNC.
 
-The protocol used is etherbone.
+The protocol used to control the board is etherbone.
 The firmware is written in migen, using Litex framework.
 
-# Getting started:
+# Getting started with a prebuilt configuration firmware:
 - you will need a colorlight 5a-75b or 75e board
 - jtag adapter for loading and flashing bitfiles
 - boards hw info and pin maps for jtag are available here https://github.com/q3k/chubby75
-- Choose the firmware you want to try, the names reflect the peripherals available, for example 75b_v6_14o11i6s6e6p will go to a colorlight 5a75b V6.0 and will contain 14 outputs 11 inputs 6 stepgens 6 encoders interfaces 6 pwm generators.
+- Choose the firmware you want to try, the names reflect the peripherals available, for example 75b_v6_14o11i6s6e6p is built for a colorlight 5a75b V6.0 and will contain 14 outputs 11 inputs 6 stepgens 6 encoders interfaces and 6 pwm generators.
 - Upload the firmware on the board, I'm using openFPGAloader but any such tool is good.
 - Connect the board to the host pc and try to ping the board, the default ip address is 192.168.2.50, a Gigabit ethernet port is needed.
 - If the board responds to pings then you can build the driver in LinuxCNC wih the command "sudo halcompile --install Lcnc.c" and start to work with the board.
@@ -58,8 +63,8 @@ I have attached a very basic HAL configuration in the file HAL.hal for initial t
 
 # Create your own configuration, what is needed:
 - Litex installed and working, see https://github.com/enjoy-digital/litex
-- oss-cad-suite 
-- if you want to try the gui configurator install also dearpygui package
+- oss-cad-suite: https://github.com/YosysHQ/oss-cad-suite-build 
+- if you want to try the gui configurator install also dearpygui package: https://github.com/hoffstadt/DearPyGui
 - clone Lcnc repo on your pc
 
 There are three ways to edit the configuration to create your own:
@@ -76,22 +81,23 @@ the GUI is invoked with the --gui option:
 
 - you can load a configuration ini file with the menu "open" option
 - you can edit the peripheral lists and pin assignments
-- you can save the configuration with the menu "save" option
+- you can save the configuration in an ini file with the menu "save" option
+- if you dont have an initial ini file the save option will create one from scratch
 - once done the menu option "generate" will start the firmware generation
 
 ![Gui_2](support_files/images/Gui_2.png)
 
 # editing the .ini configuration file
-- the configuration is stored and retrieved in an human readable .ini file
-- as stating point, an initial configuration file can be created from default configuration with the command ./Lcnc --saveconf=filename.ini
+- the configuration is stored to and retrieved from an human readable and editable .ini file
+- as stating point and initial template, a configuration file can be created from default configuration with the command ./Lcnc.py --saveconf=filename.ini
 - this is useful also in case the configuration file is broken and you want to start from scratch
 - filename.ini will be created with default configuration parameters
 - you can edit this file and use it as starting point for your own configuration
-- once edited you can build the configuration stored in the ini file with the command: ./Lcnc --loadconf=filename.ini --build
+- once edited you can build the configuration stored in the ini file with the command: ./Lcnc.py --loadconf=filename.ini --build
 
 # editing the configuration dictionary in .py
 - edit Lcnc.py modifying what is between  "Devices configuration start"  and  "Devices configuration end" in python file. This part of the firmware script file contains the list of the peripherals you want to include in the build, and the board pins assigned to each. The default driver contains a basic example with several inputs, outputs, pwm generators encoders, step generators.
-- once edited the internal dictionary, if you want to change the board type, port, mac address ecc you will use the command line options
+- once edited the internal dictionary, if you want to change the board type, port, mac address ecc you need to use the command line options
 - execute Lcnc.py:
   the command used to execute the firmware generation will accept arguments that will define
   the particular board to be used as target, and the ip address to assign to the board.
@@ -110,21 +116,21 @@ the GUI is invoked with the --gui option:
 - up to 4 boards can be driven together, the only condition needed is to have unique ip, port and MAC for each board. A gigabit ethernet switch is needed.
 
 # Working with peripherals:
--- doc in construction, the peripherals are what they seem, you can play with them, only to be noted that stepgen is velocity mode only.
+-- doc in construction, the peripherals are what they seem, play with them, only to be noted that stepgen is velocity mode only.
 
-Digital inputs to the board, the pins are defined in "_gpios_in" list un Lcnc.py script, maximum number of 32 inputs can be defined:
+Digital inputs to the board, maximum number of 32 inputs per board can be defined:
 - gpio in
   - linuxcnc -> driver
     - parameters: none
     - inputs: none
     - outputs:
-      - Lcnc.xx.input.yy.in true if input driven high (needed 100ua in fpga pin)
+      - Lcnc.xx.input.yy.in true if input driven high
       - Lcnc.xx.input.yy.in-n false if input driven high
   - driver -> etherbone registers: none
   - etherbone registers -> driver:
     - MMIO_INST_GPIOS_IN 32bit
 
-Digital outputs from the board, the pins are defined in "_gpios_out" list un Lcnc.py script, maximum number of 32 outputs can be defined:
+Digital outputs from the board, maximum number of 32 outputs per board can be defined:
 - gpio out
   - linuxcnc -> driver
     - parameters:
@@ -136,7 +142,7 @@ Digital outputs from the board, the pins are defined in "_gpios_out" list un Lcn
     - MMIO_INST_GPIOS_OUT 32bit
   - registers -> driver: none
 
-Encoder inputs, the pins are defined in "encoders" list un Lcnc.py script, maximum 16 encoders can be defined:
+Encoder inputs, maximum 16 encoders per board can be defined:
 - encoder inputs
   - linuxcnc -> driver
     - parameters:
@@ -153,7 +159,7 @@ Encoder inputs, the pins are defined in "encoders" list un Lcnc.py script, maxim
   - registers -> driver:
     - MMIO_INST_ENC_COUNT (32bit)
 
-PWM outputs,the pins are defined in "_pwm_out" list un Lcnc.py script:
+PWM outputs, simple pwm generators:
 - pwm
   - linuxcnc -> driver
     - parameters:
@@ -169,8 +175,8 @@ PWM outputs,the pins are defined in "_pwm_out" list un Lcnc.py script:
     - MMIO_INST_PWM_0 (16bit period MSB,16bit width LSB)
   - registers -> driver: none
 
-Step generator, the pins are defined in "stepgens" list un Lcnc.py script, maximum 16 instances possible, maximum steprate about half of FPGA internal clock (20MHz step rate at 40MHz clock, step width and step space set at 25ns).
-The steprate is limited by minimum step space and step width, for example at 500ns step space and 500ns step width the maximum step rate is 1MHz.
+Step generator, maximum 16 instances possible per board, maximum steprate about half of FPGA internal clock (20MHz step rate at 40MHz clock, step width and step space set at 25ns).
+The steprate is limited by minimum step space and step width, for example if step space and step width are set at 500ns the maximum step rate is 1MHz.
 - step generator (sg)
   - linuxcnc -> driver
     - parameters:
@@ -198,7 +204,9 @@ The steprate is limited by minimum step space and step width, for example at 500
   - registers -> driver:
     - MMIO_INST_POSITION_n (32bit)
 
-Timer downcounting, when reaches zero the board is reset and peripherals are reset to default state, the driver reloads the counter value at each trasmission
+For internal use:
+
+Watchdog, timer downcounting, when reaches zero the board is reset and peripherals are reset to default state, the driver reloads the counter value at each trasmission
 - watchdog:
   - linuxcnc -> driver
     - outputs:
@@ -209,7 +217,7 @@ Timer downcounting, when reaches zero the board is reset and peripherals are res
   - registers <-> driver:
     - MMIO_INST_RES_ST_REG (bits 10 to 32)
 
-This is a clock running on fpga, and read from driver, used for time related calculations
+Wallclock: this is a clock running on fpga, and read from driver, used for time related internal calculations
 - wallclock
   - linuxcnc -> driver
     - outputs:
