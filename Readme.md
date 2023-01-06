@@ -132,11 +132,12 @@ In the example configuration file all this can be seen in the lines:
 - pid.1.output => Lcnc.00.stepgen.01.vel-cmd # here the pid output is connected to Lcnc velocity command input
 
 Pid need some parameters to work correctly, and the values are usually chosen by some experiments and a certain knowledge is needed, but for the stepgen this part is very simple, since the feedback dynamics are predictable (because the feedback here is not from the real axis position*, but from stepgen calculations in fpga, so no disturbances from the real world), so simple parameters are suggested as the example in the hal file fo example above:
-setp pid.1.FF1 1.0
-setp pid.1.Pgain 200
-setp pid.1.Igain 20
-setp pid.1.Dgain 0
-setp pid.1.deadband 0.01
+- setp pid.1.FF1 1.0
+- setp pid.1.Pgain 200
+- setp pid.1.Igain 20
+- setp pid.1.Dgain 0
+- setp pid.1.deadband 0.01
+
 If encoders are vailable, and the board is modified to read inputs, this configuration will easily be modified to accept feedback from encoders instead than from Lcnc by simply swapping Lcnc.00.stepgen.01.pos-fb with encoder feedback Lcnc.00.encoder.01.pos-fb, so the axis control will become full closed loop. 
 In this case a proper PID calibration procedure for it's gains values is needed since the PID will be dealing with real world and unpredictable disturbances.
 
