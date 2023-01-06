@@ -115,6 +115,30 @@ the GUI is invoked with the --gui option:
 # Connecting to more than one board:
 - up to 4 boards can be driven together, the only condition needed is to have unique ip, port and MAC for each board. A gigabit ethernet switch is needed.
 
+# Pin numbering:
+*pay attention to pin numbering of the board: in configuration files and GUI of Lcnc, the pin numbering will start from 0 and not from 1, so first pin of each header will be called "pin 0" and the last one will be "pin 15"*
+
+# Why and how of PID in stepgen:
+In Lcnc the stepgen is a variable frequency pulse generator, this is a choice for having simple fpga code and fast and smooth pulse generation dynamics.
+Since the frequency (i.e pulses per second) is the joint velocity scaled by a constant quantity (constant that depend on steps per revolution, gear ratio, lead screw etc), Lcnc will have as input for the stepgen the requested joint velocity only.
+Lcnc is not handling directly position request, and will provide only position feedback (by counting how many steps have been generated).
+Usually we need to move the joint to a certain position, and linuxcnc will provide this as position command pin, so there is the need for something that will "translate" the position requested from linuxcnc to a velocity command to be sent to Lcnc. I'm using a PID component for this, since it is readly available in hal components, and it will be useful in case we want to move to a fully closed loop configuration with encoders. 
+Pid sits in between linuxcnc and Lcnc, and will take as input the position command from linuxcnc and will provide on it's output the velocity command needed by Lcnc stepgen. Pid need also to know the actual position of the axis at every instant in order to provide correct calculations.
+So to summarize Pid need two inputs: position you want to reach and actual joint position, and provides one output: requested joint velocity.
+Here the feedback part could generate some confusion, also if in the configuration there is no real world feedback from the axis, a feedback from stepgen is needed anyway. The step generator in the fpga will take some time to move the axis, due to for example acceleration limit imposed in hal, or hardware limits in step rate, and since the acceleration is limited, and so the velocity, the actual position will change in a finite time, and the PID will need to be aware of this delays, so a position feedback is provided by Lcnc stepgen component, to be connected back to pid.
+In the example configuration file all this can be seen in the lines:
+- joint.1.motor-pos-cmd => pid.1.command # here the requested position from linuxcnc is connected to PID input command
+- Lcnc.00.stepgen.01.pos-fb => pid.1.feedback # here the actual position feedback of the axis from Lcnc is connected to the PID feedback
+- pid.1.output => Lcnc.00.stepgen.01.vel-cmd # here the pid output is connected to Lcnc velocity command input
+Pid need some parameters to work correctly, and the values are usually chosen by some experiments and a certain knowledge is needed, but for the stepgen this part is very simple, since the feedback dynamics are predictable (because the feedback here is not from the real axis position*, but from stepgen calculations in fpga, so no disturbances from the real world), so simple parameters are suggested as the example in the hal file fo example above:
+setp pid.1.FF1 1.0
+setp pid.1.Pgain 200
+setp pid.1.Igain 20
+setp pid.1.Dgain 0
+setp pid.1.deadband 0.01
+If encoders are vailable, and the board is modified to read inputs, this configuration will easily be modified to accept feedback from encoders instead than from Lcnc by simply swapping Lcnc.00.stepgen.01.pos-fb with encoder feedback Lcnc.00.encoder.01.pos-fb, so the axis control will become full closed loop. 
+In this case a proper PID calibration procedure for it's gains values is needed since the PID will be dealing with real world and unpredictable disturbances.
+
 # Working with peripherals:
 -- doc in construction, the peripherals are what they seem, play with them, only to be noted that stepgen is velocity mode only.
 

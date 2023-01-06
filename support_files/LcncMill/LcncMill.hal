@@ -43,35 +43,31 @@
 
 # Joint 0 setup
 
-	setp Lcnc.00.stepgen.02.scale 		[JOINT_0]SCALE
-	setp Lcnc.00.stepgen.02.acc_lim	 	[JOINT_0]STEPGEN_MAXACCEL
-#	setp Lcnc.00.stepgen.02.enable  true
+	setp Lcnc.00.stepgen.00.scale 		[JOINT_0]SCALE
+	setp Lcnc.00.stepgen.00.acc_lim	 	[JOINT_0]STEPGEN_MAXACCEL
 	setp pid.0.FF1 1.0
 	setp pid.0.Pgain 200
 	setp pid.0.Igain 20
 	setp pid.0.Dgain 0
 	setp pid.0.deadband 0.01
-#	setp pid.0.enable true
 
 	net J0enable-out       <= joint.0.amp-enable-out
 	net J0enable-out       => pid.0.enable  
-	net J0enable-out       => Lcnc.00.stepgen.02.enable  
+	net J0enable-out       => Lcnc.00.stepgen.00.enable  
 	
 	net j0mot-pos-cmd 		<= joint.0.motor-pos-cmd 	=> pid.0.command
-	net j0pos-fb 		<= Lcnc.00.stepgen.02.pos-fb	=> pid.0.feedback joint.0.motor-pos-fb
-	net pid0out      pid.0.output => Lcnc.00.stepgen.02.vel-cmd
+	net j0pos-fb 		<= Lcnc.00.stepgen.00.pos-fb	=> pid.0.feedback joint.0.motor-pos-fb
+	net pid0out      pid.0.output => Lcnc.00.stepgen.00.vel-cmd
 
 # Joint 1 setup
 
 	setp Lcnc.00.stepgen.01.scale 		[JOINT_1]SCALE
 	setp Lcnc.00.stepgen.01.acc_lim 		[JOINT_1]STEPGEN_MAXACCEL
-#	setp Lcnc.00.stepgen.01.enable  true
 	setp pid.1.FF1 1.0
 	setp pid.1.Pgain 200
 	setp pid.1.Igain 20
 	setp pid.1.Dgain 0
 	setp pid.1.deadband 0.01
-#	setp pid.1.enable true
 	
 	net J1enable-out       <= joint.1.amp-enable-out
 	net J1enable-out       => pid.1.enable  
@@ -83,35 +79,26 @@
 
 # Joint 2 setup
 
-	setp Lcnc.00.stepgen.00.scale 		[JOINT_2]SCALE
+	setp Lcnc.00.stepgen.02.scale 		[JOINT_2]SCALE
 	setp Lcnc.00.stepgen.02.acc_lim	 	[JOINT_2]STEPGEN_MAXACCEL
-#	setp Lcnc.00.stepgen.00.enable  true
 	setp pid.2.FF1 1.0
 	setp pid.2.Pgain 200
 	setp pid.2.Igain 20
 	setp pid.2.Dgain 0
 	setp pid.2.deadband 0.01
-#	setp pid.2.enable true
 	
 	net J2enable-out       <= joint.2.amp-enable-out
 	net J2enable-out       => pid.2.enable  
-	net J2enable-out       => Lcnc.00.stepgen.00.enable  
+	net J2enable-out       => Lcnc.00.stepgen.02.enable  
 
 	net j2mot-pos-cmd 		<= joint.2.motor-pos-cmd 	=> pid.2.command
-	net j2pos-fb 		<= Lcnc.00.stepgen.00.pos-fb	=> pid.2.feedback joint.2.motor-pos-fb
-	net pid2out      pid.2.output => Lcnc.00.stepgen.00.vel-cmd
+	net j2pos-fb 		<= Lcnc.00.stepgen.02.pos-fb	=> pid.2.feedback joint.2.motor-pos-fb
+	net pid2out      pid.2.output => Lcnc.00.stepgen.02.vel-cmd
 
 # end-stops
-#	setp debounce.0.delay 3
     net X-stop 	Lcnc.00.input.00.in-n => joint.0.home-sw-in 
-#	net X-stop 	Lcnc.00.input.00.in-n 	=> debounce.0.0.in 
-#	net X-stop-dbc debounce.0.0.out => joint.0.home-sw-in
     net Y-stop 	Lcnc.00.input.01.in-n => joint.1.home-sw-in 
-#	net Y-stop 	Lcnc.00.input.01.in-n 	=> debounce.0.1.in 
-#	net Y-stop-dbc debounce.0.1.out => joint.1.home-sw-in
     net Z-stop 	Lcnc.00.input.02.in-n => joint.2.home-sw-in 
-#	net Z-stop 	Lcnc.00.input.02.in-n 	=> debounce.0.2.in 
-#	net Z-stop-dbc debounce.0.2.out => joint.2.home-sw-in
 
 # outputs
 

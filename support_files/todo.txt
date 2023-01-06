@@ -101,4 +101,7 @@ x modificare .c e .h per encoder
      x T4 (wd & res) mean 150ns sd 90
      x T5 (write tx) mean 1300ns sd 600
      - T6 (send tx)  mean 33000 sd 6000
+    Aggiungere periferiche interessanti:
+    - generatore pwm MASH
+    - ...
 
